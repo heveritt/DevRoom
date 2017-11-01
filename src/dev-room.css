@@ -1,0 +1,62 @@
+
+.dev-room {
+  height: 100vh;
+  padding: 10px;
+}
+
+.frame {
+  border: 3px solid grey;
+  border-radius: 5px;
+  height: 100%;
+}
+
+.frame-header {
+  display: flex;
+  justify-content: space-between;
+  background: grey;
+  border-bottom: 3px solid grey;
+  padding: 3px;
+  width: 100%;
+}
+ 
+.frame-header .token {
+  background: #222222;
+  border: 1px solid #222222;
+  border-radius: 5px;
+}
+
+.frame-contents {
+  padding: 5px;
+}
+
+.code-line {
+  padding: 3px;
+}
+
+.token {
+  margin: 0px 2px;
+  padding: 0px 3px;
+  text-align: center;
+}
+
+.token:hover {
+  outline: 1px solid grey;
+}
+
+input.token {
+  margin: 0px 5px;
+  padding: 0px;
+  border: none;
+  text-align: start;
+}
+
+/*
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}*/

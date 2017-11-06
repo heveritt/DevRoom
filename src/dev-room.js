@@ -39,11 +39,11 @@ class Frame extends Component {
   }
 
   handleKey = (ix) => (e) => {
-    if (e.key == ' ' || e.key == 'Enter' || e.key == 'Tab') {
+    if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
       e.preventDefault();
       var newContents = this.state.contents.slice();
       newContents[ix[0]][ix[1]] = e.target.value;
-      if (e.key == 'Enter') {
+      if (e.key === 'Enter') {
         newContents.push(['_']);
       } else {
         newContents[ix[0]].push('_');
@@ -67,7 +67,7 @@ class Frame extends Component {
   }
 
   renderToken(token, ix) {
-    if (token == '_') {
+    if (token === '_') {
       return (<TokenInput onKey={this.handleKey(ix)}/>);
     } else {
       return (<Token token={token} />);

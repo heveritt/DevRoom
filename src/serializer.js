@@ -13,31 +13,40 @@ class Serializer {
   }
 
   replacer() {
-    const classMap = this.classMap;
-    const alreadySerialized = new WeakSet();
-
-    return function storeClass(key, value) {
-      if (typeof value === 'object') {
-        const className = value.constructor.name;
-
-        if (alreadySerialized.has(value)) {
-          throw new Error('Circular dependency detected - class: ' + className);
-        } 
-        alreadySerialized.add(value);
-
-        if (classMap[className]) {
-          // Need to shallow copy object to avoid infinite recursion
-          return ['class: ' + className, Object.assign({}, value)];
+    const circularityDetector = function() {
+      const alreadySerialized = new WeakSet();
+      return function throwIfCircular(value) {
+        if (typeof value === 'object') {
+          if (alreadySerialized.has(value)) {
+            throw new Error('Circular dependency detected - class: ' + value.constructor.name);
+          } 
+          alreadySerialized.add(value);
         }
       }
+    }();
 
-      return value;
+    const classMap = this.classMap;
+    const classStorer = function() {
+      return function storeClass(value) {
+        if (typeof value === 'object') {
+          const className = value.constructor.name;
+          if (classMap[className]) {
+            // Need to shallow copy object to avoid infinite recursion
+            return ['class: ' + className, Object.assign({}, value)];
+          }
+        }
+        return value;
+      }
+    }();
+
+    return function(key, value) {
+      circularityDetector(value);
+      return classStorer(value);
     }
   }
 
   reviver() {
     const classMap = this.classMap;
-
     return function restoreClass(key, value) {
       if (Array.isArray(value) && 
           typeof value[0] === 'string' && 

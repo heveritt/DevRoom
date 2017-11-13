@@ -17,20 +17,20 @@ class Frame extends Component {
   constructor() {
     super();
     this.state = {
-      focus: 'grid',
+      node: 'grid',
       contexts: ['Franca', 'DevRoom', 'SudokuMate'],
       contents: [['x', '=', '1'], ['y', '=', 'x', '+', '3', '*', '5', '_']]
     };
   }
 
   render() {
-    var focus = this.renderToken(this.state.focus);
+    var node = this.renderToken(this.state.node);
     var contexts = this.renderTokens(this.state.contexts);
     var contents = this.renderLines(this.state.contents);
     return (
       <div className="frame">
         <div className="frame-header">
-          <div className="frame-focus">{focus}</div>
+          <div className="frame-node">{node}</div>
           <div className="frame-contexts">{contexts}</div>
         </div>
         <div className="frame-contents">{contents}</div>
@@ -42,11 +42,11 @@ class Frame extends Component {
     if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
       e.preventDefault();
       var newContents = this.state.contents.slice();
-      newContents[ix[0]][ix[1]] = e.target.value;
+      newContents[ix.line][ix.token] = e.target.value;
       if (e.key === 'Enter') {
         newContents.push(['_']);
       } else {
-        newContents[ix[0]].push('_');
+        newContents[ix.line].push('_');
       }
       this.setState({
         contents: newContents
@@ -55,22 +55,24 @@ class Frame extends Component {
   }
 
   renderLines(lines) {
-    return lines.map( (line, ixLine) => this.renderLine(line, ixLine) );
+    return lines.map( (line, ix) => this.renderLine(line, ix) );
   }
 
-  renderLine(line, ixLine) {
-    return (<CodeLine tokens={this.renderTokens(line, ixLine)} />);
+  renderLine(line, ix) {
+    const key = ix.toString();
+    return (<CodeLine key={key} tokens={this.renderTokens(line, ix)} />);
   }
 
   renderTokens(tokens, ixLine) {
-    return tokens.map( (token, ixToken) => this.renderToken(token, [ixLine, ixToken]) );
+    return tokens.map( (token, ix) => this.renderToken(token, {line: ixLine, token: ix}) );
   }
 
   renderToken(token, ix) {
+    const key = ix ? ix.token.toString() : '';
     if (token === '_') {
-      return (<TokenInput onKey={this.handleKey(ix)}/>);
+      return (<TokenInput key={key} value='' onKey={this.handleKey(ix)}/>);
     } else {
-      return (<Token token={token} />);
+      return (<Token key={key} token={token} />);
     }
   }
 
@@ -87,7 +89,7 @@ function Token(props) {
 class TokenInput extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {value: props.value};
 
     this.handleKey = props.onKey;
     this.handleChange = this.handleChange.bind(this);

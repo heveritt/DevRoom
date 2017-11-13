@@ -56,3 +56,10 @@ class Operation {
     this.args = props.args;
   }
 }
+
+class Procedure {
+
+  constructor(props) {
+    this.instructions = props.instructions;
+  }
+}

@@ -1,6 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
 import DevRoom from './dev-room';
+import { renderApplication } from './renderer';
 
-ReactDOM.render(<DevRoom />, document.getElementById('root'));
+renderApplication(DevRoom, document.getElementById('root'));

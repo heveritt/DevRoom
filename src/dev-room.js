@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import { Component, renderBlock , renderInLine, renderHtmlInput, renderComponent} from './renderer';
 import Keyboard from './keyboard';
 import './dev-room.css';
 
 class DevRoom extends Component {
   render() {
     return (
-      <div className="dev-room">
-        <Frame />
-      </div>
+      renderBlock('dev-room',
+        renderComponent(Frame, null)
+      )
     );
   }
 }
@@ -24,17 +24,14 @@ class Frame extends Component {
   }
 
   render() {
-    var node = this.renderToken(this.state.node);
-    var contexts = this.renderTokens(this.state.contexts);
-    var contents = this.renderLines(this.state.contents);
     return (
-      <div className="frame">
-        <div className="frame-header">
-          <div className="frame-node">{node}</div>
-          <div className="frame-contexts">{contexts}</div>
-        </div>
-        <div className="frame-contents">{contents}</div>
-      </div>
+      renderBlock('frame',
+        renderBlock('frame-header',
+          renderBlock('frame-node', this.renderToken(this.state.node)), 
+          renderBlock('frame-contexts', this.renderTokens(this.state.contexts)) 
+        ),
+        renderBlock('frame-contents', this.renderLines(this.state.contents))
+      )
     );
   }
 
@@ -60,7 +57,7 @@ class Frame extends Component {
 
   renderLine(line, ix) {
     const key = ix.toString();
-    return (<CodeLine key={key} tokens={this.renderTokens(line, ix)} />);
+    return renderComponent(CodeLine, {key: key, tokens: this.renderTokens(line, ix)});
   }
 
   renderTokens(tokens, ixLine) {
@@ -70,23 +67,23 @@ class Frame extends Component {
   renderToken(token, ix) {
     const key = ix ? ix.token.toString() : '';
     if (token === '_') {
-      return (<TokenInput key={key} value='' onKey={this.handleKey(ix)}/>);
+      return renderComponent(TokenInput, {key: key, value: '', onKey: this.handleKey(ix)});
     } else {
-      return (<Token key={key} token={token} />);
+      return renderComponent(Token, {key: key, token: token});
     }
   }
 
 }
 
 function CodeLine(props) {
-  return (<div className="code-line">{props.tokens}</div>);
+  return renderBlock('code-line', props.tokens);
 }
 
 function Token(props) {
-  return (<span className="token">{props.token}</span>);
+  return renderInLine('token', props.token);
 }
     
-class TokenInput extends React.Component {
+class TokenInput extends Component {
   constructor(props) {
     super(props);
     this.state = {value: props.value};
@@ -101,16 +98,14 @@ class TokenInput extends React.Component {
   }
 
   render() {
-    return (
-        <input
-          className="token"
-          autoFocus
-          value={this.state.value}
-          size={Math.max(this.state.value.length, 1)} // html does not allow zero
-          onChange={this.handleChange}
-          onKeyDown={this.handleKey}
-        />
-    );
+    return renderHtmlInput({
+             className: 'token',
+             autoFocus: 'autofocus',
+             value: this.state.value,
+             size: Math.max(this.state.value.length, 1), // html does not allow zero
+             onChange: this.handleChange,
+             onKeyDown: this.handleKey
+           });
   }
 }
 

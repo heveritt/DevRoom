@@ -33,6 +33,15 @@
   padding: 3px;
 }
 
+/* Show sub-expressions as bracketed to emphasise order of evaluation */
+.expression > .expression {
+  margin-left: 1px;
+  border-left: 1px solid grey;
+  margin-right: 1px;
+  border-right: 1px solid grey;
+  border-radius: 5px;
+}
+ 
 .token {
   margin: 0px 2px;
   padding: 0px 3px;

@@ -19,7 +19,19 @@ class Frame extends Component {
     this.state = {
       node: 'grid',
       contexts: ['Franca', 'DevRoom', 'SudokuMate'],
-      contents: [['x', '=', '1'], ['y', '=', 'x', '+', '3', '*', '5', '_']]
+      contents: [
+        {
+          left: 'x', operator: '=', right: '1'
+        }, 
+        {
+          left: 'y', operator: '=', right: {
+            left: {
+              left: 'x', operator: '*', right: '3'
+            },
+            operator: '+', right: '5'
+          }
+        }
+      ]
     };
   }
 
@@ -57,7 +69,7 @@ class Frame extends Component {
 
   renderLine(line, ix) {
     const key = ix.toString();
-    return renderComponent(CodeLine, {key: key, tokens: this.renderTokens(line, ix)});
+    return renderComponent(CodeLine, {key: key, number: ix + 1, data: line});
   }
 
   renderTokens(tokens, ixLine) {
@@ -69,18 +81,30 @@ class Frame extends Component {
     if (token === '_') {
       return renderComponent(TokenInput, {key: key, value: '', onKey: this.handleKey(ix)});
     } else {
-      return renderComponent(Token, {key: key, token: token});
+      return renderComponent(Token, {key: key, data: token});
     }
   }
 
 }
 
+function renderData(data) {
+  if (typeof data === 'object') {
+    return renderComponent(Expression, {data: data});
+  } else {
+    return renderComponent(Token, {data: data});
+  }
+}
+  
 function CodeLine(props) {
-  return renderBlock('code-line', props.tokens);
+  return renderBlock('code-line', '' + props.number + ': ', renderData(props.data));
+}
+
+function Expression(props) {
+  return renderInLine('expression', renderData(props.data.left), renderData(props.data.operator), renderData(props.data.right));
 }
 
 function Token(props) {
-  return renderInLine('token', props.token);
+  return renderInLine('token', props.data);
 }
     
 class TokenInput extends Component {

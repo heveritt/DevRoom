@@ -1,12 +1,28 @@
 import { Component, renderBlock , renderInLine, renderHtmlInput, renderComponent} from './renderer';
 import Keyboard from './keyboard';
+import Model from './model';
 import './dev-room.css';
 
 class DevRoom extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      node: 'grid',
+      contexts: ['Franca', 'DevRoom', 'SudokuMate'],
+      model: new Model()
+    } 
+  }
+
   render() {
+    const props = {
+      node: this.state.node,
+      contexts: this.state.contexts,
+      model: this.state.model
+    }
     return (
       renderBlock('dev-room',
-        renderComponent(Frame, null)
+        renderComponent(Frame, props)
       )
     );
   }
@@ -14,24 +30,10 @@ class DevRoom extends Component {
 
 class Frame extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      node: 'grid',
-      contexts: ['Franca', 'DevRoom', 'SudokuMate'],
-      contents: [
-        {
-          left: 'x', operator: '=', right: '1'
-        }, 
-        {
-          left: 'y', operator: '=', right: {
-            left: {
-              left: 'x', operator: '*', right: '3'
-            },
-            operator: '+', right: '5'
-          }
-        }
-      ]
+      contents: this.props.model.compileView(this.props.node, this.props.contexts)
     };
   }
 
@@ -39,8 +41,8 @@ class Frame extends Component {
     return (
       renderBlock('frame',
         renderBlock('frame-header',
-          renderBlock('frame-node', this.renderToken(this.state.node)), 
-          renderBlock('frame-contexts', this.renderTokens(this.state.contexts)) 
+          renderBlock('frame-node', this.renderToken(this.props.node)), 
+          renderBlock('frame-contexts', this.renderTokens(this.props.contexts)) 
         ),
         renderBlock('frame-contents', this.renderLines(this.state.contents))
       )
@@ -69,7 +71,7 @@ class Frame extends Component {
 
   renderLine(line, ix) {
     const key = ix.toString();
-    return renderComponent(CodeLine, {key: key, number: ix + 1, data: line});
+    return renderComponent(CodeLine, {key: key, data: line});
   }
 
   renderTokens(tokens, ixLine) {
@@ -96,7 +98,7 @@ function renderData(data) {
 }
   
 function CodeLine(props) {
-  return renderBlock('code-line', '' + props.number + ': ', renderData(props.data));
+  return renderBlock('code-line', renderData(props.data));
 }
 
 function Expression(props) {

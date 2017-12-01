@@ -1,13 +1,6 @@
-import Serializer from './serializer';
+//import Serializer from './serializer';
 
 class Model {
-
-  constructor(json) {
-    this.state = {
-      focus: 'grid',
-      contexts: ['Franca', 'DevRoom', 'SudokuMate'],
-    };
-  }
 
   static import(json) {
     return new Model(json);
@@ -17,43 +10,48 @@ class Model {
     return 'json-stram';
   }
 
-  getView(frame) {
-    return [['x', '=', '1'], ['y', '=', 'x', '+', '3', '*', '5', '_']];
+  compileView(node, contexts) {
+    return [
+      {
+        left: 'x', operator: '=', right: '1'
+      },
+      {
+        left: 'y', operator: '=', right: {
+          left: {
+            left: 'x', operator: '*', right: '3'
+          },
+          operator: '+', right: '5'
+        }
+      }
+    ];
   }
  
-  getPublicProperties(context, klass) {
-    return ['length', 'width'];
-  }
- 
-  getProperties(context, klass) {
-    return ['length', 'width'];
-  }
- 
-  getPublicOperations(context, klass) {
-    return ['length', 'width'];
-  }
- 
-  getOperations(context, klass) {
-    return ['length', 'width'];
-  }
 }
 
 export default Model;
-
+/*
 class Nodule {
 
   constructor(props) {
     this.attributes = props.attributes;
     this.operations = props.operations;
   }
+
+  getAttributes() {
+    return this.attributes;
+  }
+ 
+  getOperations() {
+    return this.operations;
+  }
 }
 
 class Operation {
 
   constructor(props) {
-    this.context = props.context;
-    this.operation = props.operation;
-    this.args = props.args;
+    this.operator = props.operator;
+    this.operand = props.operand;
+    this.qualifiers = props.qualifiers;
   }
 }
 
@@ -63,3 +61,4 @@ class Procedure {
     this.instructions = props.instructions;
   }
 }
+*/

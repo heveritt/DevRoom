@@ -5,7 +5,7 @@
 }
 
 .frame {
-  border: 3px solid grey;
+  border: 3px solid green;
   border-radius: 5px;
   height: 100%;
 }
@@ -13,8 +13,8 @@
 .frame-header {
   display: flex;
   justify-content: space-between;
-  background: grey;
-  border-bottom: 3px solid grey;
+  background: green;
+  border-bottom: 3px solid green;
   padding: 3px;
   width: 100%;
 }
@@ -33,19 +33,22 @@
   padding: 3px;
 }
 
+.expression {
+  display: inline-block;
+  padding: 2px;
+}
+
 /* Show sub-expressions as bracketed to emphasise order of evaluation */
 .expression > .expression {
-  margin-left: 1px;
-  border-left: 1px solid grey;
-  margin-right: 1px;
-  border-right: 1px solid grey;
-  border-radius: 5px;
+  border: 1px solid grey;
+  border-radius: 10px;
 }
  
 .token {
   margin: 0px 2px;
   padding: 0px 3px;
   text-align: center;
+  color: white;
 }
 
 .token:hover {
@@ -59,13 +62,6 @@ input.token {
   text-align: start;
 }
 
-/*
-.kbd-navigation .square:focus {
-  background: #ddd;
+.line-number {
+  color: grey;
 }
-
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
-}*/

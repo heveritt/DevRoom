@@ -1,4 +1,4 @@
-import { Component, renderBlock , renderInLine, renderHtmlInput, renderComponent} from './renderer';
+import {Component, render} from './renderer';
 import Keyboard from './keyboard';
 import Model from './model';
 import './dev-room.css';
@@ -10,19 +10,20 @@ class DevRoom extends Component {
     this.state = {
       node: 'grid',
       contexts: ['Franca', 'DevRoom', 'SudokuMate'],
-      model: new Model()
+      model: new Model({})
     } 
   }
 
   render() {
-    const props = {
+    const frame = {
+      className: 'frame',
       node: this.state.node,
       contexts: this.state.contexts,
       model: this.state.model
     }
     return (
-      renderBlock('dev-room',
-        renderComponent(Frame, props)
+      render.block('dev-room',
+        render.component(frame)
       )
     );
   }
@@ -32,19 +33,20 @@ class Frame extends Component {
 
   constructor(props) {
     super(props);
+    var contents = props.model.compileView(props.node, props.contexts);
     this.state = {
-      contents: this.props.model.compileView(this.props.node, this.props.contexts)
+      contents: contents
     };
   }
 
   render() {
     return (
-      renderBlock('frame',
-        renderBlock('frame-header',
-          renderBlock('frame-node', this.renderToken(this.props.node)), 
-          renderBlock('frame-contexts', this.renderTokens(this.props.contexts)) 
+      render.block('frame',
+        render.block('frame-header',
+          render.block('frame-node', render.component(this.props.node)), 
+          render.block('frame-contexts', render.component(this.props.contexts)) 
         ),
-        renderBlock('frame-contents', this.renderLines(this.state.contents))
+        render.block('frame-contents', render.component(this.state.contents))
       )
     );
   }
@@ -65,54 +67,24 @@ class Frame extends Component {
     }
   }
 
-  renderLines(lines) {
-    return lines.map( (line, ix) => this.renderLine(line, ix) );
-  }
-
-  renderLine(line, ix) {
-    const key = ix.toString();
-    return renderComponent(CodeLine, {key: key, data: line});
-  }
-
-  renderTokens(tokens, ixLine) {
-    return tokens.map( (token, ix) => this.renderToken(token, {line: ixLine, token: ix}) );
-  }
-
-  renderToken(token, ix) {
-    const key = ix ? ix.token.toString() : '';
-    if (token === '_') {
-      return renderComponent(TokenInput, {key: key, value: '', onKey: this.handleKey(ix)});
-    } else {
-      return renderComponent(Token, {key: key, data: token});
-    }
-  }
-
 }
 
-function renderData(data) {
-  if (typeof data === 'object') {
-    return renderComponent(Expression, {data: data});
-  } else {
-    return renderComponent(Token, {data: data});
-  }
-}
-  
 function CodeLine(props) {
-  return renderBlock('code-line', renderData(props.data));
+  return render.block('code-line', render.inline('line-number', (props.ix + 1) + ':'), render.component(props.instruction));
 }
 
 function Expression(props) {
-  return renderInLine('expression', renderData(props.data.left), renderData(props.data.operator), renderData(props.data.right));
+  return render.inline('expression', render.component(props.left), render.component(props.operator), render.component(props.right));
 }
 
 function Token(props) {
-  return renderInLine('token', props.data);
+  return render.inline('token', props.data);
 }
-    
-class TokenInput extends Component {
+
+class Input extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: props.value};
+    this.state = {value: props.data};
 
     this.handleKey = props.onKey;
     this.handleChange = this.handleChange.bind(this);
@@ -121,18 +93,26 @@ class TokenInput extends Component {
   handleChange(e) {
     const mappedValue = Keyboard.mapToken(e.target.value);
     this.setState({value: mappedValue});
-  }
+  }   
 
   render() {
-    return renderHtmlInput({
-             className: 'token',
-             autoFocus: 'autofocus',
-             value: this.state.value,
-             size: Math.max(this.state.value.length, 1), // html does not allow zero
-             onChange: this.handleChange,
-             onKeyDown: this.handleKey
-           });
+    return render.input({
+           className: 'input',
+           autoFocus: 'autofocus',
+           value: this.state.value,
+           size: Math.max(this.state.value.length, 1), // html does not allow zero
+           onChange: this.handleChange,
+           onKeyDown: this.handleKey
+         });
   }
+}
+
+render.components = {
+  'frame': Frame,
+  'codeline': CodeLine,
+  'expression': Expression,
+  'token': Token,
+  'input': Input
 }
 
 export default DevRoom;

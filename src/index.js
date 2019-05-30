@@ -1,5 +1,5 @@
 import './index.css';
 import DevRoom from './dev-room';
-import { renderApplication } from './renderer';
+import { render } from './renderer';
 
-renderApplication(DevRoom, document.getElementById('root'));
+render.application(DevRoom, document.getElementById('root'));

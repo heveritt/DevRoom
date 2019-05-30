@@ -2,34 +2,68 @@
 
 class Model {
 
+  constructor(props) {
+    this.sememes = props.sememes;
+    this.nodes = props.nodes;
+  }
+
   static import(json) {
     return new Model(json);
   }
   
   static export(model) {
-    return 'json-stram';
+    return 'json-stream';
   }
 
   compileView(node, contexts) {
     return [
       {
-        left: 'x', operator: '=', right: '1'
+        className: 'codeline', instruction: {
+          className: 'expression', left: 'x', operator: '=', right: '1'
+        }
       },
       {
-        left: 'y', operator: '=', right: {
-          left: {
-            left: 'x', operator: '*', right: '3'
-          },
-          operator: '+', right: '5'
+        className: 'codeline', instruction: {
+          className: 'expression', left: 'y', operator: '=', right: {
+            className: 'expression', left: {
+              className: 'expression', left: 'x', operator: '*', right: '3'
+            }, operator: '+', right: '5'
+          }
         }
+      },
+      {
+        className: 'codeline', instruction: '_'
       }
     ];
   }
+
+  translate(language, version) {
+    
+  }
  
 }
-
-export default Model;
 /*
+class Expression {
+  constructor(props) {
+    this.left = props.left;
+    this.operator = props.operator;
+    this.right = props.right;
+  }
+}
+
+class Sememe {
+  constructor(props) {
+    this.morpheme = props.morpheme;
+  }
+}
+
+class Morpheme {
+  constructor(props) {
+    this.token = props.token;
+    this.symbolic = props.symbolic;
+  }
+}
+
 class Nodule {
 
   constructor(props) {
@@ -46,19 +80,30 @@ class Nodule {
   }
 }
 
-class Operation {
-
-  constructor(props) {
-    this.operator = props.operator;
-    this.operand = props.operand;
-    this.qualifiers = props.qualifiers;
-  }
-}
-
 class Procedure {
 
   constructor(props) {
     this.instructions = props.instructions;
   }
 }
+
+class instruction {
+  
+  constructor(props) {
+    this.declaration = props.declaration;
+    this.operation = props.operation;
+  }
+}
+
+class Operation {
+
+  constructor(props) {
+    this.left = props.left;
+    this.operator = props.operator;
+    this.right = props.right;
+    this.qualifiers = props.qualifiers;
+  }
+}
+
 */
+export default Model;

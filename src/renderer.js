@@ -23,27 +23,21 @@ var render = {
 	  ReactDOM.render(React.createElement(appClass, null, null), parentElement);
 	},
 
-	component: function (component, ix) {
- 
-	  if (typeof component === 'object') {
-	    if (Array.isArray(component)) {
-	      return component.map( (element, ix) => this.component(element, ix));
-	    } else {
-	      if (ix !== undefined) {
-	        component.ix = ix;
-	        component.key = ix.toString();
-	      }
-	      return React.createElement(this.components[component.className], component, null);
-	    }
-	  } else {
-	    if (component !== '_') {
-	      let props = {data: component}
-	      if (ix !== undefined) props.key = ix.toString();
-	      return React.createElement(this.components['token'], props, null);
-	    } else {
-	      return React.createElement(this.components['input'], {data: ''}, null);
-	    }
-	  }
+	component: function (data, handlers={}) {
+      if (Array.isArray(data)) {
+        return data.map( (element, ix) => {
+        	element.ix = ix;
+        	element.key = ix.toString();
+        	return this.component(element, handlers);
+        });
+      } else {
+      	data.handlers = handlers;
+        return React.createElement(this.components[data.className], data, null);
+      }
+	},
+
+	child: function(parent, role) {
+		return this.component(parent[role], parent.handlers);
 	}
 }
 

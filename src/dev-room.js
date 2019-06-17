@@ -8,8 +8,12 @@ class DevRoom extends Component {
   constructor() {
     super();
     this.state = {
-      node: 'grid',
-      contexts: ['Franca', 'DevRoom', 'SudokuMate'],
+      node: {className: 'token', value: 'grid'},
+      contexts: [
+        {className: 'token', value: 'Franca'},
+        {className: 'token', value: 'DevRoom'},
+        {className: 'token', value: 'SudokuMate'}
+      ],
       model: new Model({})
     } 
   }
@@ -33,9 +37,8 @@ class Frame extends Component {
 
   constructor(props) {
     super(props);
-    var contents = props.model.compileView(props.node, props.contexts);
     this.state = {
-      contents: contents
+      contents: props.model.compileView(props.node, props.contexts)
     };
   }
 
@@ -46,47 +49,43 @@ class Frame extends Component {
           render.block('frame-node', render.component(this.props.node)), 
           render.block('frame-contexts', render.component(this.props.contexts)) 
         ),
-        render.block('frame-contents', render.component(this.state.contents))
+        render.block('frame-contents', render.component(this.state.contents, {onKey: this.handleKey}))
       )
     );
   }
 
-  handleKey = (ix) => (e) => {
+  handleKey = (reference) => (e) => {
     if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
       e.preventDefault();
-      var newContents = this.state.contents.slice();
-      newContents[ix.line][ix.token] = e.target.value;
-      if (e.key === 'Enter') {
-        newContents.push(['_']);
-      } else {
-        newContents[ix.line].push('_');
-      }
-      this.setState({
-        contents: newContents
-      });
+      this.props.model.processInput(reference, e.target.value, (e.key === 'Enter'));
+      this.refresh();
     }
+  }
+
+  refresh() {
+    this.setState(this.props.model.compileView(this.props.node, this.props.contexts));
   }
 
 }
 
 function CodeLine(props) {
-  return render.block('code-line', render.inline('line-number', (props.ix + 1) + ':'), render.component(props.instruction));
+  return render.block('code-line', render.inline('line-number', (props.ix + 1) + ':'), render.child(props, 'instruction'));
 }
 
 function Expression(props) {
-  return render.inline('expression', render.component(props.left), render.component(props.operator), render.component(props.right));
+  return render.inline('expression', render.child(props, 'left'), render.child(props, 'operator'), render.child(props, 'right'));
 }
 
 function Token(props) {
-  return render.inline('token', props.data);
+  return render.inline('token', props.value);
 }
 
 class Input extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: props.data};
+    this.state = {value: props.value};
 
-    this.handleKey = props.onKey;
+    this.handleKey = props.handlers.onKey(props.reference);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -109,7 +108,7 @@ class Input extends Component {
 
 render.components = {
   'frame': Frame,
-  'codeline': CodeLine,
+  'code-line': CodeLine,
   'expression': Expression,
   'token': Token,
   'input': Input

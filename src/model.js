@@ -18,23 +18,77 @@ class Model {
   compileView(node, contexts) {
     return [
       {
-        className: 'codeline', instruction: {
-          className: 'expression', left: 'x', operator: '=', right: '1'
-        }
-      },
-      {
-        className: 'codeline', instruction: {
-          className: 'expression', left: 'y', operator: '=', right: {
-            className: 'expression', left: {
-              className: 'expression', left: 'x', operator: '*', right: '3'
-            }, operator: '+', right: '5'
+        className: 'code-line',
+        instruction: {
+          className: 'expression',
+          left: {
+            className: 'token',
+            value: 'x'
+          },
+          operator: {
+            className: 'token',
+            value: '='
+          },
+          right: {
+            className: 'token',
+            value: '1'
           }
         }
       },
       {
-        className: 'codeline', instruction: '_'
+        className: 'code-line',
+        instruction: {
+          className: 'expression',
+          left: {
+            className: 'token',
+            value: 'y'
+          },
+          operator: {
+            className: 'token',
+            value: '='
+          },
+          right: {
+            className: 'expression',
+            left: {
+              className: 'expression',
+              left: {
+                className: 'token',
+                value: 'x',
+              },
+              operator: {
+                className: 'token',
+                value: '*'
+              },
+              right: {
+                className: 'input',
+                reference: 0,
+                value: ''
+              }
+            },
+            operator: {
+              className: 'token',
+              value: '+'
+            },
+            right: {
+              className: 'token',
+              value: '5'
+            }
+          }
+        }
+      },
+      {
+        className: 'code-line',
+        instruction: {
+          className: 'input',
+          reference: 1,
+          value: ''
+        }
       }
     ];
+  }
+
+  processInput(reference, value, newLine) {
+      console.log('Ref: ' + reference + ' value: ' + value + (newLine ? ' +' : ' -'));
   }
 
   translate(language, version) {

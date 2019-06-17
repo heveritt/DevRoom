@@ -5,40 +5,40 @@ class Component extends React.Component {}
 
 var render = {
 
-	components: {},
+    components: {},
 
-	block: function(className, ...children) {
-	  return React.createElement('div', {className: className}, ...children);
-	},
+    block: function(className, ...children) {
+        return React.createElement('div', {className: className}, ...children);
+    },
 
-	inline: function (className, ...children) {
-	  return React.createElement('span', {className: className, tabIndex: "0"}, ...children);
-	},
+    inline: function (className, ...children) {
+        return React.createElement('span', {className: className, tabIndex: "0"}, ...children);
+    },
 
-	input: function(props) {
-	  return React.createElement('input', props, null);
-	},
+    input: function(props) {
+        return React.createElement('input', props, null);
+    },
 
-	application: function (appClass, parentElement) {
-	  ReactDOM.render(React.createElement(appClass, null, null), parentElement);
-	},
+    application: function (appClass, parentElement) {
+        ReactDOM.render(React.createElement(appClass, null, null), parentElement);
+    },
 
-	component: function (data, handlers={}) {
-      if (Array.isArray(data)) {
-        return data.map( (element, ix) => {
-        	element.ix = ix;
-        	element.key = ix.toString();
-        	return this.component(element, handlers);
-        });
-      } else {
-      	data.handlers = handlers;
-        return React.createElement(this.components[data.className], data, null);
-      }
-	},
+    component: function (data, handlers={}) {
+        if (Array.isArray(data)) {
+            return data.map( (element, ix) => {
+                element.ix = ix;
+                element.key = ix.toString();
+                return this.component(element, handlers);
+            });
+        } else {
+            data.handlers = handlers;
+            return React.createElement(this.components[data.className], data, null);
+        }
+    },
 
-	child: function(parent, role) {
-		return this.component(parent[role], parent.handlers);
-	}
+    child: function(parent, role) {
+        return this.component(parent[role], parent.handlers);
+    }
 }
 
 export {Component, render};

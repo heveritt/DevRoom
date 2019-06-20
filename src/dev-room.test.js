@@ -1,7 +1,7 @@
 import DevRoom from './dev-room';
-import { renderApplication } from './renderer';
+import { render } from './renderer';
 
 it('renders without crashing', () => {
     const div = document.createElement('div');
-    renderApplication(DevRoom, div);
+    render.application(DevRoom, div);
 });

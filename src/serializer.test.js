@@ -95,7 +95,7 @@ test('does not treat an array of a string and an object as a class', () => {
 });
 
 test('throws on attempt to de-serialize an unmapped class', () => {
-    const serialization = '[\"class: Pitcairn\",{\"year\":1790}]';
+    const serialization = '{\"className\":\"Pitcairn\",\"year\":1790}';
     expect(() => {serializer.deserialize(serialization);}).toThrow();
 });
 

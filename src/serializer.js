@@ -8,8 +8,8 @@ class Serializer {
         return JSON.stringify(instance, this.replacer());
     }
 
-    deserialize(jsonString) {
-        return JSON.parse(jsonString, this.reviver());
+    deserialize(jsonString, reconstruct=true) {
+        return JSON.parse(jsonString, this.reviver(reconstruct));
     }
 
     replacer() {
@@ -32,7 +32,7 @@ class Serializer {
                     const className = value.constructor.name;
                     if (classMap[className]) {
                         // Need to shallow copy object to avoid infinite recursion
-                        return ['class: ' + className, Object.assign({}, value)];
+                        return Object.assign({className: className}, value);
                     }
                 }
                 return value;
@@ -45,17 +45,20 @@ class Serializer {
         }
     }
 
-    reviver() {
+    reviver(reconstruct) {
         const classMap = this.classMap;
         return function restoreClass(key, value) {
-            if (Array.isArray(value) && typeof value[0] === 'string' && value[0].slice(0, 7) === 'class: ') {
-                const className = value[0].slice(7);
-                const properties = value[1];
-                const constructor = classMap[className];
-                if (constructor) {
-                    return new constructor(properties);
+            if (typeof value === 'object' && value.className) {
+                const classConstructor = classMap[value.className];
+                if (classConstructor) {
+                    if (reconstruct) {
+                        return new classConstructor(value);
+                    } else {
+                        value.classConstructor = classConstructor;
+                        return value;
+                    }
                 } else {
-                    throw new Error('Atttempt to de-serialize unmapped class: ' + className);
+                    throw new Error('Atttempt to de-serialize unmapped class: ' + value.className);
                 }
             }
             return value;

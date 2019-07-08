@@ -16,7 +16,7 @@ class Model {
     }
 
     compileView(node, contexts) {
-        return [
+        return JSON.stringify([
             {
                 className: 'code-line',
                 instruction: {
@@ -84,7 +84,7 @@ class Model {
                     value: ''
                 }
             }
-        ];
+        ]);
     }
 
     processInput(reference, value, newLine) {

@@ -1,4 +1,5 @@
 import {Component, render} from './renderer';
+import Serializer from './serializer';
 import Keyboard from './keyboard';
 import Model from './model';
 import './dev-room.css';
@@ -49,7 +50,7 @@ class Frame extends Component {
                     render.block('frame-node', render.component(this.props.node)), 
                     render.block('frame-contexts', render.component(this.props.contexts)) 
                 ),
-                render.block('frame-contents', render.component(this.state.contents, {onKey: this.handleKey}))
+                render.block('frame-contents', render.component(JSON.parse(this.state.contents), {onKey: this.handleKey}))
             )
         );
     }

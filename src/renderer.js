@@ -5,8 +5,6 @@ class Component extends React.Component {}
 
 var render = {
 
-    components: {},
-
     block: function(className, ...children) {
         return React.createElement('div', {className: className}, ...children);
     },
@@ -32,7 +30,7 @@ var render = {
             });
         } else {
             data.handlers = handlers;
-            return React.createElement(this.components[data.className], data, null);
+            return React.createElement(data.classConstructor, data, null);
         }
     },
 

@@ -9,18 +9,15 @@ class DevRoom extends Component {
     constructor() {
         super();
         this.state = {
-            node: {className: 'token', value: 'grid'},
-            contexts: [
-                {className: 'token', value: 'Franca'},
-                {className: 'token', value: 'DevRoom'},
-                {className: 'token', value: 'SudokuMate'}
-            ],
+            node: deserialize('{"className": "token", "value": "grid"}'),
+            contexts: deserialize('[{"className": "token", "value": "Franca"},{"className": "token", "value": "DevRoom"},{"className": "token", "value": "SudokuMate"}]'),
             model: new Model({})
         } 
     }
 
     render() {
         const frame = {
+            classConstructor: Frame,
             className: 'frame',
             node: this.state.node,
             contexts: this.state.contexts,
@@ -38,9 +35,7 @@ class Frame extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            contents: props.model.compileView(props.node, props.contexts)
-        };
+        this.state = this.getContents();
     }
 
     render() {
@@ -50,7 +45,7 @@ class Frame extends Component {
                     render.block('frame-node', render.component(this.props.node)), 
                     render.block('frame-contexts', render.component(this.props.contexts)) 
                 ),
-                render.block('frame-contents', render.component(JSON.parse(this.state.contents), {onKey: this.handleKey}))
+                render.block('frame-contents', render.component(this.state.contents, {onKey: this.handleKey}))
             )
         );
     }
@@ -59,12 +54,14 @@ class Frame extends Component {
         if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
             e.preventDefault();
             this.props.model.processInput(reference, e.target.value, (e.key === 'Enter'));
-            this.refresh();
+            this.setState(this.getContents());
         }
     }
 
-    refresh() {
-        this.setState(this.props.model.compileView(this.props.node, this.props.contexts));
+    getContents() {
+        return {
+            contents: deserialize(this.props.model.compileView(this.props.node, this.props.contexts))
+        };
     }
 
 }
@@ -107,12 +104,18 @@ class Input extends Component {
     }
 }
 
-render.components = {
+const classMap = {
     'frame': Frame,
     'code-line': CodeLine,
     'expression': Expression,
     'token': Token,
     'input': Input
+};
+
+const serializer = new Serializer(classMap);
+
+function deserialize(jsonString) {
+    return serializer.deserialize(jsonString, false);
 }
 
 export default DevRoom;

@@ -31,7 +31,7 @@ class Model {
                     },
                     right: {
                         className: 'token',
-                        value: '1'
+                        value: '4'
                     }
                 }
             },

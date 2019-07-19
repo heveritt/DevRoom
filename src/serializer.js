@@ -13,9 +13,9 @@ class Serializer {
     }
 
     replacer() {
-        const circularityDetector = function() {
+        const circularityDetector = ( () => {
             const alreadySerialized = new WeakSet();
-            return function throwIfCircular(value) {
+            const throwIfCircular = (value) => {
                 if (typeof value === 'object') {
                     if (alreadySerialized.has(value)) {
                         throw new Error('Circular dependency detected - class: ' + value.constructor.name);
@@ -23,33 +23,30 @@ class Serializer {
                     alreadySerialized.add(value);
                 }
             }
-        }();
+            return throwIfCircular;
+        } )();
 
-        const classMap = this.classMap;
-        const classStorer = function() {
-            return function storeClass(value) {
-                if (typeof value === 'object') {
-                    const className = value.constructor.name;
-                    if (classMap[className]) {
-                        // Need to shallow copy object to avoid infinite recursion
-                        return Object.assign({className: className}, value);
-                    }
+        const classStorer = (value) => {
+            if (typeof value === 'object') {
+                const className = value.constructor.name;
+                if (this.classMap[className]) {
+                    // Need to shallow copy object to avoid infinite recursion
+                    return Object.assign({className: className}, value);
                 }
-                return value;
             }
-        }();
+            return value;
+        };
 
-        return function(key, value) {
+        return (key, value) => {
             circularityDetector(value);
             return classStorer(value);
         }
     }
 
     reviver(reconstruct) {
-        const classMap = this.classMap;
-        return function restoreClass(key, value) {
+        const classRestorer = (value) => {
             if (typeof value === 'object' && value.className) {
-                const classConstructor = classMap[value.className];
+                const classConstructor = this.classMap[value.className];
                 if (classConstructor) {
                     if (reconstruct) {
                         return new classConstructor(value);
@@ -63,6 +60,8 @@ class Serializer {
             }
             return value;
         }
+
+        return (key, value) => classRestorer(value);
     }
 
 }

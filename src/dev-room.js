@@ -2,32 +2,50 @@ import {Component, render} from './renderer';
 import Serializer from './serializer';
 import Keyboard from './keyboard';
 import Model from './model';
+import Database from './db';
 import './dev-room.css';
+
+const db = new Database();
 
 class DevRoom extends Component {
 
     constructor() {
         super();
         this.state = {
-            node: deserialize('{"className": "token", "value": "grid"}'),
+            node: deserialize('{"className": "token", "value": "transform"}'),
             contexts: deserialize('[{"className": "token", "value": "Franca"},{"className": "token", "value": "DevRoom"},{"className": "token", "value": "SudokuMate"}]'),
-            model: new Model({})
+            model: null,
+            error: null
         } 
     }
 
+    componentDidMount() {
+        db.loadModel()
+        .then(json => this.setState({model: Model.import(json)}))
+        .catch(error => this.setState({error: error}));
+    }
+
     render() {
-        const frame = {
-            classConstructor: Frame,
-            className: 'frame',
-            node: this.state.node,
-            contexts: this.state.contexts,
-            model: this.state.model
+        if (this.state.model) {
+            const frame = {
+                classConstructor: Frame,
+                className: 'frame',
+                node: this.state.node,
+                contexts: this.state.contexts,
+                model: this.state.model
+            };
+            return (
+                render.block('dev-room',
+                    render.component(frame)
+                )
+            );
+        } else {
+            if (this.state.error) {
+                return render.block('dev-room', 'Error: ' + this.state.error.message);
+            } else {
+                return render.block('dev-room', 'Loading Source Model...');
+            }
         }
-        return (
-            render.block('dev-room',
-                render.component(frame)
-            )
-        );
     }
 }
 
@@ -54,13 +72,14 @@ class Frame extends Component {
         if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
             e.preventDefault();
             this.props.model.processInput(reference, e.target.value, (e.key === 'Enter'));
+            // db.saveNode(2, this.props.model.getNode(this.props.node));
             this.setState(this.getContents());
         }
     }
 
     getContents() {
         return {
-            contents: deserialize(this.props.model.compileView(this.props.node, this.props.contexts))
+            contents: deserialize(this.props.model.compileView(this.props.node.value, this.props.contexts))
         };
     }
 

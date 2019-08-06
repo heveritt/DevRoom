@@ -1,0 +1,77 @@
+{
+  "sememes": [],
+  "nodes": [
+    {
+      "id": "transform",
+      "code": [
+        {
+          "className": "code-line",
+          "instruction": {
+            "className": "expression",
+            "left": {
+              "className": "token",
+              "value": "x"
+            },
+            "operator": {
+              "className": "token",
+              "value": "="
+            },
+            "right": {
+              "className": "token",
+              "value": "4"
+            }
+          }
+        },
+        {
+          "className": "code-line",
+          "instruction": {
+            "className": "expression",
+            "left": {
+              "className": "token",
+              "value": "y"
+            },
+            "operator": {
+              "className": "token",
+              "value": "="
+            },
+            "right": {
+              "className": "expression",
+              "left": {
+                "className": "expression",
+                "left": {
+                  "className": "token",
+                  "value": "x"
+                },
+                "operator": {
+                  "className": "token",
+                  "value": "*"
+                },
+                "right": {
+                  "className": "input",
+                  "reference": 0,
+                  "value": ""
+                }
+              },
+              "operator": {
+                "className": "token",
+                "value": "+"
+              },
+              "right": {
+                "className": "token",
+                "value": "5"
+              }
+            }
+          }
+        },
+        {
+          "className": "code-line",
+          "instruction": {
+            "className": "input",
+            "reference": 1,
+            "value": ""
+          }
+        }
+      ]
+    }
+  ]
+}

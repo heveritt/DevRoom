@@ -1,90 +1,31 @@
-//import Serializer from './serializer';
+import Serializer from './serializer';
 
 class Model {
 
-    constructor(props) {
-        this.sememes = props.sememes;
-        this.nodes = props.nodes;
+    constructor(sememes, nodes) {
+        this.sememes = new Map(sememes.map(sememe => [sememe.id, sememe]));
+        this.nodes = new Map(nodes.map(node => [node.id, node]));
+        console.log(this);
     }
 
     static import(json) {
-        return new Model(json);
+        console.log(json);
+        const sememes = deserialize(json.sememes);
+        const nodes = deserialize(json.nodes);
+        return new Model(sememes, nodes);
     }
     
     static export(model) {
         return 'json-stream';
     }
 
-    compileView(node, contexts) {
-        return JSON.stringify([
-            {
-                className: 'code-line',
-                instruction: {
-                    className: 'expression',
-                    left: {
-                        className: 'token',
-                        value: 'x'
-                    },
-                    operator: {
-                        className: 'token',
-                        value: '='
-                    },
-                    right: {
-                        className: 'token',
-                        value: '4'
-                    }
-                }
-            },
-            {
-                className: 'code-line',
-                instruction: {
-                    className: 'expression',
-                    left: {
-                        className: 'token',
-                        value: 'y'
-                    },
-                    operator: {
-                        className: 'token',
-                        value: '='
-                    },
-                    right: {
-                        className: 'expression',
-                        left: {
-                            className: 'expression',
-                            left: {
-                                className: 'token',
-                                value: 'x',
-                            },
-                            operator: {
-                                className: 'token',
-                                value: '*'
-                            },
-                            right: {
-                                className: 'input',
-                                reference: 0,
-                                value: ''
-                            }
-                        },
-                        operator: {
-                            className: 'token',
-                            value: '+'
-                        },
-                        right: {
-                            className: 'token',
-                            value: '5'
-                        }
-                    }
-                }
-            },
-            {
-                className: 'code-line',
-                instruction: {
-                    className: 'input',
-                    reference: 1,
-                    value: ''
-                }
-            }
-        ]);
+    getNode(id) {
+        return this.nodes.get(id);
+    }
+
+    compileView(nodeId, contexts) {
+        console.log(serialize(this.getNode(nodeId).code))
+        return serialize(this.getNode(nodeId).code);
     }
 
     processInput(reference, value, newLine) {
@@ -96,15 +37,55 @@ class Model {
     }
  
 }
-/*
+
+class CodeLine {
+    constructor(props) {
+        this.className = 'code-line';
+        this.instruction = props.instruction;
+    }
+}
+
 class Expression {
     constructor(props) {
+        this.className = 'expression';
         this.left = props.left;
         this.operator = props.operator;
         this.right = props.right;
     }
 }
 
+class Token {
+    constructor(props) {
+        this.className = 'token';
+        this.value = props.value;
+    }
+}
+
+class Input {
+    constructor(props) {
+        this.className = 'input';
+        this.value = props.value;
+    }
+}
+
+const classMap = {
+    'code-line': CodeLine,
+    'expression': Expression,
+    'token': Token,
+    'input': Input
+};
+
+const serializer = new Serializer(classMap);
+
+function deserialize(jsonString) {
+    return serializer.deserialize(jsonString);
+}
+
+function serialize(code) {
+    return serializer.serialize(code);
+}
+
+/*
 class Sememe {
     constructor(props) {
         this.morpheme = props.morpheme;

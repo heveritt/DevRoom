@@ -9,9 +9,8 @@ class Model {
     }
 
     static import(json) {
-        console.log(json);
-        const sememes = deserialize(json.sememes);
-        const nodes = deserialize(json.nodes);
+        const sememes = serializer.deserialize(json.sememes);
+        const nodes = serializer.deserialize(json.nodes);
         return new Model(sememes, nodes);
     }
     
@@ -24,8 +23,7 @@ class Model {
     }
 
     compileView(nodeId, contexts) {
-        console.log(serialize(this.getNode(nodeId).code))
-        return serialize(this.getNode(nodeId).code);
+        return serializer.serialize(this.getNode(nodeId).code);
     }
 
     processInput(reference, value, newLine) {
@@ -40,14 +38,12 @@ class Model {
 
 class CodeLine {
     constructor(props) {
-        this.className = 'code-line';
         this.instruction = props.instruction;
     }
 }
 
 class Expression {
     constructor(props) {
-        this.className = 'expression';
         this.left = props.left;
         this.operator = props.operator;
         this.right = props.right;
@@ -56,34 +52,19 @@ class Expression {
 
 class Token {
     constructor(props) {
-        this.className = 'token';
         this.value = props.value;
     }
 }
 
 class Input {
     constructor(props) {
-        this.className = 'input';
         this.value = props.value;
     }
 }
 
-const classMap = {
-    'code-line': CodeLine,
-    'expression': Expression,
-    'token': Token,
-    'input': Input
-};
+const classMap = {CodeLine, Expression, Token, Input};
 
 const serializer = new Serializer(classMap);
-
-function deserialize(jsonString) {
-    return serializer.deserialize(jsonString);
-}
-
-function serialize(code) {
-    return serializer.serialize(code);
-}
 
 /*
 class Sememe {

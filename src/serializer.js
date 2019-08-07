@@ -31,7 +31,7 @@ class Serializer {
                 const className = value.constructor.name;
                 if (this.classMap[className]) {
                     // Need to shallow copy object to avoid infinite recursion
-                    return Object.assign({className: className}, value);
+                    return Object.assign({className}, value);
                 }
             }
             return value;

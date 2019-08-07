@@ -12,8 +12,8 @@ class DevRoom extends Component {
     constructor() {
         super();
         this.state = {
-            node: deserialize('{"className": "token", "value": "transform"}'),
-            contexts: deserialize('[{"className": "token", "value": "Franca"},{"className": "token", "value": "DevRoom"},{"className": "token", "value": "SudokuMate"}]'),
+            node: deserialize('{"className": "Token", "value": "transform"}'),
+            contexts: deserialize('[{"className": "Token", "value": "Franca"},{"className": "Token", "value": "DevRoom"},{"className": "Token", "value": "SudokuMate"}]'),
             model: null,
             error: null
         } 
@@ -29,7 +29,7 @@ class DevRoom extends Component {
         if (this.state.model) {
             const frame = {
                 classConstructor: Frame,
-                className: 'frame',
+                className: 'Frame',
                 node: this.state.node,
                 contexts: this.state.contexts,
                 model: this.state.model
@@ -123,13 +123,7 @@ class Input extends Component {
     }
 }
 
-const classMap = {
-    'frame': Frame,
-    'code-line': CodeLine,
-    'expression': Expression,
-    'token': Token,
-    'input': Input
-};
+const classMap = {Frame, CodeLine, Expression, Token, Input};
 
 const serializer = new Serializer(classMap);
 

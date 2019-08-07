@@ -5,68 +5,68 @@
       "id": "transform",
       "code": [
         {
-          "className": "code-line",
+          "className": "CodeLine",
           "instruction": {
-            "className": "expression",
+            "className": "Expression",
             "left": {
-              "className": "token",
+              "className": "Token",
               "value": "x"
             },
             "operator": {
-              "className": "token",
+              "className": "Token",
               "value": "="
             },
             "right": {
-              "className": "token",
+              "className": "Token",
               "value": "4"
             }
           }
         },
         {
-          "className": "code-line",
+          "className": "CodeLine",
           "instruction": {
-            "className": "expression",
+            "className": "Expression",
             "left": {
-              "className": "token",
+              "className": "Token",
               "value": "y"
             },
             "operator": {
-              "className": "token",
+              "className": "Token",
               "value": "="
             },
             "right": {
-              "className": "expression",
+              "className": "Expression",
               "left": {
-                "className": "expression",
+                "className": "Expression",
                 "left": {
-                  "className": "token",
+                  "className": "Token",
                   "value": "x"
                 },
                 "operator": {
-                  "className": "token",
+                  "className": "Token",
                   "value": "*"
                 },
                 "right": {
-                  "className": "input",
+                  "className": "Input",
                   "reference": 0,
                   "value": ""
                 }
               },
               "operator": {
-                "className": "token",
+                "className": "Token",
                 "value": "+"
               },
               "right": {
-                "className": "token",
+                "className": "Token",
                 "value": "5"
               }
             }
           }
         },
         {
-          "className": "code-line",
+          "className": "CodeLine",
           "instruction": {
-            "className": "input",
+            "className": "Input",
             "reference": 1,
             "value": ""
           }

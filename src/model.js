@@ -9,8 +9,8 @@ class Model {
     }
 
     static import(json) {
-        const sememes = serializer.deserialize(json.sememes);
-        const nodes = serializer.deserialize(json.nodes);
+        const sememes = serializerIn.deserialize(json.sememes);
+        const nodes = serializerIn.deserialize(json.nodes);
         return new Model(sememes, nodes);
     }
     
@@ -19,11 +19,11 @@ class Model {
     }
 
     getNode(id) {
-        return this.nodes.get(id);
+        return serializer.serialize(this.nodes.get(id));
     }
 
     compileView(nodeId, contexts) {
-        return serializer.serialize(this.getNode(nodeId).code);
+        return serializer.serialize(this.nodes.get(nodeId).code);
     }
 
     processInput(reference, value, newLine) {
@@ -39,6 +39,13 @@ class Model {
 class CodeLine {
     constructor(props) {
         this.instruction = props.instruction;
+    }
+}
+
+class CodeField {
+    constructor(props) {
+        this.domain = props.domain;
+        this.value = props.value;
     }
 }
 
@@ -62,9 +69,13 @@ class Input {
     }
 }
 
-const classMap = {CodeLine, Expression, Token, Input};
+const classMap = {CodeLine, CodeField, Expression, Token, Input};
 
 const serializer = new Serializer(classMap);
+
+//const classMapV1 = Object.assign({}, classMap, {Expression: CodeField, Token: CodeField, Input: CodeField});
+
+const serializerIn = serializer;
 
 /*
 class Sememe {

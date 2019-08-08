@@ -7,58 +7,29 @@
         {
           "className": "CodeLine",
           "instruction": {
-            "className": "Expression",
-            "left": {
-              "className": "Token",
-              "value": "x"
-            },
-            "operator": {
-              "className": "Token",
-              "value": "="
-            },
-            "right": {
-              "className": "Token",
-              "value": "4"
-            }
-          }
-        },
-        {
-          "className": "CodeLine",
-          "instruction": {
-            "className": "Expression",
-            "left": {
-              "className": "Token",
-              "value": "y"
-            },
-            "operator": {
-              "className": "Token",
-              "value": "="
-            },
-            "right": {
+            "className": "CodeField",
+            "domain": "#",
+            "value": {
               "className": "Expression",
               "left": {
-                "className": "Expression",
-                "left": {
+                "className": "CodeField",
+                "domain": "#",
+                "value": {
                   "className": "Token",
                   "value": "x"
-                },
-                "operator": {
-                  "className": "Token",
-                  "value": "*"
-                },
-                "right": {
-                  "className": "Input",
-                  "reference": 0,
-                  "value": ""
                 }
               },
               "operator": {
                 "className": "Token",
-                "value": "+"
+                "value": "="
               },
               "right": {
-                "className": "Token",
-                "value": "5"
+                "className": "CodeField",
+                "domain": "#",
+                "value": {
+                  "className": "Token",
+                  "value": "4"
+                }
               }
             }
           }
@@ -66,9 +37,80 @@
         {
           "className": "CodeLine",
           "instruction": {
-            "className": "Input",
-            "reference": 1,
-            "value": ""
+            "className": "CodeField",
+            "domain": "#",
+            "value": {
+              "className": "Expression",
+              "left": {
+                "className": "CodeField",
+                "domain": "#",
+                "value": {
+                  "className": "Token",
+                  "value": "y"
+                }
+              },
+              "operator": {
+                "className": "Token",
+                "value": "="
+              },
+              "right": {
+                "className": "CodeField",
+                "domain": "#",
+                "value": {
+                  "className": "Expression",
+                  "left": {
+                    "className": "CodeField",
+                    "domain": "#",
+                    "value": {
+                      "className": "Expression",
+                      "left": {
+                        "className": "CodeField",
+                        "domain": "#",
+                        "value": {
+                          "className": "Token",
+                          "value": "x"
+                        }
+                      },
+                      "operator": {
+                        "className": "Token",
+                        "value": "*"
+                      },
+                      "right": {
+                        "className": "CodeField",
+                        "domain": "#",
+                        "value": {
+                          "className": "Input",
+                          "value": ""
+                        }
+                      }
+                    }
+                  },
+                  "operator": {
+                    "className": "Token",
+                    "value": "+"
+                  },
+                  "right": {
+                    "className": "CodeField",
+                    "domain": "#",
+                    "value": {
+                      "className": "Token",
+                      "value": "5"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "className": "CodeLine",
+          "instruction": {
+            "className": "CodeField",
+            "domain": "#",
+            "value": {
+              "className": "Input",
+              "value": ""
+            }
           }
         }
       ]

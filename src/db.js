@@ -16,9 +16,9 @@ class Database {
         });
     }
 
-    saveNode(id, json) {
-        return fetch(this.baseURL + 'nodes/', {method: 'POST', body: json, headers: {'Content-type': 'application/json'}})
-        .then(res => res.ok ? res.json() : Promise.reject(new Error('POST ' + res.url + ' (' + res.status + ') ' + res.statusText)));
+    updateNode(id, json) {
+        return fetch(this.baseURL + 'nodes/' + id, {method: 'PUT', body: json, headers: {'Content-type': 'application/json'}})
+        .then(res => res.ok ? res.json() : Promise.reject(new Error('PUT ' + res.url + ' (' + res.status + ') ' + res.statusText)));
     }
  
 }

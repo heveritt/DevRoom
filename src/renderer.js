@@ -10,7 +10,10 @@ var render = {
     },
 
     inline: function (className, ...children) {
-        return React.createElement('span', {className: className, tabIndex: "0"}, ...children);
+        let props = {className: className};
+        // TODO - Temporary fudge to preserve selectable tabbing
+        if (className === 'code-field') props.tabIndex = 0;
+        return React.createElement('span', props, ...children);
     },
 
     input: function(props) {

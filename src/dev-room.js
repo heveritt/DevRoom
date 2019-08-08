@@ -72,7 +72,7 @@ class Frame extends Component {
         if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
             e.preventDefault();
             this.props.model.processInput(reference, e.target.value, (e.key === 'Enter'));
-            // db.saveNode(2, this.props.model.getNode(this.props.node));
+            db.updateNode(this.props.node.value, this.props.model.getNode(this.props.node.value));
             this.setState(this.getContents());
         }
     }
@@ -87,6 +87,10 @@ class Frame extends Component {
 
 function CodeLine(props) {
     return render.block('code-line', render.inline('line-number', (props.ix + 1) + ':'), render.child(props, 'instruction'));
+}
+
+function CodeField(props) {
+    return render.inline('code-field', render.child(props, 'value'));
 }
 
 function Expression(props) {
@@ -123,7 +127,7 @@ class Input extends Component {
     }
 }
 
-const classMap = {Frame, CodeLine, Expression, Token, Input};
+const classMap = {Frame, CodeLine, CodeField, Expression, Token, Input};
 
 const serializer = new Serializer(classMap);
 

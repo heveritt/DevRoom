@@ -33,27 +33,30 @@
     padding: 3px;
 }
 
-.expression {
+.code-field {
     display: inline-block;
-    padding: 2px;
+    border: 1px solid grey;
+    margin: 1px 2px;
+    border-radius: 4px;
+    background-color: grey;
 }
 
-/* Show sub-expressions as bracketed to emphasise order of evaluation */
-.expression > .expression {
-    border: 1px solid grey;
-    border-radius: 10px;
+.code-field:hover {
+    border: 1px solid white;
 }
- 
+
+.expression .expression {
+    border-left: 1px solid #AAAAAA;
+    border-right: 1px solid #AAAAAA;
+    border-radius: 5px;
+}
+
 .token {
-    margin: 0px 2px;
-    padding: 0px 3px;
+    padding: 0px 5px;
     text-align: center;
     color: white;
 }
 
-.token:hover {
-    outline: 1px solid grey;
-}
 
 input.token {
     margin: 0px 5px;

@@ -12,8 +12,8 @@ class DevRoom extends Component {
     constructor() {
         super();
         this.state = {
-            node: deserialize('{"className": "Token", "value": "transform"}'),
-            contexts: deserialize('[{"className": "Token", "value": "Franca"},{"className": "Token", "value": "DevRoom"},{"className": "Token", "value": "SudokuMate"}]'),
+            node: 'transform',
+            contexts: ['Franca', 'DevRoom', 'SudokuMate'],
             model: null,
             error: null
         } 
@@ -60,8 +60,10 @@ class Frame extends Component {
         return (
             render.block('frame',
                 render.block('frame-header',
-                    render.block('frame-node', render.component(this.props.node)), 
-                    render.block('frame-contexts', render.component(this.props.contexts)) 
+                    render.block('frame-node', 'Node: ', render.inline('token', this.props.node)), 
+                    render.block('frame-contexts', 'Contexts: ',
+                        ...this.props.contexts.map( (context) => render.inline('token', context))
+                    ) 
                 ),
                 render.block('frame-contents', render.component(this.state.contents, {onKey: this.handleKey}))
             )
@@ -72,14 +74,14 @@ class Frame extends Component {
         if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
             e.preventDefault();
             this.props.model.processInput(reference, e.target.value, (e.key === 'Enter'));
-            db.updateNode(this.props.node.value, this.props.model.getNode(this.props.node.value));
+            db.updateNode(this.props.node, this.props.model.getNode(this.props.node));
             this.setState(this.getContents());
         }
     }
 
     getContents() {
         return {
-            contents: deserialize(this.props.model.compileView(this.props.node.value, this.props.contexts))
+            contents: deserialize(this.props.model.compileView(this.props.node, this.props.contexts))
         };
     }
 

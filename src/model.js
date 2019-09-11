@@ -26,7 +26,9 @@ class Model {
         return serializer.serialize(this.nodes.get(nodeId).code);
     }
 
-    processInput(reference, value, newLine) {
+    processInput(nodeId, ref, value, newLine) {
+        //const node = this.nodes.get(nodeId);
+        //node.getField(ref).value = new Token({value});
         console.log('Ref: ' + reference + ' value: ' + value + (newLine ? ' +' : ' -'));
     }
 
@@ -34,6 +36,13 @@ class Model {
         
     }
  
+}
+
+class Node {
+    constructor(props) {
+        this.id = props.id;
+        this.code = props.code;
+    }
 }
 
 class CodeLine {
@@ -69,7 +78,7 @@ class Input {
     }
 }
 
-const classMap = {CodeLine, CodeField, Expression, Token, Input};
+const classMap = {Node, CodeLine, CodeField, Expression, Token, Input};
 
 const serializer = new Serializer(classMap);
 

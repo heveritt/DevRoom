@@ -21,10 +21,11 @@
 }
  
 .frame-header .token {
-    background: #222222;
-    border: 1px solid #222222;
+    background: grey;
+    border: 1px solid grey;
     border-radius: 5px;
     margin: 0px 5px;
+    padding: 2px 5px;
 }
 
 .frame-contents {

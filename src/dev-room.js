@@ -60,10 +60,10 @@ class Frame extends Component {
         return (
             render.block('frame',
                 render.block('frame-header',
-                    render.block('frame-node', 'Node: ', render.inline('token', this.props.node)), 
+                    render.block('frame-node', 'Node: ', render.inline('token', this.props.node)),
                     render.block('frame-contexts', 'Contexts: ',
-                        ...this.props.contexts.map( (context) => render.inline('token', context))
-                    ) 
+                        ...this.props.contexts.map( (context) => render.inline('token', context) )
+                    )
                 ),
                 render.block('frame-contents', render.component(this.state.contents, {onKey: this.handleKey}))
             )

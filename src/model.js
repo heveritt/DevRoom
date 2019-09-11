@@ -29,7 +29,7 @@ class Model {
     processInput(nodeId, ref, value, newLine) {
         //const node = this.nodes.get(nodeId);
         //node.getField(ref).value = new Token({value});
-        console.log('Ref: ' + reference + ' value: ' + value + (newLine ? ' +' : ' -'));
+        console.log('Ref: ' + ref + ' value: ' + value + (newLine ? ' +' : ' -'));
     }
 
     translate(language, version) {

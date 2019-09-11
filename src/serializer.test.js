@@ -3,6 +3,7 @@ import Serializer from './serializer';
 // Create 3 classes for testing - Chicken, Egg and Fox
 class Chicken {
     constructor(props) {
+        this.className = 'Chicken';
         this.name = props.name;
         this.egg = props.egg;
     }
@@ -14,6 +15,7 @@ class Chicken {
 
 class Egg {
     constructor(props) {
+        this.className = 'Egg';
         this.name = props.name;
         if (props.mother) this.mother = props.mother;
     }

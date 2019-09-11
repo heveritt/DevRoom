@@ -27,13 +27,13 @@ class Serializer {
         } )();
 
         const classStorer = (value) => {
-            if (typeof value === 'object') {
+            /*if (typeof value === 'object') {
                 const className = value.constructor.name;
                 if (this.classMap[className]) {
                     // Need to shallow copy object to avoid infinite recursion
                     return Object.assign({className}, value);
                 }
-            }
+            }*/
             return value;
         };
 

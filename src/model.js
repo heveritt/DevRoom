@@ -40,6 +40,7 @@ class Model {
 
 class Node {
     constructor(props) {
+        this.className = 'Node';
         this.id = props.id;
         this.code = props.code;
     }
@@ -47,12 +48,14 @@ class Node {
 
 class CodeLine {
     constructor(props) {
+        this.className = 'CodeLine';
         this.instruction = props.instruction;
     }
 }
 
 class CodeField {
     constructor(props) {
+        this.className = 'CodeField';
         this.domain = props.domain;
         this.value = props.value;
     }
@@ -60,6 +63,7 @@ class CodeField {
 
 class Expression {
     constructor(props) {
+        this.className = 'Expression';
         this.left = props.left;
         this.operator = props.operator;
         this.right = props.right;
@@ -68,12 +72,14 @@ class Expression {
 
 class Token {
     constructor(props) {
+        this.className = 'Token';
         this.value = props.value;
     }
 }
 
 class Input {
     constructor(props) {
+        this.className = 'Input';
         this.value = props.value;
     }
 }

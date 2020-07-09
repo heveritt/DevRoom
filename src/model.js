@@ -26,10 +26,20 @@ class Model {
         return serializer.serialize(this.nodes.get(nodeId).code);
     }
 
-    processInput(nodeId, ref, value, newLine) {
+    processInput(ref, value, newLine) {
         //const node = this.nodes.get(nodeId);
         //node.getField(ref).value = new Token({value});
         console.log('Ref: ' + ref + ' value: ' + value + (newLine ? ' +' : ' -'));
+    }
+
+    generateHashId(value) {
+        var char, hash = 0;
+        for (let i = 0; i < value.length; i++) {
+            char = value.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
     }
 
     translate(language, version) {
@@ -43,6 +53,15 @@ class Node {
         this.className = 'Node';
         this.id = props.id;
         this.code = props.code;
+    }
+}
+
+class Sememe {
+    constructor(props) {
+        this.className = 'Sememe';
+        this.id = props.id;
+        this.symbol = props.symbol;
+        this.realm = props.realm;
     }
 }
 
@@ -84,7 +103,7 @@ class Input {
     }
 }
 
-const classMap = {Node, CodeLine, CodeField, Expression, Token, Input};
+const classMap = {Sememe, Node, CodeLine, CodeField, Expression, Token, Input};
 
 const serializer = new Serializer(classMap);
 

@@ -20,6 +20,11 @@ class Database {
         return fetch(this.baseURL + 'nodes/' + id, {method: 'PUT', body: json, headers: {'Content-type': 'application/json'}})
         .then(res => res.ok ? res.json() : Promise.reject(new Error('PUT ' + res.url + ' (' + res.status + ') ' + res.statusText)));
     }
+
+    createSememe(id, json) {
+        return fetch(this.baseURL + 'sememes', {method: 'POST', body: json, headers: {'Content-type': 'application/json'}})
+        .then(res => res.ok ? res.json() : Promise.reject(new Error('POST ' + res.url + ' (' + res.status + ') ' + res.statusText)));
+    }
  
 }
 

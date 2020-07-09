@@ -1,5 +1,36 @@
 {
-  "sememes": [],
+  "sememes": [
+    {
+      "className": "Sememe",
+      "id": "x",
+      "symbol": "x",
+      "realm": 1
+    },
+    {
+      "className": "Sememe",
+      "id": "=",
+      "symbol": "=",
+      "realm": 1
+    },
+    {
+      "className": "Sememe",
+      "id": "y",
+      "symbol": "y",
+      "realm": 1
+    },
+    {
+      "className": "Sememe",
+      "id": "*",
+      "symbol": "*",
+      "realm": 1
+    },
+    {
+      "className": "Sememe",
+      "id": "+",
+      "symbol": "+",
+      "realm": 1
+    }
+  ],
   "nodes": [
     {
       "className": "Node",

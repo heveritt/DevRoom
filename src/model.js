@@ -48,14 +48,6 @@ class Model {
  
 }
 
-class Node {
-    constructor(props) {
-        this.className = 'Node';
-        this.id = props.id;
-        this.code = props.code;
-    }
-}
-
 class Sememe {
     constructor(props) {
         this.className = 'Sememe';
@@ -65,40 +57,62 @@ class Sememe {
     }
 }
 
-class CodeLine {
+class CodeNode {
+    constructor(className) {
+        this.path = '';
+        this.className = className;
+    }
+
+    addPath(key) {
+        this.path = (this.path === '') ? key : key + '.' + this.path;
+        Object.values(this)
+        .filter( value => (typeof value === 'object' && value.addPath) )
+        .forEach( value => value.addPath(key));
+    }
+}
+
+class Node extends CodeNode {
     constructor(props) {
-        this.className = 'CodeLine';
+        super('Node');
+        this.id = props.id;
+        this.code = props.code;
+    }
+}
+
+class CodeLine extends CodeNode {
+    constructor(props) {
+        super('CodeLine');
         this.instruction = props.instruction;
     }
 }
 
-class CodeField {
+class CodeField extends CodeNode {
     constructor(props) {
-        this.className = 'CodeField';
+        super('CodeField');
         this.domain = props.domain;
         this.value = props.value;
     }
 }
 
-class Expression {
+class Expression extends CodeNode {
     constructor(props) {
-        this.className = 'Expression';
+        super('Expression');
         this.left = props.left;
         this.operator = props.operator;
         this.right = props.right;
     }
 }
 
-class Token {
+class Token extends CodeNode {
     constructor(props) {
-        this.className = 'Token';
+        super('Token');
         this.value = props.value;
     }
 }
 
-class Input {
+class Input extends CodeNode {
     constructor(props) {
-        this.className = 'Input';
+        super('Input');
         this.value = props.value;
     }
 }

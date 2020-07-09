@@ -61,7 +61,14 @@ class Serializer {
             return value;
         }
 
-        return (key, value) => classRestorer(value);
+        const pathGenerator = (key, value) => {
+            if (key !== '' && typeof value === 'object' && value.addPath) {
+                value.addPath(key);
+            }
+            return value;
+        }
+
+        return (key, value) => pathGenerator(key, classRestorer(value));
     }
 
 }

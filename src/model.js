@@ -18,18 +18,18 @@ class Model {
         return 'json-stream';
     }
 
-    getNode(id) {
-        return serializer.serialize(this.nodes.get(id));
+    exportNode(id) {
+        return serializer.serialize(this.nodes.get(id), false);
     }
 
     compileView(nodeId, contexts) {
         return serializer.serialize(this.nodes.get(nodeId).code);
     }
 
-    processInput(ref, value, newLine) {
-        //const node = this.nodes.get(nodeId);
-        //node.getField(ref).value = new Token({value});
-        console.log('Ref: ' + ref + ' value: ' + value + (newLine ? ' +' : ' -'));
+    processInput(nodeId, path, value, newLine) {
+        const node = this.nodes.get(nodeId);
+        node.getField(path).value = new Token({value}, path);
+        console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
     }
 
     generateHashId(value) {
@@ -77,43 +77,54 @@ class Node extends CodeNode {
         this.id = props.id;
         this.code = props.code;
     }
+
+    getField(path) {
+        let dirs = path.split('.');
+        dirs.splice(-1);
+        return dirs.reduce( (node, prop) => node[prop], this.code);
+    }
 }
 
 class CodeLine extends CodeNode {
-    constructor(props) {
+    constructor(props, key) {
         super('CodeLine');
         this.instruction = props.instruction;
+        this.addPath(key);
     }
 }
 
 class CodeField extends CodeNode {
-    constructor(props) {
+    constructor(props, key) {
         super('CodeField');
         this.domain = props.domain;
         this.value = props.value;
+        this.addPath(key);
     }
 }
 
 class Expression extends CodeNode {
-    constructor(props) {
+    constructor(props, key) {
         super('Expression');
         this.left = props.left;
         this.operator = props.operator;
         this.right = props.right;
+        this.addPath(key);
     }
 }
 
 class Token extends CodeNode {
-    constructor(props) {
+    constructor(props, key) {
         super('Token');
         this.value = props.value;
+        this.addPath(key);
     }
 }
 
 class Input extends CodeNode {
-    constructor(props) {
+    constructor(props, key) {
         super('Input');
         this.value = props.value;
+        this.addPath(key);
     }
 }
 

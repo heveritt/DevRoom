@@ -70,11 +70,11 @@ class Frame extends Component {
         );
     }
 
-    handleKey = (reference) => (e) => {
+    handleKey = (path) => (e) => {
         if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
             e.preventDefault();
-            this.props.model.processInput(reference, e.target.value, (e.key === 'Enter'));
-            db.updateNode(this.props.node, this.props.model.getNode(this.props.node));
+            this.props.model.processInput(this.props.node, path, e.target.value, (e.key === 'Enter'));
+            db.updateNode(this.props.node, this.props.model.exportNode(this.props.node));
             this.setState(this.getContents());
         }
     }
@@ -108,7 +108,7 @@ class Input extends Component {
         super(props);
         this.state = {value: props.value};
 
-        this.handleKey = props.handlers.onKey(props.reference);
+        this.handleKey = props.handlers.onKey(props.path);
         this.handleChange = this.handleChange.bind(this);
     }
 

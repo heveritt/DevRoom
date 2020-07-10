@@ -4,15 +4,15 @@ class Serializer {
         this.classMap = classMap;
     }
 
-    serialize(instance) {
-        return JSON.stringify(instance, this.replacer());
+    serialize(instance, includeDerived=true) {
+        return JSON.stringify(instance, this.replacer(includeDerived));
     }
 
     deserialize(jsonString, reconstruct=true) {
         return JSON.parse(jsonString, this.reviver(reconstruct));
     }
 
-    replacer() {
+    replacer(includeDerived) {
         const circularityDetector = ( () => {
             const alreadySerialized = new WeakSet();
             const throwIfCircular = (value) => {
@@ -26,30 +26,39 @@ class Serializer {
             return throwIfCircular;
         } )();
 
+        /* This turns out to be incompatable with build minification so parked at present.
+
         const classStorer = (value) => {
-            /*if (typeof value === 'object') {
+            if (typeof value === 'object') {
                 const className = value.constructor.name;
                 if (this.classMap[className]) {
                     // Need to shallow copy object to avoid infinite recursion
                     return Object.assign({className}, value);
                 }
-            }*/
+            }
             return value;
         };
 
+        */
+
+        const filterDerived = (key, value) =>
+        {
+            return (key === 'path') ? undefined : value;
+        }
+
         return (key, value) => {
             circularityDetector(value);
-            return classStorer(value);
+            return includeDerived ? value : filterDerived(key, value);
         }
     }
 
     reviver(reconstruct) {
-        const classRestorer = (value) => {
+        const classRestorer = (key, value) => {
             if (typeof value === 'object' && value.className) {
                 const classConstructor = this.classMap[value.className];
                 if (classConstructor) {
                     if (reconstruct) {
-                        return new classConstructor(value);
+                        return new classConstructor(value, key);
                     } else {
                         value.classConstructor = classConstructor;
                         return value;
@@ -61,14 +70,7 @@ class Serializer {
             return value;
         }
 
-        const pathGenerator = (key, value) => {
-            if (key !== '' && typeof value === 'object' && value.addPath) {
-                value.addPath(key);
-            }
-            return value;
-        }
-
-        return (key, value) => pathGenerator(key, classRestorer(value));
+        return (key, value) => classRestorer(key, value);
     }
 
 }

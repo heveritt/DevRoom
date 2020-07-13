@@ -2,12 +2,6 @@ import Serializer from './serializer';
 
 class Model {
 
-    constructor(sememes, nodes) {
-        this.sememes = new Map(sememes.map(sememe => [sememe.id, sememe]));
-        this.nodes = new Map(nodes.map(node => [node.id, node]));
-        console.log(this);
-    }
-
     static import(json) {
         const sememes = serializerIn.deserialize(json.sememes);
         const nodes = serializerIn.deserialize(json.nodes);
@@ -16,6 +10,12 @@ class Model {
     
     static export(model) {
         return 'json-stream';
+    }
+
+    constructor(sememes, nodes) {
+        this.sememes = new Map(sememes.map(sememe => [sememe.id, sememe]));
+        this.nodes = new Map(nodes.map(node => [node.id, node]));
+        console.log(this);
     }
 
     exportNode(id) {
@@ -28,7 +28,11 @@ class Model {
 
     processInput(nodeId, path, value, newLine) {
         const node = this.nodes.get(nodeId);
-        node.getField(path).value = new Token({value}, path);
+        if (isNaN(value)) {
+            node.getField(path).value = new Token({value}, path);
+        } else {
+            node.getField(path).value = new Literal({value}, path);
+        }
         console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
     }
 
@@ -120,6 +124,14 @@ class Token extends CodeNode {
     }
 }
 
+class Literal extends CodeNode {
+    constructor(props, key) {
+        super('Literal');
+        this.value = props.value;
+        this.addPath(key);
+    }
+}
+
 class Input extends CodeNode {
     constructor(props, key) {
         super('Input');
@@ -128,7 +140,7 @@ class Input extends CodeNode {
     }
 }
 
-const classMap = {Sememe, Node, CodeLine, CodeField, Expression, Token, Input};
+const classMap = {Sememe, Node, CodeLine, CodeField, Expression, Token, Input, Literal};
 
 const serializer = new Serializer(classMap);
 

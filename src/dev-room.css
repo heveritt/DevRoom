@@ -60,12 +60,15 @@
     color: white;
 }
 
-
 input.token {
     margin: 0px 5px;
     padding: 0px;
     border: none;
     text-align: start;
+}
+
+.literal {
+    color: lime;
 }
 
 .line-number {

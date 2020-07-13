@@ -59,7 +59,7 @@
                 "className": "CodeField",
                 "domain": "#",
                 "value": {
-                  "className": "Token",
+                  "className": "Literal",
                   "value": "4"
                 }
               }
@@ -125,7 +125,7 @@
                     "className": "CodeField",
                     "domain": "#",
                     "value": {
-                      "className": "Token",
+                      "className": "Literal",
                       "value": "5"
                     }
                   }

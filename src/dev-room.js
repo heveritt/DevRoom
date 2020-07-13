@@ -103,6 +103,10 @@ function Token(props) {
     return render.inline('token', props.value);
 }
 
+function Literal(props) {
+    return render.inline('literal', props.value);
+}
+
 class Input extends Component {
     constructor(props) {
         super(props);
@@ -129,7 +133,7 @@ class Input extends Component {
     }
 }
 
-const classMap = {Frame, CodeLine, CodeField, Expression, Token, Input};
+const classMap = {Frame, CodeLine, CodeField, Expression, Token, Input, Literal};
 
 const serializer = new Serializer(classMap);
 

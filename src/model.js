@@ -15,6 +15,7 @@ class Model {
     constructor(sememes, nodes) {
         this.sememes = new Map(sememes.map(sememe => [sememe.id, sememe]));
         this.nodes = new Map(nodes.map(node => [node.id, node]));
+        this.operators = ['*', '+', '-', '/', '='];
         console.log(this);
     }
 
@@ -27,13 +28,15 @@ class Model {
     }
 
     processInput(nodeId, path, value, newLine) {
+        console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
         const node = this.nodes.get(nodeId);
-        if (isNaN(value)) {
+        if (this.operators.includes(value)) {
+            node.getField(path).value = new Expression({left: '#', operator: value, right: '#'}, path);
+        } else if (isNaN(value)) {
             node.getField(path).value = new Token({value}, path);
         } else {
             node.getField(path).value = new Literal({value}, path);
         }
-        console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
     }
 
     generateHashId(value) {
@@ -101,7 +104,7 @@ class CodeField extends CodeNode {
     constructor(props, key) {
         super('CodeField');
         this.domain = props.domain;
-        this.value = props.value;
+        this.value = props.value ? props.value : new Input({value: ''}, 'value');
         this.addPath(key);
     }
 }
@@ -109,9 +112,9 @@ class CodeField extends CodeNode {
 class Expression extends CodeNode {
     constructor(props, key) {
         super('Expression');
-        this.left = props.left;
-        this.operator = props.operator;
-        this.right = props.right;
+        this.left = typeof props.left === 'object' ? props.left : new CodeField({domain: props.left}, 'left');
+        this.operator = typeof props.operator === 'object' ? props.operator : new Token({value: props.operator}, 'operator');
+        this.right = typeof props.right === 'object' ? props.right : new CodeField({domain: props.right}, 'right');
         this.addPath(key);
     }
 }

@@ -71,6 +71,10 @@ input.token {
     color: lime;
 }
 
+.expression > .token {
+    color: cyan;
+}
+
 .line-number {
     color: grey;
 }

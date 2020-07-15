@@ -16,20 +16,20 @@ class Model {
         this.sememes = new Map(sememes.map(sememe => [sememe.id, sememe]));
         this.nodes = new Map(nodes.map(node => [node.id, node]));
         this.expressions = {
-            ':=': {left: '.', operator: '\u2190', right: '.'},
-            '+': {left: '#', operator: '+', right: '#', return: '#'},
-            '-': {left: '#', operator: '-', right: '#', return: '#'},
-            '*': {left: '#', operator: '\u00D7', right: '#', return: '#'},
-            '/': {left: '#', operator: '\u00F7', right: '#', return: '#'},
-            '%': {left: '#', operator: '%', right: '#', return: '#'},
-            '==': {left: '.', operator: '\u225F', right: '.', return: '|'},
-            '!=': {left: '.', operator: '\u2260', right: '.', return: '|'},
-            '<': {left: '#', operator: '<', right: '#', return: '|'},
-            '>': {left: '#', operator: '>', right: '#', return: '|'},
-            '<=': {left: '#', operator: '\u2264', right: '#', return: '|'},
-             '>=': {left: '#', operator: '\u2265', right: '#', return: '|'},
-            '&&': {left: '|', operator: '\u2227', right: '|', return: '|'},
-            '||': {left: '|', operator: '\u2228', right: '|', return: '|'},
+            ':=': {left: '.', right: '.'},
+            '+' : {left: '#', right: '#', return: '#'},
+            '-' : {left: '#', right: '#', return: '#'},
+            '*' : {left: '#', right: '#', return: '#'},
+            '/' : {left: '#', right: '#', return: '#'},
+            '%' : {left: '#', right: '#', return: '#'},
+            '==': {left: '.', right: '.', return: '|'},
+            '!=': {left: '.', right: '.', return: '|'},
+            '<' : {left: '#', right: '#', return: '|'},
+            '>' : {left: '#', right: '#', return: '|'},
+            '<=': {left: '#', right: '#', return: '|'},
+            '>=': {left: '#', right: '#', return: '|'},
+            '&&': {left: '|', right: '|', return: '|'},
+            '||': {left: '|', right: '|', return: '|'},
         };
         console.log(this);
     }
@@ -46,7 +46,9 @@ class Model {
         console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
         const node = this.nodes.get(nodeId);
         if (this.expressions[value]) {
-            node.getField(path).value = new Expression(this.expressions[value], path);
+            let props = this.expressions[value];
+            props.operator = value;
+            node.getField(path).value = new Expression(props, path);
         } else if (isNaN(value)) {
             node.getField(path).value = new Token({value}, path);
         } else {

@@ -1,6 +1,6 @@
 import {Component, render} from './renderer';
 import Serializer from './serializer';
-import Keyboard from './keyboard';
+import Unicode from './unicode';
 import Model from './model';
 import Database from './db';
 import './dev-room.css';
@@ -100,7 +100,7 @@ function Expression(props) {
 }
 
 function Token(props) {
-    return render.inline('token', props.value);
+    return render.inline('token', Unicode.mapToken(props.value));
 }
 
 function Literal(props) {
@@ -117,8 +117,7 @@ class Input extends Component {
     }
 
     handleChange(e) {
-        const mappedValue = Keyboard.mapToken(e.target.value);
-        this.setState({value: mappedValue});
+        this.setState({value: e.target.value});
     }   
 
     render() {

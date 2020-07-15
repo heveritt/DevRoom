@@ -1,10 +1,6 @@
 const Keyboard = {
     map: {
-        '=>': '\u21D2',
-        '!=': '\u2260',
-        '/=': '\u2260',
-        '==': '\u225F',
-        '.': '\u00B7'
+        '=>': '\u21D2' // Is a sub-class of
     },
 
     mapToken: function(rawToken) {

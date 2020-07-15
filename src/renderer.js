@@ -16,7 +16,8 @@ var render = {
         return React.createElement('span', props, ...children);
     },
 
-    input: function(props) {
+    input: function(props, focus) {
+        if (focus) props.autoFocus = 'autofocus';
         return React.createElement('input', props, null);
     },
 

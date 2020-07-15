@@ -71,7 +71,7 @@ class Frame extends Component {
     }
 
     handleKey = (path) => (e) => {
-        if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
+        if (e.target.value !== '' && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
             e.preventDefault();
             this.props.model.processInput(this.props.node, path, e.target.value, (e.key === 'Enter'));
             db.updateNode(this.props.node, this.props.model.exportNode(this.props.node));
@@ -123,12 +123,11 @@ class Input extends Component {
     render() {
         return render.input({
             className: 'input',
-            autoFocus: 'autofocus',
             value: this.state.value,
             size: Math.max(this.state.value.length, 1), // html does not allow zero
             onChange: this.handleChange,
             onKeyDown: this.handleKey
-        });
+        }, this.props.focus);
     }
 }
 

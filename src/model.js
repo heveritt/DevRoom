@@ -121,7 +121,11 @@ class CodeField extends CodeNode {
     constructor(props, key) {
         super('CodeField');
         this.domain = props.domain;
-        this.value = props.value ? props.value : new Input({value: ''}, 'value');
+        if (props.value) {
+            this.value = props.value;
+        } else {
+            this.value = new Input(props.focus ? {focus: true} : {}, 'value');
+        }
         this.addPath(key);
     }
 }
@@ -129,7 +133,7 @@ class CodeField extends CodeNode {
 class Expression extends CodeNode {
     constructor(props, key) {
         super('Expression');
-        this.left = typeof props.left === 'object' ? props.left : new CodeField({domain: props.left}, 'left');
+        this.left = typeof props.left === 'object' ? props.left : new CodeField({domain: props.left, focus: true}, 'left');
         this.operator = typeof props.operator === 'object' ? props.operator : new Token({value: props.operator}, 'operator');
         this.right = typeof props.right === 'object' ? props.right : new CodeField({domain: props.right}, 'right');
         this.addPath(key);
@@ -155,7 +159,8 @@ class Literal extends CodeNode {
 class Input extends CodeNode {
     constructor(props, key) {
         super('Input');
-        this.value = props.value;
+        this.value = props.value ? props.value : '';
+        this.focus = props.focus ? true : false;
         this.addPath(key);
     }
 }

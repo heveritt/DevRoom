@@ -108,7 +108,16 @@ class Node extends CodeNode {
     getField(path) {
         let dirs = path.split('.');
         dirs.splice(-1);
-        return dirs.reduce( (node, prop) => node[prop], this.code);
+        return dirs.reduce( (node, prop) => node[prop], this.code.instructions);
+    }
+}
+
+class CodeBlock extends CodeNode {
+    constructor(props, key) {
+        super('CodeBlock');
+        this.arguments = props.arguments;
+        this.instructions = props.instructions;
+        this.addPath(key);
     }
 }
 
@@ -129,6 +138,15 @@ class CodeField extends CodeNode {
         } else {
             this.value = new Input({value: ''}, 'value');
         }
+        this.addPath(key);
+    }
+}
+
+class Declaration extends CodeNode {
+    constructor(props, key) {
+        super('Declaration');
+        this.identifier = props.identifier;
+        this.domain = props.domain;
         this.addPath(key);
     }
 }
@@ -167,7 +185,7 @@ class Input extends CodeNode {
     }
 }
 
-const classMap = {Sememe, Node, CodeLine, CodeField, Expression, Token, Input, Literal};
+const classMap = {Sememe, Node, CodeBlock, CodeLine, CodeField, Declaration, Expression, Token, Input, Literal};
 
 const serializer = new Serializer(classMap);
 

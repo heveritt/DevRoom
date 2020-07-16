@@ -93,12 +93,25 @@ class Frame extends Component {
 
 }
 
+function CodeBlock(props) {
+    return (
+        render.block('code-block',
+            render.block('arguments', render.child(props, 'arguments')),
+            render.block('instructions', render.child(props, 'instructions'))
+        )
+    );
+}
+
 function CodeLine(props) {
     return render.block('code-line', render.inline('line-number', (props.ix + 1) + ':'), render.child(props, 'instruction'));
 }
 
 function CodeField(props) {
     return render.inline('code-field', render.child(props, 'value'));
+}
+
+function Declaration(props) {
+    return render.block('declaration', render.inline('token', props.identifier), render.inline('separator', ':'), render.inline('token', props.domain));
 }
 
 function Expression(props) {
@@ -137,7 +150,7 @@ class Input extends Component {
     }
 }
 
-const classMap = {Frame, CodeLine, CodeField, Expression, Token, Input, Literal};
+const classMap = {Frame, CodeBlock, CodeLine, CodeField, Declaration, Expression, Token, Input, Literal};
 
 const serializer = new Serializer(classMap);
 

@@ -53,7 +53,7 @@ class Frame extends Component {
 
     constructor(props) {
         super(props);
-        this.state = this.getContents();
+        this.state = this.getView();
     }
 
     render() {
@@ -73,16 +73,22 @@ class Frame extends Component {
     handleKey = (path) => (e) => {
         if (e.target.value !== '' && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
             e.preventDefault();
-            this.props.model.processInput(this.props.node, path, e.target.value, (e.key === 'Enter'));
+            let newFocus = this.props.model.processInput(this.props.node, path, e.target.value, (e.key === 'Enter'));
             db.updateNode(this.props.node, this.props.model.exportNode(this.props.node));
-            this.setState(this.getContents());
+            let view = this.getView();
+            if (newFocus) this.getField(view.contents, newFocus).focus = true;
+            this.setState(view);
         }
     }
 
-    getContents() {
+    getView() {
         return {
             contents: deserialize(this.props.model.compileView(this.props.node, this.props.contexts))
         };
+    }
+
+    getField(code, path) {
+        return path.split('.').reduce( (node, prop) => node[prop], code);
     }
 
 }
@@ -118,7 +124,7 @@ class Input extends Component {
 
     handleChange(e) {
         this.setState({value: e.target.value});
-    }   
+    }
 
     render() {
         return render.input({

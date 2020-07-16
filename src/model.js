@@ -49,10 +49,13 @@ class Model {
             let props = this.expressions[value];
             props.operator = value;
             node.getField(path).value = new Expression(props, path);
+            return path + '.left.value';
         } else if (isNaN(value)) {
             node.getField(path).value = new Token({value}, path);
+            return false;
         } else {
             node.getField(path).value = new Literal({value}, path);
+            return false;
         }
     }
 
@@ -124,7 +127,7 @@ class CodeField extends CodeNode {
         if (props.value) {
             this.value = props.value;
         } else {
-            this.value = new Input(props.focus ? {focus: true} : {}, 'value');
+            this.value = new Input({value: ''}, 'value');
         }
         this.addPath(key);
     }
@@ -133,7 +136,7 @@ class CodeField extends CodeNode {
 class Expression extends CodeNode {
     constructor(props, key) {
         super('Expression');
-        this.left = typeof props.left === 'object' ? props.left : new CodeField({domain: props.left, focus: true}, 'left');
+        this.left = typeof props.left === 'object' ? props.left : new CodeField({domain: props.left}, 'left');
         this.operator = typeof props.operator === 'object' ? props.operator : new Token({value: props.operator}, 'operator');
         this.right = typeof props.right === 'object' ? props.right : new CodeField({domain: props.right}, 'right');
         this.addPath(key);
@@ -159,8 +162,7 @@ class Literal extends CodeNode {
 class Input extends CodeNode {
     constructor(props, key) {
         super('Input');
-        this.value = props.value ? props.value : '';
-        this.focus = props.focus ? true : false;
+        this.value = props.value;
         this.addPath(key);
     }
 }

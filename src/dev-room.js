@@ -76,7 +76,7 @@ class Frame extends Component {
             let newFocus = this.props.model.processInput(this.props.node, path, e.target.value, (e.key === 'Enter'));
             db.updateNode(this.props.node, this.props.model.exportNode(this.props.node));
             let view = this.getView();
-            if (newFocus) this.getField(view.contents, newFocus).focus = true;
+            if (newFocus) this.getField(view.contents.instructions, newFocus).focus = true;
             this.setState(view);
         }
     }

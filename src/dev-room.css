@@ -21,7 +21,7 @@
 }
  
 .frame-header .token {
-    background: grey;
+    background: #222222;
     border: 1px solid grey;
     border-radius: 5px;
     margin: 0px 5px;
@@ -33,9 +33,13 @@
 }
 
 .arguments {
-    border: 3px solid green;
+    border: 3px solid grey;
     border-radius: 5px;
     padding: 3px;
+}
+
+.arguments:hover {
+    border-color: white;
 }
 
 .declaration {
@@ -43,18 +47,19 @@
 }
 
 .arguments .token {
-    background: grey;
-    border: 1px solid grey;
-    border-radius: 5px;
     margin: 0px 5px;
     padding: 2px 5px;
 }
 
 .instructions {
     margin-top: 5px;
-    border: 3px solid green;
+    border: 3px solid grey;
     border-radius: 5px;
     padding: 3px;
+}
+
+.instructions:hover {
+    border-color: white;
 }
 
 .code-line {
@@ -63,14 +68,13 @@
 
 .code-field {
     display: inline-block;
-    border: 1px solid grey;
+    border: 1px solid transparent;
     margin: 1px 2px;
     border-radius: 4px;
-    background-color: grey;
 }
 
 .code-field:hover {
-    border: 1px solid white;
+    border-color: white;
 }
 
 .expression .expression {
@@ -79,17 +83,24 @@
     border-radius: 5px;
 }
 
-.token {
-    padding: 0px 5px;
+.token, .literal, .separator, .arrow {
+    display: inline-block;
+    padding: 1px 5px;
     text-align: center;
-    color: white;
 }
 
-input.token {
-    margin: 0px 5px;
-    padding: 0px;
-    border: none;
-    text-align: start;
+input {
+    margin: 0px 2px;
+    padding: 0px 0px 0px 2px;
+    border: 1px solid red;
+    color: white;
+    background-color: #222222;
+    font: 16px arial, sans-serif;
+}
+
+input:focus {
+    outline: none;
+    border-color: grey;
 }
 
 .literal {
@@ -102,4 +113,9 @@ input.token {
 
 .line-number {
     color: grey;
+}
+
+.separator, .arrow {
+    color: #BF80FF;
+    font-weight: bold;
 }

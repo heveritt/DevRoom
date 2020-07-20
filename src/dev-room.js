@@ -119,7 +119,7 @@ function Expression(props) {
 }
 
 function Token(props) {
-    return render.inline('token', Unicode.mapToken(props.value));
+    return render.inline(props.value === ':=' ? 'arrow' : 'token', Unicode.mapToken(props.value));
 }
 
 function Literal(props) {

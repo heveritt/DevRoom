@@ -52,9 +52,13 @@ class Model {
             return path + '.left.value';
         } else if (isNaN(value)) {
             node.getField(path).value = new Token({value}, path);
-            return false;
         } else {
             node.getField(path).value = new Literal({value}, path);
+        }
+
+        if (newLine) {
+            return node.addLineBelow(path);
+        } else {
             return false;
         }
     }
@@ -110,6 +114,17 @@ class Node extends CodeNode {
         dirs.splice(-1);
         return dirs.reduce( (node, prop) => node[prop], this.code.instructions);
     }
+
+    getLineIx(path) {
+        return 1 * path.split('.')[0];
+    }
+
+    addLineBelow(path) {
+        let ix = this.getLineIx(path) + 1;
+        let line = new CodeLine({}, '' + ix);
+        this.code.instructions.splice(ix, 0, line);
+        return '' + ix + '.instruction.value';
+    }
 }
 
 class CodeBlock extends CodeNode {
@@ -124,7 +139,7 @@ class CodeBlock extends CodeNode {
 class CodeLine extends CodeNode {
     constructor(props, key) {
         super('CodeLine');
-        this.instruction = props.instruction;
+        this.instruction = props.instruction ? props.instruction : new CodeField({domain: ''}, 'instruction');
         this.addPath(key);
     }
 }

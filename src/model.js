@@ -3,8 +3,8 @@ import Serializer from './serializer';
 class Model {
 
     static import(json) {
-        const sememes = serializerIn.deserialize(json.sememes);
-        const nodes = serializerIn.deserialize(json.nodes);
+        const sememes = deserialize(json.sememes);
+        const nodes = deserialize(json.nodes);
         return new Model(sememes, nodes);
     }
     
@@ -39,11 +39,11 @@ class Model {
     }
 
     exportNode(id) {
-        return serializer.serialize(this.node(id), false);
+        return serialize(this.node(id), false);
     }
 
     compileView(nodeId, contexts) {
-        return serializer.serialize(this.node(nodeId).code);
+        return serialize(this.node(nodeId).code);
     }
 
     processInput(nodeId, path, value, newLine) {
@@ -209,67 +209,6 @@ class Input extends CodeNode {
 }
 
 const classMap = {Sememe, Node, CodeBlock, CodeLine, CodeField, Declaration, Expression, Token, Input, Literal};
+const { serialize, deserialize } = new Serializer(classMap);
 
-const serializer = new Serializer(classMap);
-
-//const classMapV1 = Object.assign({}, classMap, {Expression: CodeField, Token: CodeField, Input: CodeField});
-
-const serializerIn = serializer;
-
-/*
-class Sememe {
-    constructor(props) {
-        this.morpheme = props.morpheme;
-    }
-}
-
-class Morpheme {
-    constructor(props) {
-        this.token = props.token;
-        this.symbolic = props.symbolic;
-    }
-}
-
-class Nodule {
-
-    constructor(props) {
-        this.attributes = props.attributes;
-        this.operations = props.operations;
-    }
-
-    getAttributes() {
-        return this.attributes;
-    }
- 
-    getOperations() {
-        return this.operations;
-    }
-}
-
-class Procedure {
-
-    constructor(props) {
-        this.instructions = props.instructions;
-    }
-}
-
-class instruction {
-    
-    constructor(props) {
-        this.declaration = props.declaration;
-        this.operation = props.operation;
-    }
-}
-
-class Operation {
-
-    constructor(props) {
-        this.left = props.left;
-        this.operator = props.operator;
-        this.right = props.right;
-        this.qualifiers = props.qualifiers;
-    }
-}
-
-*/
 export default Model;

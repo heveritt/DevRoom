@@ -2,6 +2,8 @@ class Serializer {
 
     constructor(classMap) {
         this.classMap = classMap;
+        this.serialize = this.serialize.bind(this);
+        this.deserialize = this.deserialize.bind(this);
     }
 
     serialize(instance, includeDerived=true) {

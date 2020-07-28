@@ -34,33 +34,20 @@ class Model {
         console.log(this);
     }
 
+    node(id) {
+        return this.nodes.get(id);
+    }
+
     exportNode(id) {
-        return serializer.serialize(this.nodes.get(id), false);
+        return serializer.serialize(this.node(id), false);
     }
 
     compileView(nodeId, contexts) {
-        return serializer.serialize(this.nodes.get(nodeId).code);
+        return serializer.serialize(this.node(nodeId).code);
     }
 
     processInput(nodeId, path, value, newLine) {
-        console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
-        const node = this.nodes.get(nodeId);
-        if (this.expressions[value]) {
-            let props = this.expressions[value];
-            props.operator = value;
-            node.getField(path).value = new Expression(props, path);
-            return path + '.left.value';
-        } else if (isNaN(value)) {
-            node.getField(path).value = new Token({value}, path);
-        } else {
-            node.getField(path).value = new Literal({value}, path);
-        }
-
-        if (newLine) {
-            return node.addLineBelow(path);
-        } else {
-            return false;
-        }
+        return this.node(nodeId).processInput(this, path, value, newLine);
     }
 
     generateHashId(value) {
@@ -107,6 +94,27 @@ class Node extends CodeNode {
         super('Node');
         this.id = props.id;
         this.code = props.code;
+    }
+
+    processInput(model, path, value, newLine) {
+        console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
+        let field = this.getField(path);
+        if (model.expressions[value]) {
+            let props = model.expressions[value];
+            props.operator = value;
+            field.value = new Expression(props, path);
+            return path + '.left.value';
+        } else if (isNaN(value)) {
+            field.value = new Token({value}, path);
+        } else {
+            field.value = new Literal({value}, path);
+        }
+
+        if (newLine) {
+            return this.addLineBelow(path);
+        } else {
+            return false;
+        }
     }
 
     getField(path) {

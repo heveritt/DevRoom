@@ -98,28 +98,40 @@ class Node extends CodeNode {
 
     processInput(model, path, value, newLine) {
         console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
-        let field = this.getField(path);
+        let field = this.getParentField(path);
         if (model.expressions[value]) {
             let props = model.expressions[value];
             props.operator = value;
+            let newFocus = path + '.left.value';
+            if ( Array.isArray(field.value) ) {
+                path = path.slice(0, -2); // Hack off array number!
+                let leftValue = field.value[0];
+                leftValue.path = 'value';
+                props.left = new CodeField({domain: props.left, value: leftValue}, 'left');;
+                newFocus = path + '.right.value';
+            }
             field.value = new Expression(props, path);
-            return path + '.left.value';
-        } else if (isNaN(value)) {
-            field.value = new Token({value}, path);
+            return newFocus;
         } else {
-            field.value = new Literal({value}, path);
-        }
 
-        if (newLine) {
-            return this.addLineBelow(path);
-        } else {
-            return false;
+            const token = (isNaN(value)) ? new Token({value}) : new Literal({value});
+
+            if (newLine) {
+                token.addPath(path);
+                field.value = token;
+                const ix = this.addLineBelow(path);
+                return '' + ix + '.instruction.value';
+            } else {
+                token.addPath(path + '.0');
+                field.value = [token, new Input({}, path + '.1')]
+                return path + '.1';
+            }
         }
     }
 
-    getField(path) {
+    getParentField(path) {
         let dirs = path.split('.');
-        dirs.splice(-1);
+        do { } while (dirs.pop() !== 'value')
         return dirs.reduce( (node, prop) => node[prop], this.code.instructions);
     }
 
@@ -131,7 +143,7 @@ class Node extends CodeNode {
         let ix = this.getLineIx(path) + 1;
         let line = new CodeLine({}, '' + ix);
         this.code.instructions.splice(ix, 0, line);
-        return '' + ix + '.instruction.value';
+        return ix;
     }
 }
 
@@ -156,11 +168,7 @@ class CodeField extends CodeNode {
     constructor(props, key) {
         super('CodeField');
         this.domain = props.domain;
-        if (props.value) {
-            this.value = props.value;
-        } else {
-            this.value = new Input({value: ''}, 'value');
-        }
+        this.value = props.value ? props.value : new Input({}, 'value');
         this.addPath(key);
     }
 }
@@ -203,7 +211,7 @@ class Literal extends CodeNode {
 class Input extends CodeNode {
     constructor(props, key) {
         super('Input');
-        this.value = props.value;
+        this.value = props.value ? props.value : '';
         this.addPath(key);
     }
 }

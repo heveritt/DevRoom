@@ -77,16 +77,9 @@ class Sememe {
 
 class CodeNode {
     constructor(className) {
-        this.path = '';
         this.className = className;
     }
 
-    addPath(key) {
-        this.path = (this.path === '') ? key : key + '.' + this.path;
-        Object.values(this)
-        .filter( value => (typeof value === 'object' && value.addPath) )
-        .forEach( value => value.addPath(key));
-    }
 }
 
 class Node extends CodeNode {
@@ -105,25 +98,21 @@ class Node extends CodeNode {
             let newFocus = path + '.left.value';
             if ( Array.isArray(field.value) ) {
                 path = path.slice(0, -2); // Hack off array number!
-                let leftValue = field.value[0];
-                leftValue.path = 'value';
-                props.left = new CodeField({domain: props.left, value: leftValue}, 'left');;
+                props.left = new CodeField({domain: props.left, value: field.value[0]});
                 newFocus = path + '.right.value';
             }
-            field.value = new Expression(props, path);
+            field.value = new Expression(props);
             return newFocus;
         } else {
 
             const token = (isNaN(value)) ? new Token({value}) : new Literal({value});
 
             if (newLine) {
-                token.addPath(path);
                 field.value = token;
                 const ix = this.addLineBelow(path);
-                return '' + ix + '.instruction.value';
+                return 'instructions.' + ix + '.instruction.value';
             } else {
-                token.addPath(path + '.0');
-                field.value = [token, new Input({}, path + '.1')]
+                field.value = [token, new Input({})]
                 return path + '.1';
             }
         }
@@ -132,87 +121,79 @@ class Node extends CodeNode {
     getParentField(path) {
         let dirs = path.split('.');
         do { } while (dirs.pop() !== 'value')
-        return dirs.reduce( (node, prop) => node[prop], this.code.instructions);
+        return dirs.reduce( (node, prop) => node[prop], this.code);
     }
 
     getLineIx(path) {
-        return 1 * path.split('.')[0];
+        return 1 * path.split('.')[1];
     }
 
     addLineBelow(path) {
         let ix = this.getLineIx(path) + 1;
-        let line = new CodeLine({}, '' + ix);
+        let line = new CodeLine({});
         this.code.instructions.splice(ix, 0, line);
         return ix;
     }
 }
 
 class CodeBlock extends CodeNode {
-    constructor(props, key) {
+    constructor(props) {
         super('CodeBlock');
         this.arguments = props.arguments;
         this.instructions = props.instructions;
-        this.addPath(key);
     }
 }
 
 class CodeLine extends CodeNode {
-    constructor(props, key) {
+    constructor(props) {
         super('CodeLine');
-        this.instruction = props.instruction ? props.instruction : new CodeField({domain: ''}, 'instruction');
-        this.addPath(key);
+        this.instruction = props.instruction ? props.instruction : new CodeField({domain: ''});
     }
 }
 
 class CodeField extends CodeNode {
-    constructor(props, key) {
+    constructor(props) {
         super('CodeField');
         this.domain = props.domain;
-        this.value = props.value ? props.value : new Input({}, 'value');
-        this.addPath(key);
+        this.value = props.value ? props.value : new Input({});
     }
 }
 
 class Declaration extends CodeNode {
-    constructor(props, key) {
+    constructor(props) {
         super('Declaration');
         this.identifier = props.identifier;
         this.domain = props.domain;
-        this.addPath(key);
     }
 }
 
 class Expression extends CodeNode {
-    constructor(props, key) {
+    constructor(props) {
         super('Expression');
-        this.left = typeof props.left === 'object' ? props.left : new CodeField({domain: props.left}, 'left');
-        this.operator = typeof props.operator === 'object' ? props.operator : new Token({value: props.operator}, 'operator');
-        this.right = typeof props.right === 'object' ? props.right : new CodeField({domain: props.right}, 'right');
-        this.addPath(key);
+        this.left = typeof props.left === 'object' ? props.left : new CodeField({domain: props.left});
+        this.operator = typeof props.operator === 'object' ? props.operator : new Token({value: props.operator});
+        this.right = typeof props.right === 'object' ? props.right : new CodeField({domain: props.right});
     }
 }
 
 class Token extends CodeNode {
-    constructor(props, key) {
+    constructor(props) {
         super('Token');
         this.value = props.value;
-        this.addPath(key);
     }
 }
 
 class Literal extends CodeNode {
-    constructor(props, key) {
+    constructor(props) {
         super('Literal');
         this.value = props.value;
-        this.addPath(key);
     }
 }
 
 class Input extends CodeNode {
-    constructor(props, key) {
+    constructor(props) {
         super('Input');
-        this.value = props.value ? props.value : '';
-        this.addPath(key);
+        this.value = props.value || '';
     }
 }
 

@@ -14,7 +14,7 @@ class Serializer {
         return JSON.parse(jsonString, this.reviver(reconstruct));
     }
 
-    replacer(includeDerived) {
+    replacer(genPath) {
         const circularityDetector = ( () => {
             const alreadySerialized = new WeakSet();
             const throwIfCircular = (value) => {
@@ -42,15 +42,28 @@ class Serializer {
         };
 
         */
-
-        const filterDerived = (key, value) =>
+        const generatePath = (parent, key, value) =>
         {
-            return (key === 'path') ? undefined : value;
+            function addParentPath(parentPath, key, child)
+            {
+                const childPath = parentPath ? parentPath + '.' + key : key;
+                if (key !== '' && typeof child === 'object') {
+                    if (Array.isArray(child)) {
+                        return value.map( (element, ix) => addParentPath(childPath, ix, element));
+                    }
+                    // Need to shallow copy object to avoid infinite recursion
+                    return Object.assign({path: childPath}, child);
+                } else {
+                    return child;
+                }
+            }
+            return addParentPath(parent.path || '', key, value);
         }
 
-        return (key, value) => {
+        return function(key, value) {
+            const parent = this; // Bound to JSON object currently being stringified
             circularityDetector(value);
-            return includeDerived ? value : filterDerived(key, value);
+            return genPath ? generatePath(parent, key, value) : value;
         }
     }
 

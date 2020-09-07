@@ -91,13 +91,15 @@ class Node extends CodeNode {
 
     processInput(model, path, value, newLine) {
         console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
+
         let field = this.getParentField(path);
+        if ( Array.isArray(field.value) ) path = path.slice(0, -2); // Hack off array number!
+
         if (model.expressions[value]) {
             let props = model.expressions[value];
             props.operator = value;
             let newFocus = path + '.left.value';
             if ( Array.isArray(field.value) ) {
-                path = path.slice(0, -2); // Hack off array number!
                 props.left = new CodeField({domain: props.left, value: field.value[0]});
                 newFocus = path + '.right.value';
             }
@@ -107,13 +109,20 @@ class Node extends CodeNode {
 
             const token = (isNaN(value)) ? new Token({value}) : new Literal({value});
 
-            if (newLine) {
+            if (Array.isArray(field.value) ) {
+                field.value.splice(-1, 1, token);
+            } else if (newLine) {
                 field.value = token;
+            } else {
+                field.value = [token];
+            }
+
+            if (newLine) {
                 const ix = this.addLineBelow(path);
                 return 'instructions.' + ix + '.instruction.value';
             } else {
-                field.value = [token, new Input({})]
-                return path + '.1';
+                field.value.push(new Input({}));
+                return path + '.' + (field.value.length - 1);
             }
         }
     }

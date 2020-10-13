@@ -3,6 +3,30 @@ import React from 'react';
 
 class Component extends React.Component {}
 
+class Input extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {value: props.value};
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.setState({value: e.target.value});
+    }
+
+    render() {
+        let props= {
+            value: this.state.value,
+            size: Math.max(this.state.value.length, 1), // html does not allow zero
+            onChange: this.handleChange,
+            onKeyDown: this.props.context.onKey(this.props.fieldPath),
+            autoFocus: (this.props.fieldPath === this.props.context.focus)
+        };
+        return React.createElement('input', props, null);
+    }
+}
+
 var render = {
 
     block: function(className, ...children) {
@@ -16,30 +40,34 @@ var render = {
         return React.createElement('span', props, ...children);
     },
 
-    input: function(props, focus) {
-        if (focus) props.autoFocus = 'autofocus';
-        return React.createElement('input', props, null);
+    input: function(field, value) {
+        let props = {
+            value: value,
+            context: field.context,
+            fieldPath: field.path
+        }
+        return React.createElement(Input, props);
     },
 
     application: function (appClass, parentElement) {
         ReactDOM.render(React.createElement(appClass, null, null), parentElement);
     },
 
-    component: function (data, handlers={}) {
+    component: function (data, context={}) {
         if (Array.isArray(data)) {
             return data.map( (element, ix) => {
                 element.ix = ix;
                 element.key = ix.toString();
-                return this.component(element, handlers);
+                return this.component(element, context);
             });
         } else {
-            data.handlers = handlers;
+            data.context = context;
             return React.createElement(data.classConstructor, data, null);
         }
     },
 
     child: function(parent, role) {
-        return this.component(parent[role], parent.handlers);
+        return this.component(parent[role], parent.context);
     }
 }
 

@@ -46,8 +46,8 @@ class Model {
         return serialize(this.node(nodeId).code);
     }
 
-    processInput(nodeId, path, value, newLine) {
-        return this.node(nodeId).processInput(this, path, value, newLine);
+    processInput(nodeId, path, value, fieldComplete, lineComplete) {
+        return this.node(nodeId).processInput(this, path, value, fieldComplete, lineComplete);
     }
 
     generateHashId(value) {
@@ -89,48 +89,37 @@ class Node extends CodeNode {
         this.code = props.code;
     }
 
-    processInput(model, path, value, newLine) {
-        console.log('Path: ' + path + ' value: ' + value + (newLine ? ' +' : ' -'));
+    processInput(model, path, value, fieldComplete, lineComplete) {
+        console.log('Path: ' + path + ' value: ' + value + (fieldComplete ? ' +' : ' -') + (lineComplete ? ' +' : ' -'));
 
-        let field = this.getParentField(path);
-        if ( Array.isArray(field.value) ) path = path.slice(0, -2); // Hack off array number!
+        let field = this.getField(path);
 
         if (model.expressions[value]) {
             let props = model.expressions[value];
             props.operator = value;
-            let newFocus = path + '.left.value';
+            let newFocus = path + '.value.left';
             if ( Array.isArray(field.value) ) {
                 props.left = new CodeField({domain: props.left, value: field.value[0]});
-                newFocus = path + '.right.value';
+                newFocus = path + '.value.right';
             }
             field.value = new Expression(props);
             return newFocus;
         } else {
 
             const token = (isNaN(value)) ? new Token({value}) : new Literal({value});
+            field.addToken(token, fieldComplete);
 
-            if (Array.isArray(field.value) ) {
-                field.value.splice(-1, 1, token);
-            } else if (newLine) {
-                field.value = token;
-            } else {
-                field.value = [token];
-            }
-
-            if (newLine) {
+            if (lineComplete) {
                 const ix = this.addLineBelow(path);
-                return 'instructions.' + ix + '.instruction.value';
+                return 'instructions.' + ix + '.instruction';
             } else {
-                field.value.push(new Input({}));
-                return path + '.' + (field.value.length - 1);
+                return fieldComplete ? null : path;
             }
         }
     }
 
-    getParentField(path) {
-        let dirs = path.split('.');
-        do { } while (dirs.pop() !== 'value')
-        return dirs.reduce( (node, prop) => node[prop], this.code);
+    getField(path) {
+        return path.split('.').reduce( (node, prop) => node[prop], this.code);
     }
 
     getLineIx(path) {
@@ -164,7 +153,16 @@ class CodeField extends CodeNode {
     constructor(props) {
         super('CodeField');
         this.domain = props.domain;
-        this.value = props.value ? props.value : new Input({});
+        this.value = props.value || '';
+    }
+
+    addToken(token, complete) {
+        if (Array.isArray(this.value) ) {
+            this.value.splice(-1, 1, token);
+            if (! complete) this.value.push('');
+        } else {
+            this.value = complete ? token : [token, ''];
+        }
     }
 }
 
@@ -199,14 +197,7 @@ class Literal extends CodeNode {
     }
 }
 
-class Input extends CodeNode {
-    constructor(props) {
-        super('Input');
-        this.value = props.value || '';
-    }
-}
-
-const classMap = {Sememe, Node, CodeBlock, CodeLine, CodeField, Declaration, Expression, Token, Input, Literal};
+const classMap = {Sememe, Node, CodeBlock, CodeLine, CodeField, Declaration, Expression, Token, Literal};
 const { serialize, deserialize } = new Serializer(classMap);
 
 export default Model;

@@ -116,10 +116,7 @@
                         "right": {
                           "className": "CodeField",
                           "domain": "#",
-                          "value": {
-                            "className": "Input",
-                            "value": ""
-                          }
+                          "value": ""
                         }
                       }
                     },
@@ -162,10 +159,7 @@
                 "right": {
                   "className": "CodeField",
                   "domain": ".",
-                  "value": {
-                    "className": "Input",
-                    "value": ""
-                  }
+                  "value": ""
                 }
               }
             }

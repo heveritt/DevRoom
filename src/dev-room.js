@@ -60,12 +60,16 @@ class Frame extends Component {
         return (
             render.block('frame',
                 render.block('frame-header',
-                    render.block('frame-node', 'Node: ', render.inline('token', this.props.node)),
+                    render.block('frame-node', 'Node: ',
+                        render.inline('token', this.props.node)
+                    ),
                     render.block('frame-contexts', 'Contexts: ',
                         ...this.props.contexts.map( (context) => render.inline('token', context) )
                     )
                 ),
-                render.block('frame-contents', render.component(this.state.contents, {onKey: this.handleKey}))
+                render.block('frame-contents',
+                    render.component(this.state.contents, {onKey: this.handleKey, focus: this.state.focus || ''} )
+                )
             )
         );
     }
@@ -73,11 +77,13 @@ class Frame extends Component {
     handleKey = (path) => (e) => {
         if (e.target.value !== '' && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
             e.preventDefault();
-            let newFocus = this.props.model.processInput(this.props.node, path, e.target.value, (e.key === 'Enter'));
+            const fieldComplete = (e.key !== ' ');
+            const lineComplete = (e.key === 'Enter');
+            let newFocus = this.props.model.processInput(this.props.node, path, e.target.value, fieldComplete, lineComplete);
             console.log('Focus: ' + newFocus);
             db.updateNode(this.props.node, this.props.model.exportNode(this.props.node));
             let view = this.getView();
-            if (newFocus) this.getField(view.contents, newFocus).focus = true;
+            if (newFocus) view.focus = newFocus;
             this.setState(view);
         }
     }
@@ -110,7 +116,14 @@ function CodeLine(props) {
 }
 
 function CodeField(props) {
-    return render.inline('code-field', render.child(props, 'value'));
+    function renderChild(child) {
+        return (typeof child === 'object') ? render.component(child, props.context) : render.input(props, child);
+    }
+    if (Array.isArray(props.value)) {
+        return render.inline('code-field', ...( props.value.map( child => renderChild(child) ) ) );
+    } else {
+        return render.inline('code-field', renderChild(props.value));
+    }
 }
 
 function Declaration(props) {
@@ -129,31 +142,7 @@ function Literal(props) {
     return render.inline('literal', props.value);
 }
 
-class Input extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {value: props.value};
-
-        this.handleKey = props.handlers.onKey(props.path);
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(e) {
-        this.setState({value: e.target.value});
-    }
-
-    render() {
-        return render.input({
-            className: 'input',
-            value: this.state.value,
-            size: Math.max(this.state.value.length, 1), // html does not allow zero
-            onChange: this.handleChange,
-            onKeyDown: this.handleKey
-        }, this.props.focus);
-    }
-}
-
-const classMap = {Frame, CodeBlock, CodeLine, CodeField, Declaration, Expression, Token, Input, Literal};
+const classMap = {Frame, CodeBlock, CodeLine, CodeField, Declaration, Expression, Token, Literal};
 
 const serializer = new Serializer(classMap);
 

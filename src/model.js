@@ -95,8 +95,7 @@ class Node extends CodeNode {
         let field = this.getField(path);
 
         if (model.expressions[value]) {
-            let props = model.expressions[value];
-            props.operator = value;
+            let props = Object.assign({operator: value}, model.expressions[value]);
             let newFocus = path + '.value.left';
             if ( Array.isArray(field.value) ) {
                 props.left = new CodeField({domain: props.left, value: field.value[0]});

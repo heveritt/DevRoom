@@ -33,24 +33,24 @@
   ],
   "nodes": [
     {
-      "className": "Node",
+      "className": "Nodule",
       "id": "transform",
       "code": {
-        "className": "CodeBlock",
+        "className": "Block",
         "arguments": [
           {"className": "Declaration", "identifier": "x", "domain": "#"},
           {"className": "Declaration", "identifier": "y", "domain": "#"}
         ],
         "instructions": [
           {
-            "className": "CodeLine",
+            "className": "Line",
             "instruction": {
-              "className": "CodeField",
+              "className": "Field",
               "domain": "#",
               "value": {
                 "className": "Expression",
                 "left": {
-                  "className": "CodeField",
+                  "className": "Field",
                   "domain": "#",
                   "value": {
                     "className": "Token",
@@ -62,7 +62,7 @@
                   "value": ":="
                 },
                 "right": {
-                  "className": "CodeField",
+                  "className": "Field",
                   "domain": "#",
                   "value": {
                     "className": "Literal",
@@ -73,14 +73,14 @@
             }
           },
           {
-            "className": "CodeLine",
+            "className": "Line",
             "instruction": {
-              "className": "CodeField",
+              "className": "Field",
               "domain": "#",
               "value": {
                 "className": "Expression",
                 "left": {
-                  "className": "CodeField",
+                  "className": "Field",
                   "domain": "#",
                   "value": {
                     "className": "Token",
@@ -92,17 +92,17 @@
                   "value": ":="
                 },
                 "right": {
-                  "className": "CodeField",
+                  "className": "Field",
                   "domain": "#",
                   "value": {
                     "className": "Expression",
                     "left": {
-                      "className": "CodeField",
+                      "className": "Field",
                       "domain": "#",
                       "value": {
                         "className": "Expression",
                         "left": {
-                          "className": "CodeField",
+                          "className": "Field",
                           "domain": "#",
                           "value": {
                             "className": "Token",
@@ -114,7 +114,7 @@
                           "value": "*"
                         },
                         "right": {
-                          "className": "CodeField",
+                          "className": "Field",
                           "domain": "#",
                           "value": ""
                         }
@@ -125,7 +125,7 @@
                       "value": "+"
                     },
                     "right": {
-                      "className": "CodeField",
+                      "className": "Field",
                       "domain": "#",
                       "value": {
                         "className": "Literal",
@@ -138,14 +138,14 @@
             }
           },
           {
-            "className": "CodeLine",
+            "className": "Line",
             "instruction": {
-              "className": "CodeField",
+              "className": "Field",
               "domain": "#",
               "value": {
                 "className": "Expression",
                 "left": {
-                  "className": "CodeField",
+                  "className": "Field",
                   "domain": ".",
                   "value": {
                     "className": "Token",
@@ -157,7 +157,7 @@
                   "value": ":="
                 },
                 "right": {
-                  "className": "CodeField",
+                  "className": "Field",
                   "domain": ".",
                   "value": ""
                 }

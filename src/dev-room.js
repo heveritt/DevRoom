@@ -102,7 +102,7 @@ class Frame extends Component {
 
 }
 
-function CodeBlock(props) {
+function Block(props) {
     return (
         render.block('code-block',
             render.block('arguments', render.child(props, 'arguments')),
@@ -111,11 +111,11 @@ function CodeBlock(props) {
     );
 }
 
-function CodeLine(props) {
+function Line(props) {
     return render.block('code-line', render.inline('line-number', (props.ix + 1) + ':'), render.child(props, 'instruction'));
 }
 
-function CodeField(props) {
+function Field(props) {
     function renderChild(child) {
         return (typeof child === 'object') ? render.component(child, props.context) : render.input(props, child);
     }
@@ -142,7 +142,7 @@ function Literal(props) {
     return render.inline('literal', props.value);
 }
 
-const classMap = {Frame, CodeBlock, CodeLine, CodeField, Declaration, Expression, Token, Literal};
+const classMap = {Frame, Block, Line, Field, Declaration, Expression, Token, Literal};
 
 const serializer = new Serializer(classMap);
 

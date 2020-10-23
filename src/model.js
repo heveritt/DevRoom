@@ -82,9 +82,9 @@ class CodeNode {
 
 }
 
-class Node extends CodeNode {
+class Nodule extends CodeNode {
     constructor(props) {
-        super('Node');
+        super('Nodule');
         this.id = props.id;
         this.code = props.code;
     }
@@ -98,7 +98,7 @@ class Node extends CodeNode {
             let props = Object.assign({operator: value}, model.expressions[value]);
             let newFocus = path + '.value.left';
             if ( Array.isArray(field.value) ) {
-                props.left = new CodeField({domain: props.left, value: field.value[0]});
+                props.left = new Field({domain: props.left, value: field.value[0]});
                 newFocus = path + '.value.right';
             }
             field.value = new Expression(props);
@@ -127,30 +127,30 @@ class Node extends CodeNode {
 
     addLineBelow(path) {
         let ix = this.getLineIx(path) + 1;
-        let line = new CodeLine({});
+        let line = new Line({});
         this.code.instructions.splice(ix, 0, line);
         return ix;
     }
 }
 
-class CodeBlock extends CodeNode {
+class Block extends CodeNode {
     constructor(props) {
-        super('CodeBlock');
+        super('Block');
         this.arguments = props.arguments;
         this.instructions = props.instructions;
     }
 }
 
-class CodeLine extends CodeNode {
+class Line extends CodeNode {
     constructor(props) {
-        super('CodeLine');
-        this.instruction = props.instruction ? props.instruction : new CodeField({domain: ''});
+        super('Line');
+        this.instruction = props.instruction ? props.instruction : new Field({domain: ''});
     }
 }
 
-class CodeField extends CodeNode {
+class Field extends CodeNode {
     constructor(props) {
-        super('CodeField');
+        super('Field');
         this.domain = props.domain;
         this.value = props.value || '';
     }
@@ -176,9 +176,9 @@ class Declaration extends CodeNode {
 class Expression extends CodeNode {
     constructor(props) {
         super('Expression');
-        this.left = typeof props.left === 'object' ? props.left : new CodeField({domain: props.left});
+        this.left = typeof props.left === 'object' ? props.left : new Field({domain: props.left});
         this.operator = typeof props.operator === 'object' ? props.operator : new Token({value: props.operator});
-        this.right = typeof props.right === 'object' ? props.right : new CodeField({domain: props.right});
+        this.right = typeof props.right === 'object' ? props.right : new Field({domain: props.right});
     }
 }
 
@@ -196,7 +196,7 @@ class Literal extends CodeNode {
     }
 }
 
-const classMap = {Sememe, Node, CodeBlock, CodeLine, CodeField, Declaration, Expression, Token, Literal};
+const classMap = {Sememe, Nodule, Block, Line, Field, Declaration, Expression, Token, Literal};
 const { serialize, deserialize } = new Serializer(classMap);
 
 export default Model;

@@ -75,14 +75,14 @@ class Sememe {
     }
 }
 
-class CodeNode {
+class Code {
     constructor(className) {
         this.className = className;
     }
 
 }
 
-class Nodule extends CodeNode {
+class Nodule extends Code {
     constructor(props) {
         super('Nodule');
         this.id = props.id;
@@ -133,7 +133,7 @@ class Nodule extends CodeNode {
     }
 }
 
-class Block extends CodeNode {
+class Block extends Code {
     constructor(props) {
         super('Block');
         this.arguments = props.arguments;
@@ -141,14 +141,14 @@ class Block extends CodeNode {
     }
 }
 
-class Line extends CodeNode {
+class Line extends Code {
     constructor(props) {
         super('Line');
         this.instruction = props.instruction ? props.instruction : new Field({domain: ''});
     }
 }
 
-class Field extends CodeNode {
+class Field extends Code {
     constructor(props) {
         super('Field');
         this.domain = props.domain;
@@ -165,7 +165,7 @@ class Field extends CodeNode {
     }
 }
 
-class Declaration extends CodeNode {
+class Declaration extends Code {
     constructor(props) {
         super('Declaration');
         this.identifier = props.identifier;
@@ -173,7 +173,7 @@ class Declaration extends CodeNode {
     }
 }
 
-class Expression extends CodeNode {
+class Expression extends Code {
     constructor(props) {
         super('Expression');
         this.left = typeof props.left === 'object' ? props.left : new Field({domain: props.left});
@@ -182,14 +182,14 @@ class Expression extends CodeNode {
     }
 }
 
-class Token extends CodeNode {
+class Token extends Code {
     constructor(props) {
         super('Token');
         this.value = props.value;
     }
 }
 
-class Literal extends CodeNode {
+class Literal extends Code {
     constructor(props) {
         super('Literal');
         this.value = props.value;

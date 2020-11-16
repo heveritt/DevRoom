@@ -133,10 +133,20 @@ class Nodule extends Code {
     }
 }
 
+class Procedure extends Code {
+    constructor(props) {
+        super('Procedure');
+        this.operation = props.operation;
+        this.inputs = props.inputs;
+        this.output = props.output;
+        this.implementation = props.implementation || new Field({domain: props.output.domain});
+    }
+}
+
 class Block extends Code {
     constructor(props) {
         super('Block');
-        this.arguments = props.arguments;
+        this.declarations = props.declarations;
         this.instructions = props.instructions;
     }
 }
@@ -144,7 +154,7 @@ class Block extends Code {
 class Line extends Code {
     constructor(props) {
         super('Line');
-        this.instruction = props.instruction ? props.instruction : new Field({domain: ''});
+        this.instruction = props.instruction || new Field({domain: ''});
     }
 }
 
@@ -196,7 +206,7 @@ class Literal extends Code {
     }
 }
 
-const classMap = {Sememe, Nodule, Block, Line, Field, Declaration, Expression, Token, Literal};
+const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal};
 const { serialize, deserialize } = new Serializer(classMap);
 
 export default Model;

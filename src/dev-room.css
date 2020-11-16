@@ -32,34 +32,40 @@
     padding: 5px;
 }
 
-.arguments {
-    border: 3px solid grey;
-    border-radius: 5px;
-    padding: 3px;
+.procedure {
+    border-color: grey;
 }
 
-.arguments:hover {
+.procedure:hover {
     border-color: white;
+}
+
+.interface {
+    display: inline-block;
+    border-style: solid;
+    border-width: 3px 3px 0px 3px;
+    border-radius: 5px 5px 0px 0px;
+    border-color: inherit;
+    padding: 5px;
+}
+
+.implementation {
+    border: 3px solid grey;
+    border-radius: 0px 5px 5px 5px;
+    border-color: inherit;
+}
+
+.declarations {
+    padding: 5px;
 }
 
 .declaration {
     padding: 5px;
 }
 
-.arguments .token {
-    margin: 0px 5px;
-    padding: 2px 5px;
-}
-
 .instructions {
-    margin-top: 5px;
-    border: 3px solid grey;
-    border-radius: 5px;
-    padding: 3px;
-}
-
-.instructions:hover {
-    border-color: white;
+    border-top: 3px solid grey;
+    padding: 5px;
 }
 
 .code-line {
@@ -107,7 +113,7 @@ input:focus {
     color: lime;
 }
 
-.expression > .token {
+.operation, .expression > .token {
     color: cyan;
 }
 

@@ -102,10 +102,24 @@ class Frame extends Component {
 
 }
 
+function Procedure(props) {
+  return (
+        render.block('procedure',
+            render.inline('interface', 
+                render.child(props, 'output'),
+                Token({value: ':='}),
+                render.inline('operation', props.operation),
+                render.child(props, 'inputs')
+            ),
+            render.block('implementation', render.child(props, 'implementation'))
+        )
+    );
+}
+
 function Block(props) {
     return (
         render.block('code-block',
-            render.block('arguments', render.child(props, 'arguments')),
+            render.block('declarations', render.child(props, 'declarations')),
             render.block('instructions', render.child(props, 'instructions'))
         )
     );
@@ -127,7 +141,7 @@ function Field(props) {
 }
 
 function Declaration(props) {
-    return render.block('declaration', render.inline('token', props.identifier), render.inline('separator', ':'), render.inline('token', props.domain));
+    return render.inline('declaration', render.inline('token', props.identifier), render.inline('separator', ':'), render.inline('token', props.domain));
 }
 
 function Expression(props) {
@@ -142,7 +156,7 @@ function Literal(props) {
     return render.inline('literal', props.value);
 }
 
-const classMap = {Frame, Block, Line, Field, Declaration, Expression, Token, Literal};
+const classMap = {Frame, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal};
 
 const serializer = new Serializer(classMap);
 

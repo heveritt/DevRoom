@@ -41,17 +41,16 @@
 }
 
 .interface {
-    display: inline-block;
-    border-style: solid;
-    border-width: 3px 3px 0px 3px;
-    border-radius: 5px 5px 0px 0px;
-    border-color: inherit;
-    padding: 5px;
+    border: 2px solid cyan;
+    border-radius: 15px;
+    padding: 0px 5px;
+    margin: 0px 0px 5px 0px;
+    color: cyan;
 }
 
 .implementation {
     border: 3px solid grey;
-    border-radius: 0px 5px 5px 5px;
+    border-radius: 5px;
     border-color: inherit;
 }
 
@@ -60,7 +59,16 @@
 }
 
 .declaration {
-    padding: 5px;
+    padding: 3px 5px;
+    margin: 2px;
+    color: inherit;
+}
+
+.domain {
+    padding: 0px 5px;
+    color: grey;
+    background-color: lightgrey;
+    border: 2px inset;
 }
 
 .instructions {
@@ -73,7 +81,6 @@
 }
 
 .code-field {
-    display: inline-block;
     border: 1px solid transparent;
     margin: 1px 2px;
     border-radius: 4px;
@@ -89,10 +96,14 @@
     border-radius: 5px;
 }
 
-.token, .literal, .separator, .arrow {
-    display: inline-block;
-    padding: 1px 5px;
+.token, .literal, .separator, .arrow, .operation {
+    padding: 0px 5px;
     text-align: center;
+    color: inherit;
+}
+
+span {
+    display: inline-block;
 }
 
 input {
@@ -122,6 +133,5 @@ input:focus {
 }
 
 .separator, .arrow {
-    color: #BF80FF;
-    font-weight: bold;
+    color: magenta;
 }

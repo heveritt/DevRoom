@@ -103,9 +103,9 @@ class Frame extends Component {
 }
 
 function Procedure(props) {
-  return (
+    return (
         render.block('procedure',
-            render.inline('interface', 
+            render.inline('interface',
                 render.child(props, 'output'),
                 Token({value: ':='}),
                 render.inline('operation', props.operation),
@@ -141,7 +141,10 @@ function Field(props) {
 }
 
 function Declaration(props) {
-    return render.inline('declaration', render.inline('token', props.identifier), render.inline('separator', ':'), render.inline('token', props.domain));
+    return render.inline('declaration',
+        props.identifier ? render.inline('token', props.identifier + ':') : null,
+        render.inline('domain', props.domain)
+    );
 }
 
 function Expression(props) {

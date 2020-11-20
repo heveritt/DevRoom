@@ -1,7 +1,7 @@
 const Unicode = {
     map: {
         '=>': '\u21D2', // Is a sub-class of
-        ':=': '\u2190', // Assign
+        ':=': '\u2B60', // Assign
         '*' : '\u00D7', // Multiply
         '/' : '\u00F7', // Divide
         '==': '\u225F', // Equal to

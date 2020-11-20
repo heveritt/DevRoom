@@ -146,14 +146,14 @@ class Procedure extends Code {
 class Block extends Code {
     constructor(props) {
         super('Block');
-        this.declarations = props.declarations;
-        this.instructions = props.instructions;
+        this.lines = props.lines;
     }
 }
 
 class Line extends Code {
     constructor(props) {
         super('Line');
+        this.declaration = props.declaration || undefined;
         this.instruction = props.instruction || new Field({domain: ''});
     }
 }

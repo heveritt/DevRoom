@@ -57,14 +57,7 @@
         },
         "implementation": {
           "className": "Block",
-          "declarations": [
-            {
-              "className": "Declaration",
-              "identifier": "z",
-              "domain": "#"
-            }
-          ],
-          "instructions": [
+          "lines": [
             {
               "className": "Line",
               "instruction": {
@@ -162,6 +155,11 @@
             },
             {
               "className": "Line",
+              "declaration": {
+                "className": "Declaration",
+                "identifier": "z",
+                "domain": "#"
+              },
               "instruction": {
                 "className": "Field",
                 "domain": "#",

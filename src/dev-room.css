@@ -54,10 +54,6 @@
     border-color: inherit;
 }
 
-.declarations {
-    padding: 5px;
-}
-
 .declaration {
     padding: 3px 5px;
     margin: 2px;
@@ -71,8 +67,7 @@
     border: 2px inset;
 }
 
-.instructions {
-    border-top: 3px solid grey;
+.code-block {
     padding: 5px;
 }
 

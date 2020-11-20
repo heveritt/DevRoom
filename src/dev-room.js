@@ -117,12 +117,7 @@ function Procedure(props) {
 }
 
 function Block(props) {
-    return (
-        render.block('code-block',
-            render.block('declarations', render.child(props, 'declarations')),
-            render.block('instructions', render.child(props, 'instructions'))
-        )
-    );
+    return render.block('code-block', render.child(props, 'lines'));
 }
 
 function Line(props) {

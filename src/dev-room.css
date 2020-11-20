@@ -49,14 +49,13 @@
 }
 
 .implementation {
-    border: 3px solid grey;
+    border: 2px solid;
     border-radius: 5px;
     border-color: inherit;
 }
 
 .declaration {
     padding: 3px 5px;
-    margin: 2px;
     color: inherit;
 }
 

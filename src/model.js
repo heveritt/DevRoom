@@ -153,7 +153,6 @@ class Block extends Code {
 class Line extends Code {
     constructor(props) {
         super('Line');
-        this.declaration = props.declaration || undefined;
         this.instruction = props.instruction || new Field({domain: ''});
     }
 }

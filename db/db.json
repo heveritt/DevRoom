@@ -155,23 +155,15 @@
             },
             {
               "className": "Line",
-              "declaration": {
-                "className": "Declaration",
-                "identifier": "z",
-                "domain": "#"
-              },
               "instruction": {
                 "className": "Field",
                 "domain": "#",
                 "value": {
                   "className": "Expression",
                   "left": {
-                    "className": "Field",
-                    "domain": ".",
-                    "value": {
-                      "className": "Token",
-                      "value": "z"
-                    }
+                    "className": "Declaration",
+                    "identifier": "z",
+                    "domain": "#"
                   },
                   "operator": {
                     "className": "Token",

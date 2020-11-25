@@ -5,7 +5,7 @@
 }
 
 .frame {
-    border: 3px solid green;
+    border: 3px solid grey;
     border-radius: 5px;
     height: 100%;
     cursor: default;
@@ -14,8 +14,7 @@
 .frame-header {
     display: flex;
     justify-content: space-between;
-    background: green;
-    border-bottom: 3px solid green;
+    background-image:linear-gradient(grey, lightgrey);
     padding: 3px;
     width: 100%;
 }
@@ -29,7 +28,7 @@
 }
 
 .frame-contents {
-    padding: 5px;
+    padding: 10px;
 }
 
 .procedure {
@@ -37,7 +36,7 @@
 }
 
 .procedure:hover {
-    border-color: white;
+    border-color: lightgrey;
 }
 
 .interface {

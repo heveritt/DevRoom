@@ -110,7 +110,7 @@ class Nodule extends Code {
 
             if (lineComplete) {
                 const ix = this.addLineBelow(path);
-                return 'instructions.' + ix + '.instruction';
+                return 'implementation.lines.' + ix + '.instruction';
             } else {
                 return fieldComplete ? null : path;
             }
@@ -122,13 +122,13 @@ class Nodule extends Code {
     }
 
     getLineIx(path) {
-        return 1 * path.split('.')[1];
+        return 1 * path.split('.')[2];
     }
 
     addLineBelow(path) {
         let ix = this.getLineIx(path) + 1;
         let line = new Line({});
-        this.code.instructions.splice(ix, 0, line);
+        this.code.implementation.lines.splice(ix, 0, line);
         return ix;
     }
 }

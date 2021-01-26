@@ -29,7 +29,11 @@ class Model {
             '<=': {left: '#', right: '#', return: '|'},
             '>=': {left: '#', right: '#', return: '|'},
             '&&': {left: '|', right: '|', return: '|'},
-            '||': {left: '|', right: '|', return: '|'},
+            '||': {left: '|', right: '|', return: '|'}
+        };
+        this.instructions = {
+            '?' : {className: 'Branch', condition: '|', if: true,},
+            '?|': {className: 'Branch', condition: '|', if: true, else: true}
         };
         console.log(this);
     }
@@ -103,8 +107,17 @@ class Nodule extends Code {
             }
             field.value = new Expression(props);
             return newFocus;
+        } else if (model.instructions[value]) {
+            let props = Object.assign({}, model.instructions[value]);
+            const classConstructor = classMap[props.className];
+            if (classConstructor) {
+                field.value = new classConstructor(props);
+                let newFocus = path + '.value.condition'; // TODO - hard-coded hack - to refactor processing inputs and focus
+                return newFocus;
+            } else {
+                throw new Error('Atttempt to create unknown class of code element: ' + props.className);
+            }
         } else {
-
             const token = (isNaN(value)) ? new Token({value}) : new Literal({value});
             field.addToken(token, fieldComplete);
 
@@ -146,7 +159,7 @@ class Procedure extends Code {
 class Block extends Code {
     constructor(props) {
         super('Block');
-        this.lines = props.lines;
+        this.lines = props.lines || [new Line({})];
     }
 }
 
@@ -191,6 +204,15 @@ class Expression extends Code {
     }
 }
 
+class Branch extends Code {
+    constructor(props) {
+        super('Branch');
+        this.condition = typeof props.condition === 'object' ? props.condition : new Field({domain: props.condition});
+        this.if = typeof props.operator === 'object' ? props.if : new Block({});
+        if (props.else) this.else = typeof props.else === 'object' ? props.else : new Block({});
+    }
+}
+
 class Token extends Code {
     constructor(props) {
         super('Token');
@@ -205,7 +227,7 @@ class Literal extends Code {
     }
 }
 
-const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal};
+const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Branch};
 const { serialize, deserialize } = new Serializer(classMap);
 
 export default Model;

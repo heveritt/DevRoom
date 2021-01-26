@@ -67,6 +67,8 @@
 
 .code-block {
     padding: 5px;
+    margin: 3px 0px 3px 50px;
+    border: 1px solid grey;
 }
 
 .code-line {
@@ -121,10 +123,6 @@ input:focus {
     color: cyan;
 }
 
-.line-number {
-    color: grey;
-}
-
-.separator, .arrow {
+.branch > .token, .arrow {
     color: violet;
 }

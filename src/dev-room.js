@@ -121,7 +121,7 @@ function Block(props) {
 }
 
 function Line(props) {
-    return render.block('code-line', render.inline('line-number', (props.ix + 1) + ':'), render.child(props, 'instruction'));
+    return render.block('code-line', render.child(props, 'instruction'));
 }
 
 function Field(props) {
@@ -154,7 +154,18 @@ function Literal(props) {
     return render.inline('literal', props.value);
 }
 
-const classMap = {Frame, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal};
+function Branch(props) {
+    return (
+        render.block('branch',
+            Token({value: '?'}),
+            render.child(props, 'condition'),
+            render.child(props, 'if'),
+            props.else ? render.child(props, 'else') : null
+        )
+    );
+}
+
+const classMap = {Frame, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Branch};
 
 const serializer = new Serializer(classMap);
 

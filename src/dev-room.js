@@ -2,10 +2,7 @@ import {Component, render} from './renderer';
 import Serializer from './serializer';
 import Unicode from './unicode';
 import Model from './model';
-import Database from './db';
 import './dev-room.css';
-
-const db = new Database();
 
 class DevRoom extends Component {
 
@@ -20,9 +17,9 @@ class DevRoom extends Component {
     }
 
     componentDidMount() {
-        db.loadModel()
-        .then(json => this.setState({model: Model.import(json)}))
-        .catch(error => this.setState({error: error}));
+        Model.open()
+        .then(model => this.setState({model}))
+        .catch(error => this.setState({error}));
     }
 
     render() {
@@ -75,13 +72,18 @@ class Frame extends Component {
     }
 
     handleKey = (path) => (e) => {
+        // TODO - Below is temporary measure, to provide control over DB updates during development only
+        if (e.key === '£') {
+            console.log('Saving node ' + this.props.node + ' to database.');
+            this.props.model.saveNode(this.props.node);
+        }
+
         if (e.target.value !== '' && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
             e.preventDefault();
             const fieldComplete = (e.key !== ' ');
             const lineComplete = (e.key === 'Enter');
             let newFocus = this.props.model.processInput(this.props.node, path, e.target.value, fieldComplete, lineComplete);
             console.log('Focus: ' + newFocus);
-            db.updateNode(this.props.node, this.props.model.exportNode(this.props.node));
             let view = this.getView();
             if (newFocus) view.focus = newFocus;
             this.setState(view);

@@ -1,6 +1,13 @@
 import Serializer from './serializer';
+import Database from './db';
+
+const db = new Database();
 
 class Model {
+
+    static open() {
+        return db.loadModel().then(json => Model.import(json))
+    }
 
     static import(json) {
         const sememes = deserialize(json.sememes);
@@ -42,8 +49,8 @@ class Model {
         return this.nodes.get(id);
     }
 
-    exportNode(id) {
-        return serialize(this.node(id), false);
+    saveNode(id) {
+        db.updateNode(id, serialize(this.node(id), false) );
     }
 
     compileView(nodeId, contexts) {

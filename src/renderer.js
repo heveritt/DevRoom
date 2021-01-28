@@ -20,9 +20,12 @@ class Input extends Component {
             value: this.state.value,
             size: Math.max(this.state.value.length, 1), // html does not allow zero
             onChange: this.handleChange,
-            onKeyDown: this.props.context.onKey(this.props.fieldPath),
-            autoFocus: (this.props.fieldPath === this.props.context.focus)
+            onKeyDown: this.props.context.onKey(this.props.fieldPath)
         };
+        if (this.props.context.focus === 'NEXT') {
+            this.props.context.focus = 'DONE';
+            props.autoFocus = true;
+        }
         return React.createElement('input', props, null);
     }
 }
@@ -61,6 +64,7 @@ var render = {
                 return this.component(element, context);
             });
         } else {
+            if (data.path === context.focus) context.focus = 'NEXT';
             data.context = context;
             return React.createElement(data.classConstructor, data, null);
         }

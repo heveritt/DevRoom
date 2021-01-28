@@ -58,7 +58,7 @@ class Model {
     }
 
     processInput(nodeId, path, value, fieldComplete, lineComplete) {
-        return this.node(nodeId).processInput(this, path, value, fieldComplete, lineComplete);
+        this.node(nodeId).processInput(this, path, value, fieldComplete, lineComplete);
     }
 
     generateHashId(value) {
@@ -107,20 +107,15 @@ class Nodule extends Code {
 
         if (model.expressions[value]) {
             let props = Object.assign({operator: value}, model.expressions[value]);
-            let newFocus = path + '.value.left';
             if ( Array.isArray(field.value) ) {
                 props.left = new Field({domain: props.left, value: field.value[0]});
-                newFocus = path + '.value.right';
             }
             field.value = new Expression(props);
-            return newFocus;
         } else if (model.instructions[value]) {
             let props = Object.assign({}, model.instructions[value]);
             const classConstructor = classMap[props.className];
             if (classConstructor) {
                 field.value = new classConstructor(props);
-                let newFocus = path + '.value.condition'; // TODO - hard-coded hack - to refactor processing inputs and focus
-                return newFocus;
             } else {
                 throw new Error('Atttempt to create unknown class of code element: ' + props.className);
             }
@@ -128,12 +123,7 @@ class Nodule extends Code {
             const token = (isNaN(value)) ? new Token({value}) : new Literal({value});
             field.addToken(token, fieldComplete);
 
-            if (lineComplete) {
-                const ix = this.addLineBelow(path);
-                return 'implementation.lines.' + ix + '.instruction';
-            } else {
-                return fieldComplete ? null : path;
-            }
+            if (lineComplete) this.addLineBelow(path);
         }
     }
 

@@ -65,7 +65,7 @@ class Frame extends Component {
                     )
                 ),
                 render.block('frame-contents',
-                    render.component(this.state.contents, {onKey: this.handleKey, focus: this.state.focus || ''} )
+                    render.component(this.state.contents, {onKey: this.handleKey, focus: this.state.focus || 'NEXT'} )
                 )
             )
         );
@@ -82,10 +82,9 @@ class Frame extends Component {
             e.preventDefault();
             const fieldComplete = (e.key !== ' ');
             const lineComplete = (e.key === 'Enter');
-            let newFocus = this.props.model.processInput(this.props.node, path, e.target.value, fieldComplete, lineComplete);
-            console.log('Focus: ' + newFocus);
+            this.props.model.processInput(this.props.node, path, e.target.value, fieldComplete, lineComplete);
             let view = this.getView();
-            if (newFocus) view.focus = newFocus;
+            view.focus = path;
             this.setState(view);
         }
     }

@@ -51,6 +51,7 @@ class Frame extends Component {
     constructor(props) {
         super(props);
         this.state = this.getView();
+        this.nodule = this.props.model.node(this.props.node); // Synonym only - link to node currently local
     }
 
     render() {
@@ -75,14 +76,14 @@ class Frame extends Component {
         // TODO - Below is temporary measure, to provide control over DB updates during development only
         if (e.key === '£') {
             console.log('Saving node ' + this.props.node + ' to database.');
-            this.props.model.saveNode(this.props.node);
+            this.nodule.save();
         }
 
         if (e.target.value !== '' && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
             e.preventDefault();
             const fieldComplete = (e.key !== ' ');
             const lineComplete = (e.key === 'Enter');
-            this.props.model.processInput(this.props.node, path, e.target.value, fieldComplete, lineComplete);
+            this.nodule.processInput(path, e.target.value, fieldComplete, lineComplete);
             let view = this.getView();
             view.focus = path;
             this.setState(view);

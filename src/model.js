@@ -15,13 +15,9 @@ class Model {
         return new Model(sememes, nodes);
     }
     
-    static export(model) {
-        return 'json-stream';
-    }
-
     constructor(sememes, nodes) {
         this.sememes = new Map(sememes.map(sememe => [sememe.id, sememe]));
-        this.nodes = new Map(nodes.map(node => [node.id, node]));
+        this.nodes = new Map(nodes.map(node => [node.id, node.withModel(this)]));
         this.expressions = {
             ':=': {left: '.', right: '.'},
             '+' : {left: '#', right: '#', return: '#'},
@@ -49,26 +45,8 @@ class Model {
         return this.nodes.get(id);
     }
 
-    saveNode(id) {
-        db.updateNode(id, serialize(this.node(id), false) );
-    }
-
     compileView(nodeId, contexts) {
         return serialize(this.node(nodeId).code);
-    }
-
-    processInput(nodeId, path, value, fieldComplete, lineComplete) {
-        this.node(nodeId).processInput(this, path, value, fieldComplete, lineComplete);
-    }
-
-    generateHashId(value) {
-        var char, hash = 0;
-        for (let i = 0; i < value.length; i++) {
-            char = value.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash |= 0; // Convert to 32bit integer
-        }
-        return hash;
     }
 
     translate(language, version) {
@@ -100,19 +78,25 @@ class Nodule extends Code {
         this.code = props.code;
     }
 
-    processInput(model, path, value, fieldComplete, lineComplete) {
+    withModel(model) {
+        // Don't want this outward pointing property to be serialised, otherwise we get circular dependencies
+        Object.defineProperty(this, 'model', {value: model, enumerable: false});
+        return this;
+    }
+
+    processInput(path, value, fieldComplete, lineComplete) {
         console.log('Path: ' + path + ' value: ' + value + (fieldComplete ? ' +' : ' -') + (lineComplete ? ' +' : ' -'));
 
         let field = this.getField(path);
 
-        if (model.expressions[value]) {
-            let props = Object.assign({operator: value}, model.expressions[value]);
+        if (this.model.expressions[value]) {
+            let props = Object.assign({operator: value}, this.model.expressions[value]);
             if ( Array.isArray(field.value) ) {
                 props.left = new Field({domain: props.left, value: field.value[0]});
             }
             field.value = new Expression(props);
-        } else if (model.instructions[value]) {
-            let props = Object.assign({}, model.instructions[value]);
+        } else if (this.model.instructions[value]) {
+            let props = Object.assign({}, this.model.instructions[value]);
             const classConstructor = classMap[props.className];
             if (classConstructor) {
                 field.value = new classConstructor(props);
@@ -140,6 +124,10 @@ class Nodule extends Code {
         let line = new Line({});
         this.code.implementation.lines.splice(ix, 0, line);
         return ix;
+    }
+
+    save() {
+        db.updateNode(this.id, serialize(this, false) );
     }
 }
 

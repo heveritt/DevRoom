@@ -104,7 +104,7 @@ class Nodule extends Code {
                 throw new Error('Atttempt to create unknown class of code element: ' + props.className);
             }
         } else {
-            const token = (isNaN(value)) ? new Token({value}) : new Literal({value});
+            const token = (isNaN(value) && !value.startsWith('|')) ? new Token({value}) : new Literal({value});
             field.addToken(token, fieldComplete);
 
             if (lineComplete) this.addLineBelow(path);
@@ -193,7 +193,7 @@ class Branch extends Code {
     constructor(props) {
         super('Branch');
         this.condition = typeof props.condition === 'object' ? props.condition : new Field({domain: props.condition});
-        this.if = typeof props.operator === 'object' ? props.if : new Block({});
+        this.if = typeof props.if === 'object' ? props.if : new Block({});
         if (props.else) this.else = typeof props.else === 'object' ? props.else : new Block({});
     }
 }
@@ -209,6 +209,7 @@ class Literal extends Code {
     constructor(props) {
         super('Literal');
         this.value = props.value;
+        this.domain = props.value.startsWith('|') ? '|' : '#';
     }
 }
 

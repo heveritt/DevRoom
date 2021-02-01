@@ -153,7 +153,7 @@ function Token(props) {
 }
 
 function Literal(props) {
-    return render.inline('literal', props.value);
+    return render.inline('literal', Unicode.mapToken(props.value));
 }
 
 function Branch(props) {

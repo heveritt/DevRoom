@@ -153,7 +153,9 @@ function Token(props) {
 }
 
 function Literal(props) {
-    return render.inline('literal', Unicode.mapToken(props.value));
+    let classes = 'literal';
+    if (props.value === '|0') classes += ' falsy';
+    return render.inline(classes, Unicode.mapToken(props.value));
 }
 
 function Branch(props) {

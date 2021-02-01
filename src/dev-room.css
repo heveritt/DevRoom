@@ -119,6 +119,10 @@ input:focus {
     color: lime;
 }
 
+.literal.falsy {
+    color: red;
+}
+
 .operation, .expression > .token {
     color: cyan;
 }

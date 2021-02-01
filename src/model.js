@@ -34,10 +34,6 @@ class Model {
             '&&': {left: '|', right: '|', return: '|'},
             '||': {left: '|', right: '|', return: '|'}
         };
-        this.instructions = {
-            '?' : {className: 'Branch', condition: '|', if: true,},
-            '?|': {className: 'Branch', condition: '|', if: true, else: true}
-        };
         console.log(this);
     }
 
@@ -87,31 +83,26 @@ class Nodule extends Code {
     processInput(path, value, fieldComplete, lineComplete) {
         console.log('Path: ' + path + ' value: ' + value + (fieldComplete ? ' +' : ' -') + (lineComplete ? ' +' : ' -'));
 
-        let field = this.getField(path);
+        let element = this.getElement(path);
 
-        if (this.model.expressions[value]) {
+        if (element instanceof Line) {
+            // TODO - Baby steps - Introduce the same for a Field later
+            element.input(value);
+        } else if (this.model.expressions[value]) {
             let props = Object.assign({operator: value}, this.model.expressions[value]);
-            if ( Array.isArray(field.value) ) {
-                props.left = new Field({domain: props.left, value: field.value[0]});
+            if ( Array.isArray(element.value) ) {
+                element.left = new Field({domain: props.left, value: element.value[0]});
             }
-            field.value = new Expression(props);
-        } else if (this.model.instructions[value]) {
-            let props = Object.assign({}, this.model.instructions[value]);
-            const classConstructor = classMap[props.className];
-            if (classConstructor) {
-                field.value = new classConstructor(props);
-            } else {
-                throw new Error('Atttempt to create unknown class of code element: ' + props.className);
-            }
+            element.value = new Expression(props);
         } else {
             const token = (isNaN(value) && !value.startsWith('|')) ? new Token({value}) : new Literal({value});
-            field.addToken(token, fieldComplete);
+            element.addToken(token, fieldComplete);
 
             if (lineComplete) this.addLineBelow(path);
         }
     }
 
-    getField(path) {
+    getElement(path) {
         return path.split('.').reduce( (node, prop) => node[prop], this.code);
     }
 
@@ -149,9 +140,23 @@ class Block extends Code {
 }
 
 class Line extends Code {
+
+    static inputs = {
+        '?' : {className: 'Branch', condition: '|', if: true,},
+        '?|': {className: 'Branch', condition: '|', if: true, else: true}
+    };
+
     constructor(props) {
         super('Line');
-        this.instruction = props.instruction || new Field({domain: ''});
+        this.instruction = props.instruction || '';
+    }
+
+    input(value) {
+        if (Line.inputs[value]) {
+            let props = Line.inputs[value];
+            const classConstructor = classMap[props.className];
+            this.instruction = new classConstructor(props);
+        }
     }
 }
 

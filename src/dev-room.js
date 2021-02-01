@@ -123,7 +123,10 @@ function Block(props) {
 }
 
 function Line(props) {
-    return render.block('code-line', render.child(props, 'instruction'));
+    return render.block('code-line',
+        (typeof props.instruction === 'object') ?
+        render.child(props, 'instruction') :
+        render.input(props, props.instruction));
 }
 
 function Field(props) {

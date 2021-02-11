@@ -31,26 +31,16 @@
     padding: 10px;
 }
 
-.procedure {
-    border-color: grey;
-}
-
-.procedure:hover {
-    border-color: lightgrey;
-}
-
 .interface {
     border: 2px solid cyan;
     border-radius: 15px;
     padding: 0px 5px;
-    margin: 0px 0px 5px 0px;
     color: cyan;
 }
 
 .implementation {
-    border: 2px solid;
+    border: 2px solid cyan;
     border-radius: 5px;
-    border-color: inherit;
 }
 
 .declaration {
@@ -67,12 +57,15 @@
 
 .code-block {
     padding: 5px;
-    margin: 3px 0px 3px 50px;
+    margin: 3px 3px 3px 50px;
     border: 1px solid grey;
+    border-radius: 4px;
 }
 
 .code-line {
-    padding: 3px;
+    border: 1px solid transparent;
+    margin: 1px 2px;
+    border-radius: 4px;
 }
 
 .code-field {
@@ -81,7 +74,7 @@
     border-radius: 4px;
 }
 
-.code-field:hover {
+.selectable:hover {
     border-color: white;
 }
 
@@ -94,7 +87,6 @@
 .token, .literal, .separator, .arrow, .operation {
     padding: 0px 5px;
     text-align: center;
-    color: inherit;
 }
 
 span {

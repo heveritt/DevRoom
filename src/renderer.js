@@ -32,15 +32,19 @@ class Input extends Component {
 
 var render = {
 
-    block: function(className, ...children) {
-        return React.createElement('div', {className: className}, ...children);
+    block: function(classes, ...children) {
+        return this.element(classes, ...children);
     },
 
-    inline: function (className, ...children) {
-        let props = {className: className};
-        // TODO - Temporary fudge to preserve selectable tabbing
-        if (className === 'code-field') props.tabIndex = 0;
-        return React.createElement('span', props, ...children);
+    inline: function (classes, ...children) {
+        return this.element(classes + ' inline', ...children);
+    },
+
+    element: function (classes, ...children) {
+        const htmlElement = (classes.split(' ').includes('inline')) ? 'span' : 'div';
+        const domProps = {className: classes};
+        if (classes.split(' ').includes('selectable')) domProps.tabIndex = 0;
+        return React.createElement(htmlElement, domProps, ...children);
     },
 
     input: function(field, value) {

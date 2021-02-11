@@ -119,11 +119,11 @@ function Procedure(props) {
 }
 
 function Block(props) {
-    return render.block('code-block', render.child(props, 'lines'));
+    return render.block('code-block selectable', render.child(props, 'lines'));
 }
 
 function Line(props) {
-    return render.block('code-line',
+    return render.block('code-line selectable',
         (typeof props.instruction === 'object') ?
         render.child(props, 'instruction') :
         render.input(props, props.instruction));
@@ -134,9 +134,9 @@ function Field(props) {
         return (typeof child === 'object') ? render.component(child, props.context) : render.input(props, child);
     }
     if (Array.isArray(props.value)) {
-        return render.inline('code-field', ...( props.value.map( child => renderChild(child) ) ) );
+        return render.inline('code-field selectable', ...( props.value.map( child => renderChild(child) ) ) );
     } else {
-        return render.inline('code-field', renderChild(props.value));
+        return render.inline('code-field selectable', renderChild(props.value));
     }
 }
 

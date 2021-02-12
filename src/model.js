@@ -64,7 +64,6 @@ class Code {
     constructor(className) {
         this.className = className;
     }
-
 }
 
 class Nodule extends Code {
@@ -102,8 +101,12 @@ class Nodule extends Code {
         }
     }
 
+    deleteElement(path) {
+        this.getElement(path).deleteContents();
+    }
+
     getElement(path) {
-        return path.split('.').reduce( (node, prop) => node[prop], this.code);
+        return path.split('.').reduce( (node, child) => node[child], this.code);
     }
 
     getLineIx(path) {
@@ -137,6 +140,10 @@ class Block extends Code {
         super('Block');
         this.lines = props.lines || [new Line({})];
     }
+
+    deleteContents() {
+        this.lines = [new Line({})];
+    }
 }
 
 class Line extends Code {
@@ -158,6 +165,10 @@ class Line extends Code {
             this.instruction = new classConstructor(props);
         }
     }
+
+    deleteContents() {
+        this.instruction = '';
+    }
 }
 
 class Field extends Code {
@@ -174,6 +185,10 @@ class Field extends Code {
         } else {
             this.value = complete ? token : [token, ''];
         }
+    }
+
+    deleteContents() {
+        this.value = '';
     }
 }
 

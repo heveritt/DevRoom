@@ -33,17 +33,20 @@ class Input extends Component {
 var render = {
 
     block: function(classes, ...children) {
-        return this.element(classes, ...children);
+        return this.element(classes, {}, ...children);
     },
 
     inline: function (classes, ...children) {
-        return this.element(classes + ' inline', ...children);
+        return this.element(classes + ' inline', {}, ...children);
     },
 
-    element: function (classes, ...children) {
+    element: function (classes, props, ...children) {
         const htmlElement = (classes.split(' ').includes('inline')) ? 'span' : 'div';
         const domProps = {className: classes};
-        if (classes.split(' ').includes('selectable')) domProps.tabIndex = 0;
+        if (classes.split(' ').includes('selectable')) {
+            domProps.tabIndex = 0;
+            domProps.onKeyDown = props.context.onKey(props.path);
+        }
         return React.createElement(htmlElement, domProps, ...children);
     },
 

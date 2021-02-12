@@ -73,6 +73,11 @@ class Frame extends Component {
     }
 
     handleKey = (path) => (e) => {
+
+        e.stopPropagation();
+
+        // console.log(path + '( key: ' + e.key + ', value: ' + e.target.value + ')');
+
         // TODO - Below is temporary measure, to provide control over DB updates during development only
         if (e.key === '£') {
             console.log('Saving node ' + this.props.node + ' to database.');
@@ -84,10 +89,13 @@ class Frame extends Component {
             const fieldComplete = (e.key !== ' ');
             const lineComplete = (e.key === 'Enter');
             this.nodule.processInput(path, e.target.value, fieldComplete, lineComplete);
-            let view = this.getView();
-            view.focus = path;
-            this.setState(view);
+        } else if (e.key === 'Delete') {
+            this.nodule.deleteElement(path);
         }
+
+        let view = this.getView();
+        view.focus = path;
+        this.setState(view);
     }
 
     getView() {
@@ -119,11 +127,11 @@ function Procedure(props) {
 }
 
 function Block(props) {
-    return render.block('code-block selectable', render.child(props, 'lines'));
+    return render.element('code-block selectable', props, render.child(props, 'lines'));
 }
 
 function Line(props) {
-    return render.block('code-line selectable',
+    return render.element('code-line selectable', props,
         (typeof props.instruction === 'object') ?
         render.child(props, 'instruction') :
         render.input(props, props.instruction));
@@ -133,10 +141,11 @@ function Field(props) {
     function renderChild(child) {
         return (typeof child === 'object') ? render.component(child, props.context) : render.input(props, child);
     }
+    const classes = 'code-field selectable inline';
     if (Array.isArray(props.value)) {
-        return render.inline('code-field selectable', ...( props.value.map( child => renderChild(child) ) ) );
+        return render.element(classes, props, ...( props.value.map( child => renderChild(child) ) ) );
     } else {
-        return render.inline('code-field selectable', renderChild(props.value));
+        return render.element(classes, props, renderChild(props.value));
     }
 }
 

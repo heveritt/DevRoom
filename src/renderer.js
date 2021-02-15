@@ -72,8 +72,7 @@ var render = {
             });
         } else {
             if (data.path === context.focus) context.focus = 'NEXT';
-            data.context = context;
-            return React.createElement(data.classConstructor, data, null);
+            return React.createElement(data.classConstructor, Object.assign({context}, data), null);
         }
     },
 

@@ -32,7 +32,7 @@ class Input extends Component {
 
 var handleKey = (handler, actions, path) => (e) => {
 
-    console.log('Key: ', e.key, 'actions: ', actions, 'path: ', path)
+    //console.log('Key: ', e.key, 'actions: ', actions, 'path: ', path)
     if (actions.includes('save') && e.key === '£') {
 
         e.stopPropagation();

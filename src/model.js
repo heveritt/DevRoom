@@ -99,7 +99,7 @@ class Nodule extends Code {
         } else if (this.model.expressions[value]) {
             let props = Object.assign({operator: value}, this.model.expressions[value]);
             if ( Array.isArray(element.value) ) {
-                element.left = new Field({domain: props.left, value: element.value[0]});
+                props.left = new Field({domain: props.left, value: element.value[0]});
             }
             element.value = new Expression(props);
         } else {

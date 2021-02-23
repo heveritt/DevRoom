@@ -44,12 +44,12 @@ class Serializer {
         */
         const generatePath = (parent, key, value) =>
         {
-            function addParentPath(parentPath, key, child)
+            function addParentPath(parentPath, key, child, separator = '.')
             {
-                const childPath = parentPath ? parentPath + '.' + key : key;
+                const childPath = parentPath ? parentPath + separator + key : key;
                 if (key !== '' && typeof child === 'object') {
                     if (Array.isArray(child)) {
-                        return value.map( (element, ix) => addParentPath(childPath, ix, element));
+                        return value.map( (element, ix) => addParentPath(childPath, ix, element, '#'));
                     }
                     // Need to shallow copy object to avoid infinite recursion
                     return Object.assign({path: childPath}, child);

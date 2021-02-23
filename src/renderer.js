@@ -16,17 +16,40 @@ class Input extends Component {
     }
 
     render() {
-        let props= {
+        let domProps= {
             value: this.state.value,
             size: Math.max(this.state.value.length, 1), // html does not allow zero
             onChange: this.handleChange,
-            onKeyDown: this.props.context.onKey(this.props.fieldPath)
+            onKeyDown: handleKey(this.props.context.onAction, ['input'], this.props.fieldPath)
         };
         if (this.props.context.focus === 'NEXT') {
             this.props.context.focus = 'DONE';
-            props.autoFocus = true;
+            domProps.autoFocus = true;
         }
-        return React.createElement('input', props, null);
+        return React.createElement('input', domProps, null);
+    }
+}
+
+var handleKey = (handler, actions, path) => (e) => {
+
+    console.log('Key: ', e.key, 'actions: ', actions, 'path: ', path)
+    if (actions.includes('save') && e.key === '£') {
+
+        e.stopPropagation();
+        e.preventDefault();
+        handler('save');
+
+    } else if (actions.includes('input') && e.target.value && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
+
+        e.stopPropagation();
+        e.preventDefault();
+        handler('input', path, { value: e.target.value, fieldComplete: (e.key !== ' '), lineComplete:  (e.key === 'Enter')});
+
+    } else if (actions.includes('delete') && e.key === 'Delete') {
+
+        e.stopPropagation();
+        handler('delete', path);
+
     }
 }
 
@@ -45,7 +68,7 @@ var render = {
         const domProps = {className: classes};
         if (classes.split(' ').includes('selectable')) {
             domProps.tabIndex = 0;
-            domProps.onKeyDown = props.context.onKey(props.path);
+            domProps.onKeyDown = handleKey(props.context.onAction, ['delete', 'save'], props.path);
         }
         return React.createElement(htmlElement, domProps, ...children);
     },

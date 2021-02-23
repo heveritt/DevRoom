@@ -64,6 +64,15 @@ class Code {
     constructor(className) {
         this.className = className;
     }
+
+    getChild(child) {
+        if (child.includes('#')) {
+            let [children, ix] = child.split('#');
+            return this[children][ix];
+        } else {
+            return this[child];
+        }
+    }
 }
 
 class Nodule extends Code {
@@ -79,7 +88,8 @@ class Nodule extends Code {
         return this;
     }
 
-    processInput(path, value, fieldComplete, lineComplete) {
+    input(path, info) {
+        let {value, fieldComplete, lineComplete} = info;
         console.log('Path: ' + path + ' value: ' + value + (fieldComplete ? ' +' : ' -') + (lineComplete ? ' +' : ' -'));
 
         let element = this.getElement(path);
@@ -101,26 +111,23 @@ class Nodule extends Code {
         }
     }
 
-    deleteElement(path) {
+    delete(path) {
         this.getElement(path).deleteContents();
     }
 
     getElement(path) {
-        return path.split('.').reduce( (node, child) => node[child], this.code);
-    }
-
-    getLineIx(path) {
-        return 1 * path.split('.')[2];
+        return path.split('.').reduce( (node, child) => node.getChild(child), this.code);
     }
 
     addLineBelow(path) {
-        let ix = this.getLineIx(path) + 1;
-        let line = new Line({});
-        this.code.implementation.lines.splice(ix, 0, line);
-        return ix;
+        let cut = path.lastIndexOf('.lines#');
+        let block = this.getElement(path.slice(0, cut))
+        let ix = +path.slice(cut + 7).split('.')[0];
+        block.addLineBelow(ix);
     }
 
     save() {
+        console.log('Saving node ' + this.id + ' to database.');
         db.updateNode(this.id, serialize(this, false) );
     }
 }
@@ -143,6 +150,10 @@ class Block extends Code {
 
     deleteContents() {
         this.lines = [new Line({})];
+    }
+
+    addLineBelow(ix) {
+        this.lines.splice(ix + 1, 0, new Line({}));
     }
 }
 

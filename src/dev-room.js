@@ -52,6 +52,8 @@ class Frame extends Component {
         super(props);
         this.state = this.getView();
         this.nodule = this.props.model.node(this.props.node); // Synonym only - link to node currently local
+
+        this.handleAction = this.handleAction.bind(this);
     }
 
     render() {
@@ -66,31 +68,21 @@ class Frame extends Component {
                     )
                 ),
                 render.block('frame-contents',
-                    render.component(this.state.contents, {onKey: this.handleKey, focus: this.state.focus || 'NEXT'} )
+                    render.component(this.state.contents, {onAction: this.handleAction, focus: this.state.focus || 'NEXT'} )
                 )
             )
         );
     }
 
-    handleKey = (path) => (e) => {
+    handleAction(action, path, info) {
 
-        e.stopPropagation();
-
-        // console.log(path + '( key: ' + e.key + ', value: ' + e.target.value + ')');
-
-        // TODO - Below is temporary measure, to provide control over DB updates during development only
-        if (e.key === '£') {
-            console.log('Saving node ' + this.props.node + ' to database.');
+        console.log(action + ': ' + path);
+        if (action === 'save') {
             this.nodule.save();
-        }
-
-        if (e.target.value !== '' && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
-            e.preventDefault();
-            const fieldComplete = (e.key !== ' ');
-            const lineComplete = (e.key === 'Enter');
-            this.nodule.processInput(path, e.target.value, fieldComplete, lineComplete);
-        } else if (e.key === 'Delete') {
-            this.nodule.deleteElement(path);
+        } else if (action === 'delete') {
+            this.nodule.delete(path);
+        } else if (action === 'input') {
+            this.nodule.input(path, info);
         }
 
         let view = this.getView();
@@ -105,11 +97,6 @@ class Frame extends Component {
         console.log(view);
         return view;
     }
-
-    getField(code, path) {
-        return path.split('.').reduce( (node, prop) => node[prop], code);
-    }
-
 }
 
 function Procedure(props) {

@@ -18,21 +18,6 @@ class Model {
     constructor(sememes, nodes) {
         this.sememes = new Map(sememes.map(sememe => [sememe.id, sememe]));
         this.nodes = new Map(nodes.map(node => [node.id, node.withModel(this)]));
-        this.expressions = {
-            '+' : {left: '#', right: '#', return: '#'},
-            '-' : {left: '#', right: '#', return: '#'},
-            '*' : {left: '#', right: '#', return: '#'},
-            '/' : {left: '#', right: '#', return: '#'},
-            '%' : {left: '#', right: '#', return: '#'},
-            '==': {left: '.', right: '.', return: '|'},
-            '!=': {left: '.', right: '.', return: '|'},
-            '<' : {left: '#', right: '#', return: '|'},
-            '>' : {left: '#', right: '#', return: '|'},
-            '<=': {left: '#', right: '#', return: '|'},
-            '>=': {left: '#', right: '#', return: '|'},
-            '&&': {left: '|', right: '|', return: '|'},
-            '||': {left: '|', right: '|', return: '|'}
-        };
         console.log(this);
     }
 
@@ -91,23 +76,9 @@ class Nodule extends Code {
         let {value, fieldComplete, lineComplete} = info;
         console.log('Path: ' + path + ' value: ' + value + (fieldComplete ? ' +' : ' -') + (lineComplete ? ' +' : ' -'));
 
-        let element = this.getElement(path);
+        this.getElement(path).input(value, fieldComplete);
 
-        if (element instanceof Line) {
-            // TODO - Baby steps - Introduce the same for a Field later
-            element.input(value);
-        } else if (this.model.expressions[value]) {
-            let props = Object.assign({operator: value}, this.model.expressions[value]);
-            if ( Array.isArray(element.value) ) {
-                props.left = new Field({domain: props.left, value: element.value[0]});
-            }
-            element.value = new Expression(props);
-        } else {
-            const token = (isNaN(value) && !value.startsWith('|')) ? new Token({value}) : new Literal({value});
-            element.addToken(token, fieldComplete);
-
-            if (lineComplete) this.addLineBelow(path);
-        }
+        if (lineComplete) this.addLineBelow(path);
     }
 
     delete(path) {
@@ -183,18 +154,44 @@ class Line extends Code {
 }
 
 class Field extends Code {
+
+    static expressions = {
+        '+' : {left: '#', right: '#', return: '#'},
+        '-' : {left: '#', right: '#', return: '#'},
+        '*' : {left: '#', right: '#', return: '#'},
+        '/' : {left: '#', right: '#', return: '#'},
+        '%' : {left: '#', right: '#', return: '#'},
+        '==': {left: '.', right: '.', return: '|'},
+        '!=': {left: '.', right: '.', return: '|'},
+        '<' : {left: '#', right: '#', return: '|'},
+        '>' : {left: '#', right: '#', return: '|'},
+        '<=': {left: '#', right: '#', return: '|'},
+        '>=': {left: '#', right: '#', return: '|'},
+        '&&': {left: '|', right: '|', return: '|'},
+        '||': {left: '|', right: '|', return: '|'}
+    };
+
     constructor(props) {
         super('Field');
         this.domain = props.domain;
         this.value = props.value || '';
     }
 
-    addToken(token, complete) {
-        if (Array.isArray(this.value) ) {
-            this.value.splice(-1, 1, token);
-            if (! complete) this.value.push('');
+    input(value, complete) {
+        if (Field.expressions[value]) {
+            let props = Object.assign({operator: value}, Field.expressions[value]);
+            if ( Array.isArray(this.value) ) {
+                props.left = new Field({domain: props.left, value: this.value[0]});
+            }
+            this.value = new Expression(props);
         } else {
-            this.value = complete ? token : [token, ''];
+            const token = (isNaN(value) && !value.startsWith('|')) ? new Token({value}) : new Literal({value});
+            if (Array.isArray(this.value) ) {
+                this.value.splice(-1, 1, token);
+                if (! complete) this.value.push('');
+            } else {
+                this.value = complete ? token : [token, ''];
+            }
         }
     }
 

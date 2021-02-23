@@ -19,7 +19,6 @@ class Model {
         this.sememes = new Map(sememes.map(sememe => [sememe.id, sememe]));
         this.nodes = new Map(nodes.map(node => [node.id, node.withModel(this)]));
         this.expressions = {
-            ':=': {left: '.', right: '.'},
             '+' : {left: '#', right: '#', return: '#'},
             '-' : {left: '#', right: '#', return: '#'},
             '*' : {left: '#', right: '#', return: '#'},
@@ -160,7 +159,8 @@ class Block extends Code {
 class Line extends Code {
 
     static inputs = {
-        '?' : {className: 'Branch', condition: '|', if: true,},
+        ':=': {className: 'Expression', operator: ':=', left: '.', right: '.'},
+        '?' : {className: 'Branch', condition: '|', if: true},
         '?|': {className: 'Branch', condition: '|', if: true, else: true}
     };
 

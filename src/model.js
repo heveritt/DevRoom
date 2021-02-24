@@ -203,7 +203,7 @@ class Field extends Code {
 class Declaration extends Code {
     constructor(props) {
         super('Declaration');
-        this.identifier = props.identifier;
+        this.role = props.role;
         this.domain = props.domain;
     }
 }

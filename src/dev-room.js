@@ -138,7 +138,7 @@ function Field(props) {
 
 function Declaration(props) {
     return render.inline('declaration',
-        props.identifier ? render.inline('token', props.identifier + ':') : null,
+        props.role ? render.inline('token', props.role + ':') : null,
         render.inline('domain', props.domain)
     );
 }

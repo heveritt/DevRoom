@@ -108,7 +108,10 @@ function Procedure(props) {
                 render.inline('operation', props.operation),
                 render.child(props, 'inputs')
             ),
-            render.block('implementation', render.child(props, 'implementation'))
+            render.block('implementation',
+                render.block('indent'),
+                render.child(props, 'implementation')
+            )
         )
     );
 }
@@ -157,18 +160,24 @@ function Literal(props) {
     return render.inline(classes, Unicode.mapToken(props.value));
 }
 
-function Branch(props) {
+function Selection(props) {
     return (
-        render.block('branch',
+        render.block('selection',
             Token({value: '?'}),
             render.child(props, 'condition'),
-            render.child(props, 'if'),
-            props.else ? render.child(props, 'else') : null
+            render.block('branch',
+                render.block('indent', Literal({value: '|1'})),
+                render.child(props, 'if')
+            ),
+            props.else ? render.block('branch',
+                render.block('indent', Literal({value: '|0'})),
+                render.child(props, 'else')
+            ) : null
         )
     );
 }
 
-const classMap = {Frame, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Branch};
+const classMap = {Frame, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection};
 
 const serializer = new Serializer(classMap);
 

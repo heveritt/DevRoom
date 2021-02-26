@@ -55,9 +55,19 @@
     border: 2px inset;
 }
 
-.code-block {
+.branch, .implementation {
+    display: flex;
+}
+
+.indent {
+    flex: 0 0 100px;
     padding: 5px;
-    margin: 3px 3px 3px 50px;
+}
+
+.code-block {
+    flex: 1;
+    margin-top: 5px;
+    padding: 5px;
     border: 1px solid grey;
     border-radius: 4px;
 }
@@ -119,6 +129,6 @@ input:focus {
     color: cyan;
 }
 
-.branch > .token, .arrow {
+.selection > .token, .arrow {
     color: violet;
 }

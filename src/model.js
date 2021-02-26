@@ -131,8 +131,8 @@ class Line extends Code {
 
     static inputs = {
         ':=': {className: 'Expression', operator: ':=', left: '.', right: '.'},
-        '?' : {className: 'Branch', condition: '|', if: true},
-        '?|': {className: 'Branch', condition: '|', if: true, else: true}
+        '?' : {className: 'Selection', condition: '|', if: true},
+        '?|': {className: 'Selection', condition: '|', if: true, else: true}
     };
 
     constructor(props) {
@@ -217,9 +217,9 @@ class Expression extends Code {
     }
 }
 
-class Branch extends Code {
+class Selection extends Code {
     constructor(props) {
-        super('Branch');
+        super('Selection');
         this.condition = typeof props.condition === 'object' ? props.condition : new Field({domain: props.condition});
         this.if = typeof props.if === 'object' ? props.if : new Block({});
         if (props.else) this.else = typeof props.else === 'object' ? props.else : new Block({});
@@ -241,7 +241,7 @@ class Literal extends Code {
     }
 }
 
-const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Branch};
+const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection};
 const { serialize, deserialize } = new Serializer(classMap);
 
 export default Model;

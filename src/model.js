@@ -57,6 +57,20 @@ class Code {
             return this[child];
         }
     }
+
+    isOptional() {
+        return false;
+    }
+
+    deleteChild(child) {
+        if (this[child] && this[child].isOptional()) {
+            let deleted = this[child];
+            delete this[child];
+            return deleted;
+        } else {
+            return '';
+        }
+    }
 }
 
 class Nodule extends Code {
@@ -82,16 +96,29 @@ class Nodule extends Code {
     }
 
     delete(path) {
-        this.getElement(path).deleteContents();
+        let contents = this.getElement(path).deleteContents();
+        if (! contents) {
+            let {parent, child} = this.getParentChild(path);
+            return parent.deleteChild(child);
+        } else {
+            return contents;
+        }
     }
 
     getElement(path) {
         return path.split('.').reduce( (node, child) => node.getChild(child), this.code);
     }
 
+    getParentChild(path) {
+        let cut = path.lastIndexOf('.');
+        let parent = this.getElement(path.slice(0, cut));
+        let child = path.slice(cut + 1);
+        return {parent, child};
+    }
+
     addLineBelow(path) {
         let cut = path.lastIndexOf('.lines#');
-        let block = this.getElement(path.slice(0, cut))
+        let block = this.getElement(path.slice(0, cut));
         let ix = +path.slice(cut + 7).split('.')[0];
         block.addLineBelow(ix);
     }
@@ -119,7 +146,26 @@ class Block extends Code {
     }
 
     deleteContents() {
-        this.lines = [new Line({})];
+        if (this.isEmpty()) {
+            return '';
+        } else {
+            let contents = this.lines;
+            this.lines = [new Line({})];
+            return contents;
+        }
+    }
+
+    deleteChild(child) {
+        if (this.lines.length > 1) {
+            let ix = child.split('#')[1];
+            return this.lines.splice(ix, 1)[0];
+        } else {
+            return '';
+        }
+    }
+
+    isEmpty() {
+        return this.lines.length === 1 && this.lines[0].isEmpty();
     }
 
     addLineBelow(ix) {
@@ -148,8 +194,14 @@ class Line extends Code {
         }
     }
 
+    isEmpty() {
+        return ! this.instruction;
+    }
+
     deleteContents() {
+        let contents = this.instruction;
         this.instruction = '';
+        return contents;
     }
 }
 
@@ -195,8 +247,14 @@ class Field extends Code {
         }
     }
 
+    isOptional() {
+        return this.domain.endsWith('?');
+    }
+
     deleteContents() {
+        let contents = this.value;
         this.value = '';
+        return contents;
     }
 }
 
@@ -223,6 +281,16 @@ class Selection extends Code {
         this.condition = typeof props.condition === 'object' ? props.condition : new Field({domain: props.condition});
         this.if = typeof props.if === 'object' ? props.if : new Block({});
         if (props.else) this.else = typeof props.else === 'object' ? props.else : new Block({});
+    }
+
+    deleteChild(child) {
+        if (child === 'else' && this.else) {
+            let deleted = this.else;
+            delete this.else;
+            return deleted;
+        } else {
+            return '';
+        }
     }
 }
 

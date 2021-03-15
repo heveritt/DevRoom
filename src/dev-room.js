@@ -121,10 +121,15 @@ function Block(props) {
 }
 
 function Line(props) {
-    return render.element('code-line selectable', props,
-        (typeof props.instruction === 'object') ?
-        render.child(props, 'instruction') :
-        render.input(props, props.instruction));
+    function renderChild(child) {
+        return (typeof child === 'object') ? render.component(child, props.context) : render.input(props, child);
+    }
+    const classes = 'code-line selectable';
+    if (Array.isArray(props.instruction)) {
+        return render.element(classes, props, ...( props.instruction.map( child => renderChild(child) ) ) );
+    } else {
+        return render.element(classes, props, renderChild(props.instruction));
+    }
 }
 
 function Field(props) {

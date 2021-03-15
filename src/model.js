@@ -186,11 +186,22 @@ class Line extends Code {
         this.instruction = props.instruction || '';
     }
 
-    input(value) {
+    input(value, complete) {
         if (Line.inputs[value]) {
             let props = Line.inputs[value];
             const classConstructor = classMap[props.className];
+            if ( Array.isArray(this.instruction) ) {
+                props.left = new Field({domain: props.left, value: this.instruction[0]});
+            }
             this.instruction = new classConstructor(props);
+        } else {
+            const token = new Token({value});
+            if (Array.isArray(this.instruction) ) {
+                this.instruction.splice(-1, 1, token);
+                if (! complete) this.instruction.push('');
+            } else {
+                this.instruction = complete ? token : [token, ''];
+            }
         }
     }
 

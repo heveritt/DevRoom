@@ -188,7 +188,7 @@ class Line extends Code {
 
     input(value, complete) {
         if (Line.inputs[value]) {
-            let props = Line.inputs[value];
+            let props = Object.assign({}, Line.inputs[value]);
             const classConstructor = classMap[props.className];
             if ( Array.isArray(this.instruction) ) {
                 props.left = new Field({domain: props.left, value: this.instruction[0]});

@@ -15,17 +15,17 @@ class Serializer {
     }
 
     replacer(genPath) {
-        const circularityDetector = ( () => {
+        const duplicateDetector = ( () => {
             const alreadySerialized = new WeakSet();
-            const throwIfCircular = (value) => {
+            const throwIfDuplicate = (value) => {
                 if (typeof value === 'object') {
                     if (alreadySerialized.has(value)) {
-                        throw new Error('Circular dependency detected - class: ' + value.constructor.name);
+                        throw new Error('Duplicate reference detected: ' + JSON.stringify(value));
                     } 
                     alreadySerialized.add(value);
                 }
             }
-            return throwIfCircular;
+            return throwIfDuplicate;
         } )();
 
         /* This turns out to be incompatable with build minification so parked at present.
@@ -62,7 +62,7 @@ class Serializer {
 
         return function(key, value) {
             const parent = this; // Bound to JSON object currently being stringified
-            circularityDetector(value);
+            duplicateDetector(value);
             return genPath ? generatePath(parent, key, value) : value;
         }
     }

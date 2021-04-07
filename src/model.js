@@ -289,9 +289,12 @@ class Expression extends Code {
 class Selection extends Code {
     constructor(props) {
         super('Selection');
-        this.condition = typeof props.condition === 'object' ? props.condition : new Field({domain: props.condition});
-        this.if = typeof props.if === 'object' ? props.if : new Block({});
-        if (props.else) this.else = typeof props.else === 'object' ? props.else : new Block({});
+        if (props.branches) {
+            this.branches = props.branches;
+        } else {
+            this.branches = [new Branch({})];
+            if (props.else) this.branches.push(new Branch({else: true}));
+        }
     }
 
     deleteChild(child) {
@@ -302,6 +305,18 @@ class Selection extends Code {
         } else {
             return '';
         }
+    }
+}
+
+class Branch extends Code {
+    constructor(props) {
+        super('Branch');
+        if (props.condition) {
+            this.condition = props.condition;
+        } else if (! props.else) {
+            this.condition = new Field({domain: '|'});
+        }
+        this.code = props.code ? props.code : new Block({});
     }
 }
 
@@ -320,7 +335,7 @@ class Literal extends Code {
     }
 }
 
-const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection};
+const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection, Branch};
 const { serialize, deserialize } = new Serializer(classMap);
 
 export default Model;

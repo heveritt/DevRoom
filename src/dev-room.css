@@ -55,7 +55,7 @@
     border: 2px inset;
 }
 
-.branch, .implementation {
+.branch-code, .implementation {
     display: flex;
 }
 

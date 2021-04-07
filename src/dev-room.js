@@ -166,23 +166,22 @@ function Literal(props) {
 }
 
 function Selection(props) {
+    return render.block('selection', render.child(props, 'branches'));
+}
+
+function Branch(props) {
     return (
-        render.block('selection',
-            Token({value: '?'}),
-            render.child(props, 'condition'),
-            render.block('branch',
-                render.block('indent', Literal({value: '|1'})),
-                render.child(props, 'if')
-            ),
-            props.else ? render.block('branch',
-                render.block('indent', Literal({value: '|0'})),
-                render.child(props, 'else')
-            ) : null
+        render.block('branch',
+            props.condition ? render.block('selection', Token({value: '?'}), render.child(props, 'condition')) : null,
+            render.block('branch-code',
+                render.block('indent', Literal({value: props.condition ? '|1' : '|0'})),
+                render.child(props, 'code')
+            )
         )
     );
 }
 
-const classMap = {Frame, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection};
+const classMap = {Frame, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection, Branch};
 
 const serializer = new Serializer(classMap);
 

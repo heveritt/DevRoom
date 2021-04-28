@@ -95,7 +95,6 @@ var render = {
                 return this.component(element, context);
             });
         } else {
-            console.log(context.focus + ' - ' + data.path);
             if (data.path === context.focus) {
                 context = Object.assign({}, context)
                 context.focus = 'NEXT';

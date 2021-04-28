@@ -85,6 +85,10 @@
 }
 
 .selectable:hover {
+    border-color: grey;
+}
+
+.selectable:focus {
     border-color: white;
 }
 

@@ -26,6 +26,7 @@ class Input extends Component {
             this.props.context.focus = 'DONE';
             domProps.autoFocus = true;
         }
+
         return React.createElement('input', domProps, null);
     }
 }
@@ -94,7 +95,11 @@ var render = {
                 return this.component(element, context);
             });
         } else {
-            if (data.path === context.focus) context.focus = 'NEXT';
+            console.log(context.focus + ' - ' + data.path);
+            if (data.path === context.focus) {
+                context = Object.assign({}, context)
+                context.focus = 'NEXT';
+            }
             return React.createElement(data.classConstructor, Object.assign({context}, data), null);
         }
     },

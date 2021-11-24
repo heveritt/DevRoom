@@ -62,13 +62,15 @@ class Frame extends Component {
                 render.block('frame-header',
                     render.block('frame-node', 'Node: ',
                         render.inline('token', this.props.node)
-                    ),
-                    render.block('frame-contexts', 'Contexts: ',
-                        ...this.props.contexts.map( (context) => render.inline('token', context) )
                     )
                 ),
-                render.block('frame-contents',
-                    render.component(this.state.contents, {onAction: this.handleAction, focus: this.state.focus || 'NEXT'} )
+                render.block('frame-body',
+                    render.block('frame-contexts',
+                            ...this.props.contexts.map( (context) => Context({value: context}) )
+                        ),
+                    render.block('frame-contents',
+                        render.component(this.state.contents, {onAction: this.handleAction, focus: this.state.focus || 'NEXT'} )
+                    )
                 )
             )
         );
@@ -177,6 +179,14 @@ function Branch(props) {
                 render.block('indent', Literal({value: props.condition ? '|1' : '|0'})),
                 render.child(props, 'code')
             )
+        )
+    );
+}
+
+function Context(props) {
+    return (
+        render.block('context',
+            render.inline('lozenge', props.value)
         )
     );
 }

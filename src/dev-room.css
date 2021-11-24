@@ -5,7 +5,9 @@
 }
 
 .frame {
-    border: 3px solid grey;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid grey;
     border-radius: 5px;
     height: 100%;
     cursor: default;
@@ -27,12 +29,38 @@
     padding: 2px 5px;
 }
 
-.frame-contents {
+.frame-body {
+    flex:  1;
+    display:  flex;
+    width: 100%;
+}
+
+.frame-contexts {
+    flex: 20%;
+    border: 2px solid grey;
     padding: 10px;
 }
 
+.frame-contents {
+    flex:  80%;
+    border: 2px solid grey;
+    padding: 10px;
+}
+
+.context {
+    text-align: center;
+    margin: 10px;
+    color:  white;
+}
+
+.lozenge {
+    border: 2px solid;
+    border-radius: 15px;
+    padding: 4px 10px;
+}
+
 .interface {
-    border: 2px solid cyan;
+    border: 2px solid;
     border-radius: 15px;
     padding: 0px 5px;
     color: cyan;

@@ -16,5 +16,6 @@
     "db": "json-server -p 8080 db/db.json",
     "server": "node server/server.js"
   },
+  "proxy": "http://localhost:3001",
   "homepage": "/"
 }

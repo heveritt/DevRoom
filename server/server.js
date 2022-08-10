@@ -5,8 +5,9 @@ const port = 3001;
 
 server.use(express.static('build'));
 
-server.get('nodes/:nodeId', (req, res) => {
+server.get('/nodes/:nodeId', (req, res) => {
     console.log('Requested node: ' + req.params.nodeId);
+    res.json({ message: "Hello from server!" });
 });
 
 server.use( (req, res, next) => {

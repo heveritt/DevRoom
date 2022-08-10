@@ -96,6 +96,9 @@ class Frame extends Component {
         const view = {
             contents: deserialize(this.props.model.compileView(this.props.node, this.props.contexts))
         };
+/*        fetch("/nodes/12345")
+            .then((res) => res.json())
+            .then((data) => console.log(data.message));*/
         console.log(view);
         return view;
     }

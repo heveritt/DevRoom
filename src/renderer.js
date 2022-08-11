@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
+import Unicode from './unicode';
 
 class Component extends React.Component {}
 
@@ -105,6 +106,12 @@ var render = {
 
     child: function(parent, role) {
         return this.component(parent[role], parent.context);
+    },
+
+    token: function(token, classes='token') {
+        if (token === ':=') classes = 'arrow';
+        if (token === '|0') classes += ' falsy';
+        return this.inline(classes, Unicode.mapToken(token));
     }
 }
 

@@ -1,6 +1,5 @@
 import {Component, render} from './renderer';
 import Serializer from './serializer';
-import Unicode from './unicode';
 import Model from './model';
 import './dev-room.css';
 
@@ -46,6 +45,7 @@ class DevRoom extends Component {
     }
 }
 
+
 class Frame extends Component {
 
     constructor(props) {
@@ -66,7 +66,7 @@ class Frame extends Component {
                 ),
                 render.block('frame-body',
                     render.block('frame-contexts',
-                            ...this.props.contexts.map( (context) => Context({value: context}) )
+                            ...this.props.contexts.map( (context) => render.block('context', render.inline('lozenge', context)) )
                         ),
                     render.block('frame-contents',
                         render.component(this.state.view, {onAction: this.handleAction, focus: this.state.focus || 'NEXT'} )
@@ -109,7 +109,7 @@ class Procedure extends Component {
             render.block('procedure',
                 render.inline('interface',
                     render.child(this.props, 'output'),
-                    Token({value: ':='}),
+                    render.token(':='),
                     render.inline('operation', this.props.operation),
                     render.child(this.props, 'inputs')
                 ),
@@ -181,35 +181,29 @@ class Branch extends Component {
     render() {
         return (
             render.block('branch',
-                this.props.condition ? render.block('selection', Token({value: '?'}), render.child(this.props, 'condition')) : null,
+                this.props.condition ? render.block('selection', render.token('?'), render.child(this.props, 'condition')) : null,
                 render.block('branch-code',
-                    render.block('indent', Literal({value: this.props.condition ? '|1' : '|0'})),
+                    render.block('indent', render.token(this.props.condition ? '|1' : '|0', 'literal')),
                     render.child(this.props, 'code')
                 )
             )
         );
     }
 }
-
-function Token(props) {
-    return render.inline(props.value === ':=' ? 'arrow' : 'token', Unicode.mapToken(props.value));
+class Token extends Component {
+    render() {
+        return render.token(this.props.value);
+    }
 }
 
-function Literal(props) {
-    let classes = 'literal';
-    if (props.value === '|0') classes += ' falsy';
-    return render.inline(classes, Unicode.mapToken(props.value));
+class Literal extends Component {
+    render() {
+      return render.token(this.props.value, 'literal');
+    }
 }
 
-function Context(props) {
-    return (
-        render.block('context',
-            render.inline('lozenge', props.value)
-        )
-    );
-}
 
-const classMap = {Frame, Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection, Branch};
+const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection, Branch};
 
 const serializer = new Serializer(classMap);
 

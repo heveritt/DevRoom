@@ -50,7 +50,7 @@ class Frame extends Component {
 
     constructor(props) {
         super(props);
-        this.state = this.getView();
+        this.state = {view: this.getView()};
         this.nodule = this.props.model.node(this.props.node); // Synonym only - link to node currently local
 
         this.handleAction = this.handleAction.bind(this);
@@ -69,7 +69,7 @@ class Frame extends Component {
                             ...this.props.contexts.map( (context) => Context({value: context}) )
                         ),
                     render.block('frame-contents',
-                        render.component(this.state.contents, {onAction: this.handleAction, focus: this.state.focus || 'NEXT'} )
+                        render.component(this.state.view, {onAction: this.handleAction, focus: this.state.focus || 'NEXT'} )
                     )
                 )
             )
@@ -79,6 +79,7 @@ class Frame extends Component {
     handleAction(action, path, info) {
 
         console.log(action + ': ' + path);
+        let focus = path;
         if (action === 'save') {
             this.nodule.save();
         } else if (action === 'delete') {
@@ -88,14 +89,11 @@ class Frame extends Component {
         }
 
         let view = this.getView();
-        view.focus = path;
-        this.setState(view);
+        this.setState({view, focus});
     }
 
     getView() {
-        const view = {
-            contents: deserialize(this.props.model.compileView(this.props.node, this.props.contexts))
-        };
+        const view = deserialize(this.props.model.compileView(this.props.node, this.props.contexts));
 /*        fetch("/nodes/12345")
             .then((res) => res.json())
             .then((data) => console.log(data.message));*/
@@ -104,60 +102,93 @@ class Frame extends Component {
     }
 }
 
-function Procedure(props) {
-    return (
-        render.block('procedure',
-            render.inline('interface',
-                render.child(props, 'output'),
-                Token({value: ':='}),
-                render.inline('operation', props.operation),
-                render.child(props, 'inputs')
-            ),
-            render.block('implementation',
-                render.block('indent'),
-                render.child(props, 'implementation')
+
+class Procedure extends Component {
+    render() {
+        return (
+            render.block('procedure',
+                render.inline('interface',
+                    render.child(this.props, 'output'),
+                    Token({value: ':='}),
+                    render.inline('operation', this.props.operation),
+                    render.child(this.props, 'inputs')
+                ),
+                render.block('implementation',
+                    render.block('indent'),
+                    render.child(this.props, 'implementation')
+                )
             )
-        )
-    );
-}
-
-function Block(props) {
-    return render.element('code-block selectable', props, render.child(props, 'lines'));
-}
-
-function Line(props) {
-    function renderChild(child) {
-        return (typeof child === 'object') ? render.component(child, props.context) : render.input(props, child);
-    }
-    const classes = 'code-line selectable';
-    if (Array.isArray(props.instruction)) {
-        return render.element(classes, props, ...( props.instruction.map( child => renderChild(child) ) ) );
-    } else {
-        return render.element(classes, props, renderChild(props.instruction));
+        );
     }
 }
 
-function Field(props) {
-    function renderChild(child) {
-        return (typeof child === 'object') ? render.component(child, props.context) : render.input(props, child);
-    }
-    const classes = 'code-field selectable inline';
-    if (Array.isArray(props.value)) {
-        return render.element(classes, props, ...( props.value.map( child => renderChild(child) ) ) );
-    } else {
-        return render.element(classes, props, renderChild(props.value));
+class Block extends Component {
+    render() {
+        return render.element('code-block selectable', this.props, render.child(this.props, 'lines'));
     }
 }
 
-function Declaration(props) {
-    return render.inline('declaration',
-        props.role ? render.inline('token', props.role + ':') : null,
-        render.inline('domain', props.domain)
-    );
+class Line extends Component {
+    render() {
+        function renderChild(line, child) {
+            return (typeof child === 'object') ? render.component(child, line.context) : render.input(line, child);
+        }
+        const classes = 'code-line selectable';
+        if (Array.isArray(this.props.instruction)) {
+            return render.element(classes, this.props, ...( this.props.instruction.map( child => renderChild(this.props, child) ) ) );
+        } else {
+            return render.element(classes, this.props, renderChild(this.props, this.props.instruction));
+        }
+    }
 }
 
-function Expression(props) {
-    return render.inline('expression', render.child(props, 'left'), render.child(props, 'operator'), render.child(props, 'right'));
+class Field extends Component {
+    render() {
+        function renderChild(field, child) {
+            return (typeof child === 'object') ? render.component(child, field.context) : render.input(field, child);
+        }
+        const classes = 'code-field selectable inline';
+        if (Array.isArray(this.props.value)) {
+            return render.element(classes, this.props, ...( this.props.value.map( child => renderChild(this.props, child) ) ) );
+        } else {
+            return render.element(classes, this.props, renderChild(this.props, this.props.value));
+        }
+    }
+}
+
+class Declaration extends Component {
+    render() {
+        return render.inline('declaration',
+            this.props.role ? render.inline('token', this.props.role + ':') : null,
+            render.inline('domain', this.props.domain)
+        );
+    }
+}
+
+class Expression extends Component {
+    render() {
+        return render.inline('expression', render.child(this.props, 'left'), render.child(this.props, 'operator'), render.child(this.props, 'right'));
+    }
+}
+
+class Selection extends Component {
+    render() {
+        return render.block('selection', render.child(this.props, 'branches'));
+    }
+}
+
+class Branch extends Component {
+    render() {
+        return (
+            render.block('branch',
+                this.props.condition ? render.block('selection', Token({value: '?'}), render.child(this.props, 'condition')) : null,
+                render.block('branch-code',
+                    render.block('indent', Literal({value: this.props.condition ? '|1' : '|0'})),
+                    render.child(this.props, 'code')
+                )
+            )
+        );
+    }
 }
 
 function Token(props) {
@@ -168,22 +199,6 @@ function Literal(props) {
     let classes = 'literal';
     if (props.value === '|0') classes += ' falsy';
     return render.inline(classes, Unicode.mapToken(props.value));
-}
-
-function Selection(props) {
-    return render.block('selection', render.child(props, 'branches'));
-}
-
-function Branch(props) {
-    return (
-        render.block('branch',
-            props.condition ? render.block('selection', Token({value: '?'}), render.child(props, 'condition')) : null,
-            render.block('branch-code',
-                render.block('indent', Literal({value: props.condition ? '|1' : '|0'})),
-                render.child(props, 'code')
-            )
-        )
-    );
 }
 
 function Context(props) {

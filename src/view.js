@@ -62,16 +62,16 @@ class Frame extends Component {
 class Procedure extends Component {
     render() {
         return (
-            render.block('procedure',
-                render.inline('interface',
-                    render.child(this.props, 'output'),
-                    render.token(':='),
-                    render.inline('operation', this.props.operation),
-                    render.child(this.props, 'inputs')
+            this.block('procedure',
+                this.inline('interface',
+                    this.child('output'),
+                    this.token(':='),
+                    this.child('operation'),
+                    this.child('inputs')
                 ),
-                render.block('implementation',
-                    render.block('indent'),
-                    render.child(this.props, 'implementation')
+                this.block('implementation',
+                    this.block('indent'),
+                    this.child('implementation')
                 )
             )
         );

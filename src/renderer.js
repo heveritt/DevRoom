@@ -9,19 +9,19 @@ class Component extends React.Component {
     }
 
     block(classes, ...children) {
-        return this.element(classes, {}, ...children);
+        return this.element(classes, ...children);
     }
 
     inline(classes, ...children) {
-        return this.element(classes + ' inline', {}, ...children);
+        return this.element(classes + ' inline', ...children);
     }
 
-    element(classes, props, ...children) {
+    element(classes, ...children) {
         const htmlElement = (classes.split(' ').includes('inline')) ? 'span' : 'div';
         const domProps = {className: classes};
         if (classes.split(' ').includes('selectable')) {
             domProps.tabIndex = 0;
-            domProps.onKeyDown = handleKey(props.context.onAction, ['delete', 'save'], props.path);
+            domProps.onKeyDown = handleKey(this.props.context.onAction, ['delete', 'save'], this.props.path);
         }
         return React.createElement(htmlElement, domProps, ...children);
     }
@@ -33,10 +33,6 @@ class Component extends React.Component {
             fieldPath: field.path
         }
         return React.createElement(Input, props);
-    }
-
-    application(appClass, parentElement) {
-        ReactDOM.render(React.createElement(appClass, null, null), parentElement);
     }
 
     component(data, context={}) {
@@ -56,10 +52,17 @@ class Component extends React.Component {
     }
 
     child(role) {
-        if (typeof this.props[role] === 'object') {
-            return this.component(this.props[role], this.props.context);
+        return this.component(this.props[role], this.props.context);
+    }
+
+    editable(role) {
+        function renderChild(parent, child) {
+            return (typeof child === 'object') ? parent.component(child, parent.props.context) : parent.input(parent.props, child);
+        }
+        if (Array.isArray(this.props[role])) {
+            return this.props[role].map( child => renderChild(this, child) );
         } else {
-            return this.token(this.props[role]);
+            return [ renderChild(this, this.props[role]) ];
         }
     }
 
@@ -122,62 +125,8 @@ var handleKey = (handler, actions, path) => (e) => {
 }
 
 var render = {
-
-    block: function(classes, ...children) {
-        return this.element(classes, {}, ...children);
-    },
-
-    inline: function (classes, ...children) {
-        return this.element(classes + ' inline', {}, ...children);
-    },
-
-    element: function (classes, props, ...children) {
-        const htmlElement = (classes.split(' ').includes('inline')) ? 'span' : 'div';
-        const domProps = {className: classes};
-        if (classes.split(' ').includes('selectable')) {
-            domProps.tabIndex = 0;
-            domProps.onKeyDown = handleKey(props.context.onAction, ['delete', 'save'], props.path);
-        }
-        return React.createElement(htmlElement, domProps, ...children);
-    },
-
-    input: function(field, value) {
-        let props = {
-            value: value,
-            context: field.context,
-            fieldPath: field.path
-        }
-        return React.createElement(Input, props);
-    },
-
     application: function (appClass, parentElement) {
         ReactDOM.render(React.createElement(appClass, null, null), parentElement);
-    },
-
-    component: function (data, context={}) {
-        if (Array.isArray(data)) {
-            return data.map( (element, ix) => {
-                element.ix = ix;
-                element.key = ix.toString();
-                return this.component(element, context);
-            });
-        } else {
-            if (data.path === context.focus) {
-                context = Object.assign({}, context)
-                context.focus = 'NEXT';
-            }
-            return React.createElement(data.classConstructor, Object.assign({context}, data), null);
-        }
-    },
-
-    child: function(parent, role) {
-        return this.component(parent[role], parent.context);
-    },
-
-    token: function(token, classes='token') {
-        if (token === ':=') classes = 'arrow';
-        if (token === '|0') classes += ' falsy';
-        return this.inline(classes, Unicode.mapToken(token));
     }
 }
 

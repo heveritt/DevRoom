@@ -1,4 +1,4 @@
-import {Component, render} from './renderer';
+import {Component} from './renderer';
 import Frame from './view';
 import Model from './model';
 import './dev-room.css';
@@ -31,15 +31,15 @@ class DevRoom extends Component {
                 model: this.state.model
             };
             return (
-                render.block('dev-room',
-                    render.component(frame)
+                this.block('dev-room',
+                    this.component(frame)
                 )
             );
         } else {
             if (this.state.error) {
-                return render.block('dev-room', 'Error: ' + this.state.error.message);
+                return this.block('dev-room', 'Error: ' + this.state.error.message);
             } else {
-                return render.block('dev-room', 'Loading Source Model...');
+                return this.block('dev-room', 'Loading Source Model...');
             }
         }
     }

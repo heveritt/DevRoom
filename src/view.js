@@ -1,4 +1,4 @@
-import {Component, render} from './renderer';
+import {Component} from './renderer';
 import Serializer from './serializer';
 
 
@@ -14,18 +14,18 @@ class Frame extends Component {
 
     render() {
         return (
-            render.block('frame',
-                render.block('frame-header',
-                    render.block('frame-node', 'Node: ',
-                        render.inline('token', this.props.node)
+            this.block('frame',
+                this.block('frame-header',
+                    this.block('frame-node', 'Node: ',
+                        this.inline('token', this.props.node)
                     )
                 ),
-                render.block('frame-body',
-                    render.block('frame-contexts',
-                            ...this.props.contexts.map( (context) => render.block('context', render.inline('lozenge', context)) )
+                this.block('frame-body',
+                    this.block('frame-contexts',
+                            ...this.props.contexts.map( (context) => this.block('context', this.inline('lozenge', context)) )
                         ),
-                    render.block('frame-contents',
-                        render.component(this.state.view, {onAction: this.handleAction, focus: this.state.focus || 'NEXT'} )
+                    this.block('frame-contents',
+                        this.component(this.state.view, {onAction: this.handleAction, focus: this.state.focus || 'NEXT'} )
                     )
                 )
             )
@@ -66,7 +66,7 @@ class Procedure extends Component {
                 this.inline('interface',
                     this.child('output'),
                     this.token(':='),
-                    this.child('operation'),
+                    this.token(this.props.operation),
                     this.child('inputs')
                 ),
                 this.block('implementation',
@@ -80,81 +80,95 @@ class Procedure extends Component {
 
 class Block extends Component {
     render() {
-        return render.element('code-block selectable', this.props, render.child(this.props, 'lines'));
+        return (
+            this.block('code-block selectable', 
+                this.child('lines')
+            )
+        );
     }
 }
 
 class Line extends Component {
     render() {
-        function renderChild(line, child) {
-            return (typeof child === 'object') ? render.component(child, line.context) : render.input(line, child);
-        }
-        const classes = 'code-line selectable';
-        if (Array.isArray(this.props.instruction)) {
-            return render.element(classes, this.props, ...( this.props.instruction.map( child => renderChild(this.props, child) ) ) );
-        } else {
-            return render.element(classes, this.props, renderChild(this.props, this.props.instruction));
-        }
+        return (
+            this.block('code-line selectable', 
+                ...this.editable('instruction')
+            )
+        );
     }
 }
 
 class Field extends Component {
     render() {
-        function renderChild(field, child) {
-            return (typeof child === 'object') ? render.component(child, field.context) : render.input(field, child);
-        }
-        const classes = 'code-field selectable inline';
-        if (Array.isArray(this.props.value)) {
-            return render.element(classes, this.props, ...( this.props.value.map( child => renderChild(this.props, child) ) ) );
-        } else {
-            return render.element(classes, this.props, renderChild(this.props, this.props.value));
-        }
+        return (
+            this.inline('code-field selectable', 
+                ...this.editable('value')
+            )
+        );
     }
 }
 
 class Declaration extends Component {
     render() {
-        return render.inline('declaration',
-            this.props.role ? render.inline('token', this.props.role + ':') : null,
-            render.inline('domain', this.props.domain)
+        return (
+            this.inline('declaration',
+                this.props.role ? this.inline('token', this.props.role + ':') : null,
+                this.inline('domain', this.props.domain)
+            )
         );
     }
 }
 
 class Expression extends Component {
     render() {
-        return render.inline('expression', render.child(this.props, 'left'), render.child(this.props, 'operator'), render.child(this.props, 'right'));
+        return (
+            this.inline('expression',
+                this.child('left'),
+                this.child('operator'),
+                this.child('right')
+            )
+        );
     }
 }
 
 class Selection extends Component {
     render() {
-        return render.block('selection', render.child(this.props, 'branches'));
+        return (
+            this.block('selection',
+                this.child('branches')
+            )
+        );
     }
 }
 
 class Branch extends Component {
     render() {
         return (
-            render.block('branch',
-                this.props.condition ? render.block('selection', render.token('?'), render.child(this.props, 'condition')) : null,
-                render.block('branch-code',
-                    render.block('indent', render.token(this.props.condition ? '|1' : '|0', 'literal')),
-                    render.child(this.props, 'code')
+            this.block('branch',
+                this.props.condition ? 
+                    this.block('selection',
+                        this.token('?'),
+                        this.child('condition')
+                    ) : null,
+                this.block('branch-code',
+                    this.block('indent',
+                        this.token(this.props.condition ? '|1' : '|0', 'literal')),
+                    this.child('code')
                 )
             )
         );
     }
 }
+
 class Token extends Component {
     render() {
-        return render.token(this.props.value);
+        return this.token(this.props.value);
     }
 }
 
 class Literal extends Component {
     render() {
-      return render.token(this.props.value, 'literal');
+        return this.token(this.props.value, 'literal');
     }
 }
 

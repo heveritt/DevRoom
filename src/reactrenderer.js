@@ -1,67 +1,8 @@
+import ReactDOM from 'react-dom';
+import React from 'react';
 import Unicode from './unicode';
 
-var DOM = {
-    element: function(tagName, props, listeners, ...children) {
-
-        function appendChild(parent, child) {
-            if (child) {
-                if (typeof child === 'object') {
-                    element.appendChild(child);
-                } else {
-                    element.innerHTML = child;
-                }
-            }
-        }
-
-        //console.log('<' + tagName + ' ' + props.className + '>');
-        let element = document.createElement(tagName);
-
-        for (let key in props) {
-            element.setAttribute(key === 'className' ? 'class' : key, props[key]);
-        }
-
-        for (let key in listeners) {
-            element.addEventListener(key, listeners[key]);
-        }
-
-        for (let child of children) {
-            //console.log(child);
-            if (Array.isArray(child)) {
-                child.map( (c) => appendChild(element, c));
-            } else {
-                appendChild(element, child);
-            }
-        }
-
-        return element;
-    },
-
-    component: function(constructor, props) {
-        let component = new constructor(props);
-        return component.renderToDom();
-    }
-}
-
-class Component {
-
-    constructor(props) {
-        this.props = {};
-        this.state = {};
-        Object.assign(this.props, props);
-    }
-
-    setState(state) {
-        Object.assign(this.state, state);
-        let oldElement = this.domElement;
-        let newElement = this.render();
-        oldElement.replaceWith(newElement);
-        this.domElement = newElement;
-    }
-
-    renderToDom() {
-        this.domElement = this.render();
-        return this.domElement;
-    }
+class Component extends React.Component {
     
     render () {
         return this.token('Missing render() implementation!');
@@ -76,14 +17,13 @@ class Component {
     }
 
     element(classes, ...children) {
-        const tagName = (classes.split(' ').includes('inline')) ? 'span' : 'div';
+        const htmlElement = (classes.split(' ').includes('inline')) ? 'span' : 'div';
         const domProps = {className: classes};
-        const listeners = {};
         if (classes.split(' ').includes('selectable')) {
             domProps.tabIndex = 0;
-            listeners.keydown = handleKey(this.props.context.onAction, ['delete', 'save'], this.props.path);
+            domProps.onKeyDown = handleKey(this.props.context.onAction, ['delete', 'save'], this.props.path);
         }
-        return DOM.element(tagName, domProps, listeners, ...children);
+        return React.createElement(htmlElement, domProps, ...children);
     }
 
     input(field, value) {
@@ -92,7 +32,7 @@ class Component {
             context: field.context,
             fieldPath: field.path
         }
-        return DOM.component(Input, props);
+        return React.createElement(Input, props);
     }
 
     component(data, context={}) {
@@ -107,7 +47,7 @@ class Component {
                 context = Object.assign({}, context)
                 context.focus = 'NEXT';
             }
-            return DOM.component(data.classConstructor, Object.assign({context}, data));
+            return React.createElement(data.classConstructor, Object.assign({context}, data), null);
         }
     }
 
@@ -149,17 +89,15 @@ class Input extends Component {
         let domProps= {
             value: this.state.value,
             size: Math.max(this.state.value.length, 1), // html does not allow zero
-        };
-        let listeners= {
-            change: this.handleChange,
-            keydown: handleKey(this.props.context.onAction, ['input'], this.props.fieldPath)
+            onChange: this.handleChange,
+            onKeyDown: handleKey(this.props.context.onAction, ['input'], this.props.fieldPath)
         };
         if (this.props.context.focus === 'NEXT') {
             this.props.context.focus = 'DONE';
             domProps.autoFocus = true;
         }
 
-        return DOM.element('input', domProps, listeners);
+        return React.createElement('input', domProps, null);
     }
 }
 
@@ -188,9 +126,7 @@ var handleKey = (handler, actions, path) => (e) => {
 
 var render = {
     application: function (appClass, parentElement) {
-        let app = new appClass({});
-        parentElement.appendChild(app.renderToDom());
-        app.componentDidMount();
+        ReactDOM.render(React.createElement(appClass, null, null), parentElement);
     }
 }
 

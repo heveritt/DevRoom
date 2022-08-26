@@ -6,8 +6,8 @@ class Serializer {
         this.deserialize = this.deserialize.bind(this);
     }
 
-    serialize(instance, includeDerived=true) {
-        return JSON.stringify(instance, this.replacer(includeDerived));
+    serialize(instance, genPath=false) {
+        return JSON.stringify(instance, this.replacer(genPath));
     }
 
     deserialize(jsonString, reconstruct=true) {

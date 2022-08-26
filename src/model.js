@@ -26,7 +26,7 @@ class Model {
     }
 
     compileView(nodeId, contexts) {
-        return serialize(this.node(nodeId).code);
+        return serialize(this.node(nodeId).code, true);
     }
 
     translate(language, version) {
@@ -125,7 +125,7 @@ class Nodule extends Code {
 
     save() {
         console.log('Saving node ' + this.id + ' to database.');
-        db.updateNode(this.id, serialize(this, false) );
+        db.updateNode(this.id, serialize(this) );
     }
 }
 

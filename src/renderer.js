@@ -67,15 +67,14 @@ class Component {
     }
 
     block(classes, ...children) {
-        return this.element(classes, ...children);
+        return this.element('div', classes, ...children);
     }
 
     inline(classes, ...children) {
-        return this.element(classes + ' inline', ...children);
+        return this.element('span', classes, ...children);
     }
 
-    element(classes, ...children) {
-        const tagName = (classes.split(' ').includes('inline')) ? 'span' : 'div';
+    element(tagName, classes, ...children) {
         const domProps = {className: classes};
         const listeners = {};
         if (classes.split(' ').includes('selectable')) {
@@ -100,7 +99,6 @@ class Component {
         if (Array.isArray(data)) {
             return data.map( (element, ix) => {
                 element.ix = ix;
-                element.key = ix.toString();
                 return this.component(element, context);
             });
         } else {

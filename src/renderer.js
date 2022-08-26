@@ -34,11 +34,6 @@ var DOM = {
         }
 
         return element;
-    },
-
-    component: function(constructor, props) {
-        let component = new constructor(props);
-        return component.renderToDom();
     }
 }
 
@@ -56,6 +51,10 @@ class Component {
         let newElement = this.render();
         oldElement.replaceWith(newElement);
         this.domElement = newElement;
+    }
+
+    focus() {
+        if (this.domElement) this.domElement.focus();
     }
 
     renderToDom() {
@@ -88,11 +87,13 @@ class Component {
 
     input(field, value) {
         let props = {
+            className: 'Input',
+            classConstructor: Input,
+            path: field.path + '.value',
             value: value,
-            context: field.context,
             fieldPath: field.path
         }
-        return DOM.component(Input, props);
+        return this.component(props, field.context);
     }
 
     component(data, context={}) {
@@ -103,11 +104,9 @@ class Component {
                 return this.component(element, context);
             });
         } else {
-            if (data.path === context.focus) {
-                context = Object.assign({}, context)
-                context.focus = 'NEXT';
-            }
-            return DOM.component(data.classConstructor, Object.assign({context}, data));
+            let component = new data.classConstructor(Object.assign({context}, data));
+            if (context.onRender) context.onRender(component);
+            return component.renderToDom();
         }
     }
 
@@ -154,10 +153,6 @@ class Input extends Component {
             change: this.handleChange,
             keydown: handleKey(this.props.context.onAction, ['input'], this.props.fieldPath)
         };
-        if (this.props.context.focus === 'NEXT') {
-            this.props.context.focus = 'DONE';
-            domProps.autoFocus = true;
-        }
 
         return DOM.element('input', domProps, listeners);
     }

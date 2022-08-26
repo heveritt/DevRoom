@@ -7,16 +7,19 @@ class Frame extends Component {
     constructor(props) {
         super(props);
         this.state = {view: this.getView()};
+        this.components = {};
+        this.focus = '';
         this.nodule = this.props.model.node(this.props.node); // Synonym only - link to node currently local
 
         this.handleAction = this.handleAction.bind(this);
+        this.handleRender = this.handleRender.bind(this);
     }
 
     render() {
         return (
             this.block('frame',
                 this.block('frame-header',
-                    this.block('frame-node', 'Node: ',
+                    this.block('frame-node', 'Noode: ',
                         this.inline('token', this.props.node)
                     )
                 ),
@@ -25,7 +28,7 @@ class Frame extends Component {
                             ...this.props.contexts.map( (context) => this.block('context', this.inline('lozenge', context)) )
                         ),
                     this.block('frame-contents',
-                        this.component(this.state.view, {onAction: this.handleAction, focus: this.state.focus || 'NEXT'} )
+                        this.component(this.state.view, {onAction: this.handleAction, onRender: this.handleRender} )
                     )
                 )
             )
@@ -35,7 +38,7 @@ class Frame extends Component {
     handleAction(action, path, info) {
 
         console.log(action + ': ' + path);
-        let focus = path;
+        this.focus = path;
         if (action === 'save') {
             this.nodule.save();
         } else if (action === 'delete') {
@@ -45,7 +48,20 @@ class Frame extends Component {
         }
 
         let view = this.getView();
-        this.setState({view, focus});
+        this.components = {};
+        this.setState({view});
+        console.log('Focus: ' + this.focus);
+        this.components[this.focus].focus();
+        //console.log(this.components);
+    }
+
+    handleRender(component) {
+        this.components[component.props.path] = component;
+        if (this.focus) {
+            if (this.focus === component.props.path) this.focus = '';
+        } else {
+            if (component.props.className === 'Input') this.focus = component.props.path;
+        }
     }
 
     getView() {

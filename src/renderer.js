@@ -148,7 +148,7 @@ class Input extends Component {
             value: this.state.value,
             size: Math.max(this.state.value.length, 1), // html does not allow zero
         };
-        if (this.props.placeholder) domProps.placeholder = this.props.placeholder;
+        if (this.props.placeholder) domProps.placeholder = Unicode.mapToken(this.props.placeholder);
         let listeners= {
             change: this.handleChange,
             keydown: handleKey(this.props.context.onAction, ['input'], this.props.fieldPath)

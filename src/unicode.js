@@ -12,6 +12,7 @@ const Unicode = {
         '||': '\u2228', // Logical OR
         '|1': '\u2714', // TRUE (Heavy check mark)
         '|0': '\u2718', // FALSE (Heavy ballot X)
+        '.' : '\u00B7', // Data domain (Middle Dot)
     },
 
     mapToken: function(rawToken) {

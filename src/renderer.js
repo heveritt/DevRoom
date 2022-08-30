@@ -90,7 +90,8 @@ class Component {
             classConstructor: Input,
             path: field.path + '.value',
             value: value,
-            fieldPath: field.path
+            fieldPath: field.path,
+            placeholder: field.domain
         }
         return this.component(props, field.context);
     }
@@ -147,6 +148,7 @@ class Input extends Component {
             value: this.state.value,
             size: Math.max(this.state.value.length, 1), // html does not allow zero
         };
+        if (this.props.placeholder) domProps.placeholder = this.props.placeholder;
         let listeners= {
             change: this.handleChange,
             keydown: handleKey(this.props.context.onAction, ['input'], this.props.fieldPath)

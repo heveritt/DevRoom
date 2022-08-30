@@ -138,15 +138,22 @@ span {
 input {
     margin: 0px 2px;
     padding: 0px 0px 0px 2px;
-    border: 1px solid red;
-    color: white;
-    background-color: #222222;
+    outline: 2px solid red;
     font: 16px arial, sans-serif;
+    background-color: lightgrey;
+    text-align: left;
 }
 
 input:focus {
     outline: none;
-    border-color: grey;
+}
+
+::-webkit-input-placeholder {
+  text-align: center;
+}
+
+:-moz-placeholder {
+  text-align: center;
 }
 
 .literal {

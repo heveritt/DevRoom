@@ -56,7 +56,7 @@ class Frame extends Component {
     }
 
     handleRender(component) {
-        this.components[component.props.path] = component;
+        if (component.props.path) this.components[component.props.path] = component;
         if (this.focus) {
             if (this.focus === component.props.path) this.focus = '';
         } else {

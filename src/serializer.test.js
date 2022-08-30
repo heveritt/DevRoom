@@ -104,3 +104,39 @@ test('throws on attempt to de-serialize an unmapped class', () => {
 test('throws on attempt to serialize classes with circular dependencies', () => {
     expect(() => {serializer.serialize(henson);}).toThrow();
 });
+
+// Create a round trip that generates a path for each object serialized
+const generatePath = (value) => serializer.deserialize(serializer.serialize(value, true));
+const family = {surname: 'Smith', son: {forename: 'John', son: {forename: 'Philip'}}, daughters: [{forename: 'Anne'}, {forename: 'Ruth'}]};
+const familyBack = generatePath(family);
+
+test('generates a path for an object child', () => {
+    expect(familyBack.son.path).toEqual('son');
+});
+
+test('generates a path for a child of a child', () => {
+    expect(familyBack.son.son.path).toEqual('son.son');
+});
+
+test('generates a path for each object in an array', () => {
+    expect(familyBack.daughters[0].path).toEqual('daughters#0');
+    expect(familyBack.daughters[1].path).toEqual('daughters#1');
+});
+
+test('generates a path for the top level object', () => {
+    expect(familyBack.path).toEqual('');
+});
+
+test('generates a path for an array of objects', () => {
+    const misc = [{name: 'John'}, {name: 'Philip'}]
+    const miscBack = generatePath(misc);
+    expect(miscBack[0].path).toEqual('#0');
+    expect(miscBack[1].path).toEqual('#1');
+});
+
+test('generates a path for a mixed array of objects', () => {
+    const misc = [{name: 'John'}, 42, 'Smith', {name: 'Philip'}]
+    const miscBack = generatePath(misc);
+    expect(miscBack[0].path).toEqual('#0');
+    expect(miscBack[3].path).toEqual('#3');
+});

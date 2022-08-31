@@ -14,6 +14,7 @@ const Unicode = {
         '|0': '\u2718', // FALSE (Heavy ballot X)
         '.' : '\u00B7', // Data domain (Middle Dot)
         '|' : '\u2713|\u2717', // Boolean domain
+        '[$': '\u2B8D', // Loop symbol
     },
 
     mapToken: function(rawToken) {

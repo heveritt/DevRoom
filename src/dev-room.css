@@ -83,7 +83,7 @@
     border: 2px inset;
 }
 
-.branch-code, .implementation {
+.branch-code, .loop-code, .implementation {
     display: flex;
 }
 
@@ -168,6 +168,6 @@ input:focus {
     color: cyan;
 }
 
-.selection > .token, .arrow {
+.selection > .token, .loop-condition > .token, .arrow {
     color: violet;
 }

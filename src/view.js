@@ -176,6 +176,32 @@ class Branch extends Component {
     }
 }
 
+class Iteration extends Component {
+    render() {
+        return (
+            this.block('iteration',
+                this.props.optional ? (
+                    this.block('loop-condition',
+                        this.token('?'),
+                        this.child('condition'),
+                        this.token('[$')
+                    )
+                ) : (
+                    this.block('loop-condition',
+                        this.token('[$'),
+                        this.child('condition'),
+                        this.token('?'),
+                    )
+                ),
+                this.block('loop-code',
+                    this.block('indent'),
+                    this.child('code')
+                )
+            )
+        );
+    }
+}
+
 class Token extends Component {
     render() {
         return this.token(this.props.value);
@@ -189,7 +215,7 @@ class Literal extends Component {
 }
 
 
-const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection, Branch};
+const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection, Branch, Iteration};
 
 const serializer = new Serializer(classMap);
 

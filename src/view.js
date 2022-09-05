@@ -19,7 +19,7 @@ class Frame extends Component {
         return (
             this.block('frame',
                 this.block('frame-header',
-                    this.block('frame-node', 'Noode: ',
+                    this.block('frame-node', 'Node: ',
                         this.inline('token', this.props.node)
                     )
                 ),

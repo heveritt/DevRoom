@@ -161,7 +161,7 @@ class Input extends Component {
 var handleKey = (handler, actions, path) => (e) => {
 
     //console.log('Key: ', e.key, 'actions: ', actions, 'path: ', path)
-    if (actions.includes('save') && e.key === '£') {
+    if (actions.includes('save') && e.ctrlKey && (e.key === 's' || e.key === 'S')) {
 
         e.stopPropagation();
         e.preventDefault();

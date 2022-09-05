@@ -163,9 +163,17 @@
                 "right": {
                   "className": "Field",
                   "domain": ".",
-                  "value": ""
+                  "value": {
+                    "className": "Literal",
+                    "value": "35",
+                    "domain": "#"
+                  }
                 }
               }
+            },
+            {
+              "className": "Line",
+              "instruction": ""
             }
           ]
         }

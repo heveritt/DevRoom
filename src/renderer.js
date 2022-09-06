@@ -79,7 +79,7 @@ class Component {
         const listeners = {};
         if (classes.split(' ').includes('selectable')) {
             domProps.tabIndex = 0;
-            listeners.keydown = handleKey(this.props.context.onAction, ['delete', 'save'], this.props.path);
+            listeners.keydown = handleKey(this.props.context.onAction, ['delete', 'save', 'generate'], this.props.path);
         }
         return DOM.element(tagName, domProps, listeners, ...children);
     }
@@ -167,7 +167,13 @@ var handleKey = (handler, actions, path) => (e) => {
         e.preventDefault();
         handler('save');
 
-    } else if (actions.includes('input') && e.target.value && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
+    } else if (actions.includes('generate') && e.ctrlKey && (e.key === 'g' || e.key === 'G')) {
+
+        e.stopPropagation();
+        e.preventDefault();
+        handler('generate');
+
+   } else if (actions.includes('input') && e.target.value && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
 
         e.stopPropagation();
         e.preventDefault();

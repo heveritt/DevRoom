@@ -127,6 +127,17 @@ class Nodule extends Code {
         console.log('Saving node ' + this.id + ' to database.');
         db.updateNode(this.id, serialize(this) );
     }
+
+    generate() {
+        const options = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: serialize(this)
+        }
+        fetch("/generated/" + this.id, options)
+            .then((res) => res.json())
+            .then((data) => console.log(data.message));
+    }
 }
 
 class Procedure extends Code {

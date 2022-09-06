@@ -41,6 +41,8 @@ class Frame extends Component {
         this.focus = path;
         if (action === 'save') {
             this.nodule.save();
+        } else if (action === 'generate') {
+            this.nodule.generate();
         } else if (action === 'delete') {
             this.nodule.delete(path);
         } else if (action === 'input') {

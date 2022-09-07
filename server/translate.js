@@ -39,11 +39,11 @@ function translate(nodule) {
         },
         
         Expression: function(props) {
-            if (props.operator.value === ':=') {
-                return trObject(props.left, props) + ' = ' + trObject(props.right, props) + ';';
-            } else {
-                return '(' + trObject(props.left, props) + ' ' + trObject(props.operator) + ' ' + trObject(props.right, props) + ')';
-            }
+            return '(' + trObject(props.left) + ' ' + trObject(props.operator) + ' ' + trObject(props.right) + ')';
+        },
+
+        Assignment: function(props) {
+            return trObject(props.left) + ' = ' + trObject(props.right) + ';';
         },
 
         Token: function(props) {

@@ -61,7 +61,7 @@
             {
               "className": "Line",
               "instruction": {
-                "className": "Expression",
+                "className": "Assignment",
                 "left": {
                   "className": "Field",
                   "domain": "#",
@@ -69,10 +69,6 @@
                     "className": "Token",
                     "value": "x"
                   }
-                },
-                "operator": {
-                  "className": "Token",
-                  "value": ":="
                 },
                 "right": {
                   "className": "Field",
@@ -88,7 +84,7 @@
             {
               "className": "Line",
               "instruction": {
-                "className": "Expression",
+                "className": "Assignment",
                 "left": {
                   "className": "Field",
                   "domain": "#",
@@ -96,10 +92,6 @@
                     "className": "Token",
                     "value": "y"
                   }
-                },
-                "operator": {
-                  "className": "Token",
-                  "value": ":="
                 },
                 "right": {
                   "className": "Field",
@@ -150,15 +142,11 @@
             {
               "className": "Line",
               "instruction": {
-                "className": "Expression",
+                "className": "Assignment",
                 "left": {
                   "className": "Declaration",
                   "role": "z",
                   "domain": "#"
-                },
-                "operator": {
-                  "className": "Token",
-                  "value": ":="
                 },
                 "right": {
                   "className": "Field",

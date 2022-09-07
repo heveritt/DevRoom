@@ -149,6 +149,18 @@ class Expression extends Component {
     }
 }
 
+class Assignment extends Component {
+    render() {
+        return (
+            this.inline('assignment',
+                this.child('left'),
+                this.token(':='),
+                this.child('right')
+            )
+        );
+    }
+}
+
 class Selection extends Component {
     render() {
         return (
@@ -217,7 +229,7 @@ class Literal extends Component {
 }
 
 
-const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Token, Literal, Selection, Branch, Iteration};
+const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Assignment, Token, Literal, Selection, Branch, Iteration};
 
 const serializer = new Serializer(classMap);
 

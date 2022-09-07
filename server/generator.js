@@ -1,4 +1,5 @@
 const fs = require('fs');
+const translate = require('./translate');
 
 class Generator {
 
@@ -6,9 +7,10 @@ class Generator {
         this.filePath = './generated/';
     }
 
-    generateNode(id, json) {
+    generateNode(id, nodule) {
         const fileName = this.filePath + id + '.js';
-        fs.writeFile(fileName, json, (error) => { if (error) { console.log(error); } } );
+        const jsCode = translate(nodule.code);
+        fs.writeFile(fileName, jsCode, (error) => { if (error) { console.log(error); } } );
     }
 
 }

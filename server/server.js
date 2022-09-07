@@ -13,7 +13,7 @@ server.get('/nodes/:nodeId', (req, res) => {
 
 server.put('/generated/:nodeId', (req, res) => {
     console.log('Generated code for nodule: ' + req.params.nodeId);
-    generator.generateNode(req.params.nodeId, JSON.stringify(req.body));
+    generator.generateNode(req.params.nodeId, req.body);
     res.json({ message: "Hello from server Hugo!" });
 });
 

@@ -53,7 +53,7 @@ class Frame extends Component {
         this.components = {};
         this.setState({view});
         console.log('Focus: ' + this.focus);
-        this.components[this.focus].focus();
+        if (this.focus) this.components[this.focus].focus();
         //console.log(this.components);
     }
 

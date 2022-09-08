@@ -97,30 +97,19 @@ class Component {
     }
 
     component(data, context={}) {
-        if (Array.isArray(data)) {
-            return data.map( (element, ix) => {
-                element.ix = ix;
-                return this.component(element, context);
-            });
-        } else {
-            let component = new data.classConstructor(Object.assign({context}, data));
-            if (context.onRender) context.onRender(component);
-            return component.renderToDom();
-        }
+        let component = new data.classConstructor(Object.assign({context}, data));
+        if (context.onRender) context.onRender(component);
+        return component.renderToDom();
     }
 
-    child(role) {
-        return this.component(this.props[role], this.props.context);
-    }
-
-    editable(role) {
-        function renderChild(parent, child) {
-            return (typeof child === 'object') ? parent.component(child, parent.props.context) : parent.input(parent.props, child);
-        }
-        if (Array.isArray(this.props[role])) {
-            return this.props[role].map( child => renderChild(this, child) );
+    child(role, ix=null) {
+        const child = (ix !== null) ? this.props[role][ix] : this.props[role];
+        if (Array.isArray(child)) {
+            return child.map( (element, ix) => this.child(role, ix) );
+        } else if (typeof child === 'object') {
+            return this.component(child, this.props.context);
         } else {
-            return [ renderChild(this, this.props[role]) ];
+            return this.input(this.props, child);
         }
     }
 

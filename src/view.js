@@ -110,7 +110,7 @@ class Line extends Component {
     render() {
         return (
             this.block('code-line selectable', 
-                ...this.editable('instruction')
+                this.child('instruction')
             )
         );
     }
@@ -120,7 +120,7 @@ class Field extends Component {
     render() {
         return (
             this.inline('code-field selectable', 
-                ...this.editable('value')
+                this.child('value')
             )
         );
     }

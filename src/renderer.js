@@ -98,7 +98,7 @@ class Component {
 
     component(data, context={}) {
         let component = new data.classConstructor(Object.assign({context}, data));
-        if (context.onRender) context.onRender(component);
+        if (context.onCreate) context.onCreate(component);
         return component.renderToDom();
     }
 

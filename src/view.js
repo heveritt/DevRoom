@@ -12,7 +12,7 @@ class Frame extends Component {
         this.nodule = this.props.model.node(this.props.node); // Synonym only - link to node currently local
 
         this.handleAction = this.handleAction.bind(this);
-        this.handleRender = this.handleRender.bind(this);
+        this.handleCreate = this.handleCreate.bind(this);
     }
 
     render() {
@@ -28,7 +28,7 @@ class Frame extends Component {
                             ...this.props.contexts.map( (context) => this.block('context', this.inline('lozenge', context)) )
                         ),
                     this.block('frame-contents',
-                        this.component(this.state.view, {onAction: this.handleAction, onRender: this.handleRender} )
+                        this.component(this.state.view, {onAction: this.handleAction, onCreate: this.handleCreate} )
                     )
                 )
             )
@@ -48,7 +48,7 @@ class Frame extends Component {
         //console.log(this.components);
     }
 
-    handleRender(component) {
+    handleCreate(component) {
         if (component.props.path) this.components[component.props.path] = component;
         if (this.focus) {
             if (this.focus === component.props.path) this.focus = '';

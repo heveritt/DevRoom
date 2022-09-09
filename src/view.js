@@ -37,22 +37,13 @@ class Frame extends Component {
 
     handleAction(action, path, info) {
 
-        console.log(action + ': ' + path);
+        //console.log(action + ': ' + path);
         this.focus = path;
-        if (action === 'save') {
-            this.nodule.save();
-        } else if (action === 'generate') {
-            this.nodule.generate();
-        } else if (action === 'delete') {
-            this.nodule.delete(path);
-        } else if (action === 'input') {
-            this.nodule.input(path, info);
-        }
-
+        this.nodule[action](path, info);
         let view = this.getView();
         this.components = {};
         this.setState({view});
-        console.log('Focus: ' + this.focus);
+        //console.log('Focus: ' + this.focus);
         if (this.focus) this.components[this.focus].focus();
         //console.log(this.components);
     }
@@ -68,10 +59,7 @@ class Frame extends Component {
 
     getView() {
         const view = deserialize(this.props.model.compileView(this.props.node, this.props.contexts));
-/*        fetch("/nodes/12345")
-            .then((res) => res.json())
-            .then((data) => console.log(data.message));*/
-        console.log(view);
+        // console.log(view);
         return view;
     }
 }

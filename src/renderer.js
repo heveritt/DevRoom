@@ -136,6 +136,7 @@ class Input extends Component {
         let domProps= {
             value: this.state.value,
             size: Math.max(this.state.value.length, 1), // html does not allow zero
+            autofocus: true // Controls focus on initial load - focus will fall on first DOM element with autofocus.
         };
         if (this.props.placeholder) domProps.placeholder = Unicode.mapToken(this.props.placeholder);
         let listeners= {

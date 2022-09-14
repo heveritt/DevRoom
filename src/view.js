@@ -118,7 +118,7 @@ class Declaration extends Component {
     render() {
         return (
             this.inline('declaration',
-                this.props.role ? this.inline('token', this.props.role + ':') : null,
+                this.props.role ? this.inline('token', this.props.role) : null,
                 this.inline('domain', this.props.domain)
             )
         );

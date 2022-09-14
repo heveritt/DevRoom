@@ -144,9 +144,13 @@
               "instruction": {
                 "className": "Assignment",
                 "left": {
-                  "className": "Declaration",
-                  "role": "z",
-                  "domain": "#"
+                  "className": "Field",
+                  "domain": "#",
+                  "value": {
+                    "className": "Declaration",
+                    "role": "z",
+                    "domain": "#"
+                  }
                 },
                 "right": {
                   "className": "Field",

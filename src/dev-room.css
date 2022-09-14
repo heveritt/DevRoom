@@ -45,6 +45,7 @@
     flex:  80%;
     border: 2px solid grey;
     padding: 10px;
+    line-height: 20px;
 }
 
 .context {
@@ -62,8 +63,12 @@
 .interface {
     border: 2px solid;
     border-radius: 15px;
-    padding: 0px 5px;
+    padding: 3px 5px;
     color: cyan;
+}
+
+.interface .declaration {
+    padding:  0px 5px;
 }
 
 .implementation {
@@ -71,16 +76,21 @@
     border-radius: 5px;
 }
 
-.declaration {
-    padding: 3px 5px;
-    color: inherit;
+.implementation .declaration > .domain {
+    display:  none;
+}
+
+.implementation .declaration:hover > .domain {
+    display:  inline-block;
 }
 
 .domain {
-    padding: 0px 5px;
+    padding: 0px 10px;
     color: grey;
     background-color: lightgrey;
-    border: 2px inset;
+    line-height: 18px;
+    border: 1px solid grey;
+    border-radius: 5px;
 }
 
 .branch-code, .loop-code, .implementation {

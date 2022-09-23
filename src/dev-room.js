@@ -8,7 +8,7 @@ class DevRoom extends Component {
     constructor() {
         super();
         this.state = {
-            node: 'transform',
+            node: 'max',
             contexts: ['Franca', 'DevRoom', 'SudokuMate'],
             model: null,
             error: null

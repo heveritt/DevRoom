@@ -34,7 +34,7 @@
   "nodes": [
     {
       "className": "Nodule",
-      "id": "transform",
+      "id": "max",
       "code": {
         "className": "Procedure",
         "operation": "max",

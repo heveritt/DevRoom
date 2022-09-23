@@ -1,20 +1,13 @@
-const fs = require('fs');
+const fs = require('./filesystem');
 const translate = require('./translate');
 
-class Generator {
-
-    constructor() {
-        this.filePath = './generated/';
-    }
+const generator = {
 
     generateNode(id, nodule) {
-        const fileName = this.filePath + id + '.js';
         const jsCode = translate(nodule.code);
-        fs.writeFile(fileName, jsCode, (error) => { if (error) { console.log(error); } } );
+        fs.write('generatedJS', id, jsCode);
     }
 
 }
-
-const generator = new Generator();
 
 module.exports = generator;

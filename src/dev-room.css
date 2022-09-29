@@ -7,7 +7,7 @@
 .frame {
     display: flex;
     flex-direction: column;
-    border: 2px solid grey;
+    border: 2px solid gray;
     border-radius: 5px;
     height: 100%;
     cursor: default;
@@ -16,14 +16,14 @@
 .frame-header {
     display: flex;
     justify-content: space-between;
-    background-image:linear-gradient(grey, lightgrey);
+    background-image:linear-gradient(gray, lightgrey);
     padding: 3px;
     width: 100%;
 }
  
 .frame-header .token {
     background: #222222;
-    border: 1px solid grey;
+    border: 1px solid gray;
     border-radius: 5px;
     margin: 0px 5px;
     padding: 2px 5px;
@@ -37,13 +37,13 @@
 
 .frame-contexts {
     flex: 20%;
-    border: 2px solid grey;
+    border: 2px solid gray;
     padding: 10px;
 }
 
 .frame-contents {
     flex:  80%;
-    border: 2px solid grey;
+    border: 2px solid gray;
     padding: 10px;
     line-height: 20px;
 }
@@ -86,11 +86,16 @@
 
 .domain {
     padding: 0px 10px;
-    color: grey;
+    color: gray;
     background-color: lightgrey;
     line-height: 18px;
-    border: 1px solid grey;
+    border: 1px solid gray;
     border-radius: 5px;
+}
+
+/* TODO Should be output domain */
+.interface .domain:first-child {
+    background-color: inherit;
 }
 
 .branch-code, .loop-code, .implementation {
@@ -120,7 +125,7 @@
 }
 
 .selectable:hover {
-    border-color: grey;
+    border-color: gray;
 }
 
 .selectable:focus {

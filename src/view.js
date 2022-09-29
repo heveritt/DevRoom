@@ -169,8 +169,9 @@ class Branch extends Component {
                         this.child('condition')
                     ) : null,
                 this.block('branch-code',
-                    this.block('indent',
+                    this.block('label',
                         this.token(this.props.condition ? '|1' : '|0', 'literal')),
+                    this.block('indent'),
                     this.child('code')
                 )
             )

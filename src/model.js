@@ -198,8 +198,8 @@ class Line extends Code {
     static inputs = {
         '=' : {className: 'Assignment'},
         '<' : {className: 'Return'},
-        '?' : {className: 'Selection', condition: '|', if: true},
-        '?|': {className: 'Selection', condition: '|', if: true, else: true},
+        '?' : {className: 'Selection', condition: '|', branchs: ['|1']},
+        '?|': {className: 'Selection', condition: '|', branchs: ['|1', '|0']},
         '?$': {className: 'Iteration', optional: true},
         '$?': {className: 'Iteration', optional: false}
     };
@@ -327,12 +327,8 @@ class Return extends Code {
 class Selection extends Code {
     constructor(props) {
         super('Selection');
-        if (props.branches) {
-            this.branches = props.branches;
-        } else {
-            this.branches = [new Branch({})];
-            if (props.else) this.branches.push(new Branch({else: true}));
-        }
+        this.condition = typeof props.condition === 'object' ? props.condition : new Field({domain: props.condition});
+        this.branchs = props.branchs.map( branch => typeof branch === 'object' ? branch : new Branch({label: branch}));
     }
 
     deleteChild(child) {
@@ -349,11 +345,7 @@ class Selection extends Code {
 class Branch extends Code {
     constructor(props) {
         super('Branch');
-        if (props.condition) {
-            this.condition = props.condition;
-        } else if (! props.else) {
-            this.condition = new Field({domain: '|'});
-        }
+        this.label = props.label;
         this.code = props.code ? props.code : new Block({});
     }
 }

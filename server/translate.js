@@ -59,15 +59,13 @@ function translate(nodule) {
         },
 
         Selection: function(props) {
-            return trArray(props.branches, '');
+            let code = 'if ' + trObject(props.condition) + trObject(props.branchs[0]);
+            if (branchs.length > 1) code += ' else' + trObject(props.branchs[1]);
+            return code;
         },
 
         Branch: function(props) {
-            if (props.condition) {
-                return 'if ' + trObject(props.condition) + trObject(props.code);
-            } else {
-                return ' else' + trObject(props.code);
-            }
+            return trObject(props.code);
         },
         
         Iteration: function(props) {

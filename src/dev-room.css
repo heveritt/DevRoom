@@ -97,7 +97,7 @@
     background-color: inherit;
 }
 
-.branch-code, .loop-code, .implementation {
+.branch, .loop-code, .implementation {
     display: flex;
     position: relative;
 }

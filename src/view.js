@@ -164,7 +164,9 @@ class Selection extends Component {
     render() {
         return (
             this.block('selection',
-                this.child('branches')
+                this.token('?'),
+                this.child('condition'),
+                this.child('branchs')
             )
         );
     }
@@ -174,17 +176,11 @@ class Branch extends Component {
     render() {
         return (
             this.block('branch',
-                this.props.condition ? 
-                    this.block('selection',
-                        this.token('?'),
-                        this.child('condition')
-                    ) : null,
-                this.block('branch-code',
-                    this.block('label',
-                        this.token(this.props.condition ? '|1' : '|0', 'literal')),
-                    this.block('indent'),
-                    this.child('code')
-                )
+                this.block('label',
+                    this.token(this.props.label, 'literal')
+                ),
+                this.block('indent'),
+                this.child('code')
             )
         );
     }

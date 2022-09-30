@@ -62,36 +62,37 @@
               "className": "Line",
               "instruction": {
                 "className": "Selection",
-                "branches": [
-                  {
-                    "className": "Branch",
-                    "condition": {
+                "condition": {
+                  "className": "Field",
+                  "domain": "|",
+                  "value": {
+                    "className": "Expression",
+                    "left": {
                       "className": "Field",
-                      "domain": "|",
+                      "domain": "#",
                       "value": {
-                        "className": "Expression",
-                        "left": {
-                          "className": "Field",
-                          "domain": "#",
-                          "value": {
-                            "className": "Token",
-                            "value": "x"
-                          }
-                        },
-                        "operator": {
-                          "className": "Token",
-                          "value": ">"
-                        },
-                        "right": {
-                          "className": "Field",
-                          "domain": "#",
-                          "value": {
-                            "className": "Token",
-                            "value": "y"
-                          }
-                        }
+                        "className": "Token",
+                        "value": "x"
                       }
                     },
+                    "operator": {
+                      "className": "Token",
+                      "value": ">"
+                    },
+                    "right": {
+                      "className": "Field",
+                      "domain": "#",
+                      "value": {
+                        "className": "Token",
+                        "value": "y"
+                      }
+                    }
+                  }
+                },
+                "branchs": [
+                  {
+                    "className": "Branch",
+                    "label": "|1",
                     "code": {
                       "className": "Block",
                       "lines": [
@@ -114,6 +115,7 @@
                   },
                   {
                     "className": "Branch",
+                    "label": "|0",
                     "code": {
                       "className": "Block",
                       "lines": [

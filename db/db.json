@@ -61,46 +61,13 @@
             {
               "className": "Line",
               "instruction": {
-                "className": "Assignment",
-                "left": {
-                  "className": "Field",
-                  "domain": "#",
-                  "value": {
-                    "className": "Token",
-                    "value": "x"
-                  }
-                },
-                "right": {
-                  "className": "Field",
-                  "domain": "#",
-                  "value": {
-                    "className": "Literal",
-                    "value": "4",
-                    "domain": "#"
-                  }
-                }
-              }
-            },
-            {
-              "className": "Line",
-              "instruction": {
-                "className": "Assignment",
-                "left": {
-                  "className": "Field",
-                  "domain": "#",
-                  "value": {
-                    "className": "Token",
-                    "value": "y"
-                  }
-                },
-                "right": {
-                  "className": "Field",
-                  "domain": "#",
-                  "value": {
-                    "className": "Expression",
-                    "left": {
+                "className": "Selection",
+                "branches": [
+                  {
+                    "className": "Branch",
+                    "condition": {
                       "className": "Field",
-                      "domain": "#",
+                      "domain": "|",
                       "value": {
                         "className": "Expression",
                         "left": {
@@ -113,59 +80,62 @@
                         },
                         "operator": {
                           "className": "Token",
-                          "value": "*"
+                          "value": ">"
                         },
                         "right": {
                           "className": "Field",
                           "domain": "#",
-                          "value": ""
+                          "value": {
+                            "className": "Token",
+                            "value": "y"
+                          }
                         }
                       }
                     },
-                    "operator": {
-                      "className": "Token",
-                      "value": "+"
-                    },
-                    "right": {
-                      "className": "Field",
-                      "domain": "#",
-                      "value": {
-                        "className": "Literal",
-                        "value": "5",
-                        "domain": "#"
-                      }
+                    "code": {
+                      "className": "Block",
+                      "lines": [
+                        {
+                          "className": "Line",
+                          "instruction": {
+                            "className": "Return",
+                            "right": {
+                              "className": "Field",
+                              "domain": ".",
+                              "value": {
+                                "className": "Token",
+                                "value": "x"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "className": "Branch",
+                    "code": {
+                      "className": "Block",
+                      "lines": [
+                        {
+                          "className": "Line",
+                          "instruction": {
+                            "className": "Return",
+                            "right": {
+                              "className": "Field",
+                              "domain": ".",
+                              "value": {
+                                "className": "Token",
+                                "value": "y"
+                              }
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
-                }
+                ]
               }
-            },
-            {
-              "className": "Line",
-              "instruction": {
-                "className": "Assignment",
-                "left": {
-                  "className": "Field",
-                  "domain": "#",
-                  "value": {
-                    "className": "Declaration",
-                    "role": "z",
-                    "domain": "#"
-                  }
-                },
-                "right": {
-                  "className": "Field",
-                  "domain": ".",
-                  "value": {
-                    "className": "Literal",
-                    "value": "35",
-                    "domain": "#"
-                  }
-                }
-              }
-            },
-            {
-              "className": "Line",
-              "instruction": ""
             }
           ]
         }

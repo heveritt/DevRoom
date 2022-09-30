@@ -197,6 +197,7 @@ class Line extends Code {
 
     static inputs = {
         '=' : {className: 'Assignment'},
+        '<' : {className: 'Return'},
         '?' : {className: 'Selection', condition: '|', if: true},
         '?|': {className: 'Selection', condition: '|', if: true, else: true},
         '?$': {className: 'Iteration', optional: true},
@@ -316,6 +317,13 @@ class Assignment extends Code {
     }
 }
 
+class Return extends Code {
+    constructor(props) {
+        super('Return');
+        this.right = props.right ? props.right : new Field({domain: '.'}); // TODO - Should be output domain
+    }
+}
+
 class Selection extends Code {
     constructor(props) {
         super('Selection');
@@ -374,7 +382,7 @@ class Literal extends Code {
     }
 }
 
-const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Assignment, Token, Literal, Selection, Branch, Iteration};
+const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Assignment, Return, Token, Literal, Selection, Branch, Iteration};
 const { serialize, deserialize } = new Serializer(classMap);
 
 export default Model;

@@ -44,7 +44,7 @@ class Frame extends Component {
         this.components = {};
         this.setState({view});
         //console.log('Focus: ' + this.focus);
-        if (this.focus) this.components[this.focus].focus();
+        if (this.focus && this.components[this.focus]) this.components[this.focus].focus();
         //console.log(this.components);
     }
 
@@ -149,6 +149,17 @@ class Assignment extends Component {
     }
 }
 
+class Return extends Component {
+    render() {
+        return (
+            this.inline('return',
+                this.token(':='),
+                this.child('right')
+            )
+        );
+    }
+}
+
 class Selection extends Component {
     render() {
         return (
@@ -218,7 +229,7 @@ class Literal extends Component {
 }
 
 
-const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Assignment, Token, Literal, Selection, Branch, Iteration};
+const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Assignment, Return, Token, Literal, Selection, Branch, Iteration};
 
 const serializer = new Serializer(classMap);
 

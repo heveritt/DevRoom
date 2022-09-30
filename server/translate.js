@@ -37,13 +37,17 @@ function translate(nodule) {
         Declaration: function(props) {
             return props.role;
         },
-        
+
         Expression: function(props) {
             return '(' + trObject(props.left) + ' ' + trObject(props.operator) + ' ' + trObject(props.right) + ')';
         },
 
         Assignment: function(props) {
             return trObject(props.left) + ' = ' + trObject(props.right) + ';';
+        },
+
+        Return: function(props) {
+            return 'return ' + trObject(props.right) + ';';
         },
 
         Token: function(props) {

@@ -137,9 +137,10 @@
     margin: 5px 5px 5px 0px;
     padding: 5px 0px;
     border: 1px solid dimgrey;
-    border-radius: 0px 4px 4px 4px;
+    border-radius: 0px 5px 5px 5px;
 }
 
+/* To illustrate evaluation order using pseudo-brackets */
 .expression .expression {
     border-left: 1px solid dimgray;
     border-right: 1px solid dimgray;

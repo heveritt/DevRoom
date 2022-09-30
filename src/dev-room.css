@@ -93,8 +93,7 @@
     border-radius: 5px;
 }
 
-/* TODO Should be output domain */
-.interface .domain:first-child {
+.output > .domain {
     background-color: inherit;
 }
 

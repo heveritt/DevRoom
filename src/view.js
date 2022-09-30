@@ -117,7 +117,7 @@ class Field extends Component {
 class Declaration extends Component {
     render() {
         return (
-            this.inline('declaration',
+            this.inline(this.getRole() + ' declaration',
                 this.props.role ? this.inline('token', this.props.role) : null,
                 this.inline('domain', this.props.domain)
             )

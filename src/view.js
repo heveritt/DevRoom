@@ -76,8 +76,10 @@ class Procedure extends Component {
                     this.child('inputs')
                 ),
                 this.block('implementation',
-                    this.block('indent'),
-                    this.child('implementation')
+                    this.block('procedure-code',
+                        this.block('indent'),
+                        this.child('implementation')
+                    )
                 )
             )
         );
@@ -175,7 +177,7 @@ class Selection extends Component {
 class Branch extends Component {
     render() {
         return (
-            this.block('branch',
+            this.block('branch selectable',
                 this.block('label',
                     this.token(this.props.label, 'literal')
                 ),

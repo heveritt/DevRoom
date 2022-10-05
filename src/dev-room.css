@@ -61,8 +61,9 @@
 }
 
 .interface {
-    border: 2px solid;
-    border-radius: 15px;
+    border-style: solid;
+    border-width: 2px 2px 0px 2px;
+    border-radius: 15px 15px 0px 0px;
     padding: 3px 5px;
     color: cyan;
 }
@@ -72,8 +73,10 @@
 }
 
 .implementation {
-    border: 2px solid cyan;
-    border-radius: 5px;
+    border: 2px solid;
+    border-color: cyan;
+    border-radius: 0px 15px 15px 15px;
+    padding: 5px 5px 5px 0px;
 }
 
 .implementation .declaration > .domain {
@@ -97,12 +100,14 @@
     background-color: inherit;
 }
 
-.branch, .loop-code, .implementation {
+.procedure-code, .branch, .loop-code {
     display: flex;
     position: relative;
+    padding: 5px 5px 5px 0px;
+    border-color: dimgrey;
 }
 
-.label {
+.branch .label {
   position: absolute;
   z-index: 1;
   font-size: 12px;
@@ -113,30 +118,35 @@
 
 .indent {
     flex: 0 0 50px;
-    margin: 5px 0px 5px 0px;
-    border-top: 1px solid dimgrey;
+    border-top: 1px solid;
+    border-color: inherit;
     padding: 5px;
 }
 
-.selectable {
+.code-block {
+    flex: 1;
+    padding: 5px 5px 5px 0px;
+    border: 1px solid;
+    border-color: inherit;
+    border-radius: 0px 5px 5px 5px;
+}
+
+.code-line {
+    border: 1px solid transparent;
+    border-radius: 0px 5px 5px 0px;
+}
+
+.code-field {
     border: 1px solid transparent;
     border-radius: 5px;
 }
 
 .selectable:hover {
-    border-color: gray;
+    border-color: #AAAAAA;
 }
 
 .selectable:focus {
     border-color: white;
-}
-
-.code-block {
-    flex: 1;
-    margin: 5px 5px 5px 0px;
-    padding: 5px 0px;
-    border: 1px solid dimgrey;
-    border-radius: 0px 5px 5px 5px;
 }
 
 /* To illustrate evaluation order using pseudo-brackets */

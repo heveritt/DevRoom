@@ -62,6 +62,10 @@ class Code {
         return false;
     }
 
+    deleteContents() {
+        return '';
+    }
+
     deleteChild(child) {
         if (this[child] && this[child].isOptional()) {
             let deleted = this[child];
@@ -332,10 +336,10 @@ class Selection extends Code {
     }
 
     deleteChild(child) {
-        if (child === 'else' && this.else) {
-            let deleted = this.else;
-            delete this.else;
-            return deleted;
+        let ix = Number(child.split('#')[1]);
+        // Can only remove last (i.e. "else") branch from if-else
+        if (this.branchs.length === ix + 1) {
+            return this.branchs.pop();
         } else {
             return '';
         }

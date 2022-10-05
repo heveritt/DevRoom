@@ -108,12 +108,17 @@
 }
 
 .branch .label {
-  position: absolute;
-  z-index: 1;
-  font-size: 12px;
-  left: 5px;
-  top: -4px;
-  background: #222222;
+    position: absolute;
+    z-index: 1;
+    font-size: 12px;
+    line-height: 12px;
+    left: 5px;
+    top: 0px;
+    background-color: #222222;
+}
+
+.branch:focus .label {
+    background-color: inherit;
 }
 
 .indent {
@@ -147,6 +152,7 @@
 
 .selectable:focus {
     border-color: white;
+    background: #444444;
 }
 
 /* To illustrate evaluation order using pseudo-brackets */

@@ -245,20 +245,20 @@ class Line extends Code {
 
 class Field extends Code {
 
-    static expressions = {
-        '+' : {left: '#', right: '#', return: '#'},
-        '-' : {left: '#', right: '#', return: '#'},
-        '*' : {left: '#', right: '#', return: '#'},
-        '/' : {left: '#', right: '#', return: '#'},
-        '%' : {left: '#', right: '#', return: '#'},
-        '==': {left: '.', right: '.', return: '|'},
-        '!=': {left: '.', right: '.', return: '|'},
-        '<' : {left: '#', right: '#', return: '|'},
-        '>' : {left: '#', right: '#', return: '|'},
-        '<=': {left: '#', right: '#', return: '|'},
-        '>=': {left: '#', right: '#', return: '|'},
-        '&&': {left: '|', right: '|', return: '|'},
-        '||': {left: '|', right: '|', return: '|'}
+    static inputs = {
+        '+' : {left: '#', right: '#', output: '#'},
+        '-' : {left: '#', right: '#', output: '#'},
+        '*' : {left: '#', right: '#', output: '#'},
+        '/' : {left: '#', right: '#', output: '#'},
+        '%' : {left: '#', right: '#', output: '#'},
+        '==': {left: '.', right: '.', output: '|'},
+        '!=': {left: '.', right: '.', output: '|'},
+        '<' : {left: '#', right: '#', output: '|'},
+        '>' : {left: '#', right: '#', output: '|'},
+        '<=': {left: '#', right: '#', output: '|'},
+        '>=': {left: '#', right: '#', output: '|'},
+        '&&': {left: '|', right: '|', output: '|'},
+        '||': {left: '|', right: '|', output: '|'}
     };
 
     constructor(props) {
@@ -268,8 +268,8 @@ class Field extends Code {
     }
 
     input(value, complete) {
-        if (Field.expressions[value]) {
-            let props = Object.assign({operator: value}, Field.expressions[value]);
+        if (Field.inputs[value]) {
+            let props = Object.assign({operator: value}, Field.inputs[value]);
             if ( Array.isArray(this.value) ) {
                 props.left = new Field({domain: props.left, value: this.value[0]});
             }
@@ -308,8 +308,9 @@ class Expression extends Code {
     constructor(props) {
         super('Expression');
         this.left = typeof props.left === 'object' ? props.left : new Field({domain: props.left});
-        this.operator = typeof props.operator === 'object' ? props.operator : new Token({value: props.operator});
+        this.operator = props.operator;
         this.right = typeof props.right === 'object' ? props.right : new Field({domain: props.right});
+        this.output = new Field({domain: props.output});
     }
 }
 

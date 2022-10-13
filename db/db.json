@@ -75,10 +75,7 @@
                         "value": "x"
                       }
                     },
-                    "operator": {
-                      "className": "Token",
-                      "value": ">"
-                    },
+                    "operator": ">",
                     "right": {
                       "className": "Field",
                       "domain": "#",
@@ -86,6 +83,11 @@
                         "className": "Token",
                         "value": "y"
                       }
+                    },
+                    "output": {
+                      "className": "Field",
+                      "domain": "|",
+                      "value": ""
                     }
                   }
                 },

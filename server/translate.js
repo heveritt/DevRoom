@@ -39,7 +39,7 @@ function translate(nodule) {
         },
 
         Expression: function(props) {
-            return '(' + trObject(props.left) + ' ' + trObject(props.operator) + ' ' + trObject(props.right) + ')';
+            return '(' + trObject(props.left) + ' ' + props.operator + ' ' + trObject(props.right) + ')';
         },
 
         Assignment: function(props) {
@@ -60,7 +60,7 @@ function translate(nodule) {
 
         Selection: function(props) {
             let code = 'if ' + trObject(props.condition) + trObject(props.branchs[0]);
-            if (branchs.length > 1) code += ' else' + trObject(props.branchs[1]);
+            if (props.branchs.length > 1) code += ' else' + trObject(props.branchs[1]);
             return code;
         },
 

@@ -6,10 +6,10 @@ class Frame extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {view: this.getView()};
+        this.view = this.getView();
         this.components = {};
         this.focus = '';
-        this.nodule = this.props.model.node(this.props.node); // Synonym only - link to node currently local
+        this.nodule = this.model.node(this.node); // Synonym only - link to node currently local
 
         this.handleAction = this.handleAction.bind(this);
         this.handleCreate = this.handleCreate.bind(this);
@@ -20,15 +20,15 @@ class Frame extends Component {
             this.block('frame',
                 this.block('frame-header',
                     this.block('frame-node', 'Node: ',
-                        this.inline('token', this.props.node)
+                        this.inline('token', this.node)
                     )
                 ),
                 this.block('frame-body',
                     this.block('frame-contexts',
-                            ...this.props.contexts.map( (context) => this.block('context', this.inline('lozenge', context)) )
+                            ...this.contexts.map( (context) => this.block('context', this.inline('lozenge', context)) )
                         ),
                     this.block('frame-contents',
-                        this.component(this.state.view, {onAction: this.handleAction, onCreate: this.handleCreate} )
+                        this.component(this.view, {onAction: this.handleAction, onCreate: this.handleCreate} )
                     )
                 )
             )
@@ -49,16 +49,16 @@ class Frame extends Component {
     }
 
     handleCreate(component) {
-        if (component.props.path) this.components[component.props.path] = component;
+        if (component.path) this.components[component.path] = component;
         if (this.focus) {
-            if (this.focus === component.props.path) this.focus = '';
+            if (this.focus === component.path) this.focus = '';
         } else {
-            if (component.props.className === 'Input') this.focus = component.props.path;
+            if (component.className === 'Input') this.focus = component.path;
         }
     }
 
     getView() {
-        const view = deserialize(this.props.model.compileView(this.props.node, this.props.contexts));
+        const view = deserialize(this.model.compileView(this.node, this.contexts));
         // console.log(view);
         return view;
     }
@@ -72,7 +72,7 @@ class Procedure extends Component {
                 this.inline('interface',
                     this.child('output'),
                     this.token(':='),
-                    this.token(this.props.operation),
+                    this.token(this.operation),
                     this.child('inputs')
                 ),
                 this.block('implementation',
@@ -120,8 +120,8 @@ class Declaration extends Component {
     render() {
         return (
             this.inline(this.getRole() + ' declaration',
-                this.props.role ? this.inline('token', this.props.role) : null,
-                this.inline('domain', this.props.domain)
+                this.role ? this.inline('token', this.role) : null,
+                this.inline('domain', this.domain)
             )
         );
     }
@@ -132,7 +132,7 @@ class Expression extends Component {
         return (
             this.inline('expression',
                 this.child('left'),
-                this.token(this.props.operator),
+                this.token(this.operator),
                 this.child('right')
             )
         );
@@ -179,7 +179,7 @@ class Branch extends Component {
         return (
             this.block('branch selectable',
                 this.block('label',
-                    this.token(this.props.label, 'literal')
+                    this.token(this.label, 'literal')
                 ),
                 this.block('indent'),
                 this.child('code')
@@ -192,7 +192,7 @@ class Iteration extends Component {
     render() {
         return (
             this.block('iteration',
-                this.props.optional ? (
+                this.optional ? (
                     this.block('loop-condition',
                         this.token('?'),
                         this.child('condition'),
@@ -216,13 +216,13 @@ class Iteration extends Component {
 
 class Token extends Component {
     render() {
-        return this.token(this.props.value);
+        return this.token(this.value);
     }
 }
 
 class Literal extends Component {
     render() {
-        return this.token(this.props.value, 'literal');
+        return this.token(this.value, 'literal');
     }
 }
 

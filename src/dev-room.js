@@ -6,13 +6,10 @@ import './dev-room.css';
 class DevRoom extends Component {
 
     constructor() {
-        super();
-        this.state = {
+        super({
             node: 'max',
-            contexts: ['Franca', 'DevRoom', 'SudokuMate'],
-            model: null,
-            error: null
-        } 
+            contexts: ['Franca', 'DevRoom', 'SudokuMate']
+        });
     }
 
     componentDidMount() {
@@ -22,13 +19,13 @@ class DevRoom extends Component {
     }
 
     render() {
-        if (this.state.model) {
+        if (this.model) {
             const frame = {
                 classConstructor: Frame,
                 className: 'Frame',
-                node: this.state.node,
-                contexts: this.state.contexts,
-                model: this.state.model
+                node: this.node,
+                contexts: this.contexts,
+                model: this.model
             };
             return (
                 this.block('dev-room',
@@ -36,8 +33,8 @@ class DevRoom extends Component {
                 )
             );
         } else {
-            if (this.state.error) {
-                return this.block('dev-room', 'Error: ' + this.state.error.message);
+            if (this.error) {
+                return this.block('dev-room', 'Error: ' + this.error.message);
             } else {
                 return this.block('dev-room', 'Loading Source Model...');
             }

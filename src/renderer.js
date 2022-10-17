@@ -40,13 +40,11 @@ var DOM = {
 class Component {
 
     constructor(props) {
-        this.props = {};
-        this.state = {};
-        Object.assign(this.props, props);
+        Object.assign(this, props);
     }
 
     setState(state) {
-        Object.assign(this.state, state);
+        Object.assign(this, state);
         let oldElement = this.domElement;
         let newElement = this.render();
         oldElement.replaceWith(newElement);
@@ -67,7 +65,7 @@ class Component {
     }
 
     getRole() {
-        return this.props.path.split('.').pop().split('s#')[0];
+        return this.path.split('.').pop().split('s#')[0];
     }
 
     block(classes, ...children) {
@@ -83,7 +81,7 @@ class Component {
         const listeners = {};
         if (classes.split(' ').includes('selectable')) {
             domProps.tabIndex = 0;
-            listeners.keydown = handleKey(this.props.context.onAction, ['delete', 'save', 'generate'], this.props.path);
+            listeners.keydown = handleKey(this.context.onAction, ['delete', 'save', 'generate'], this.path);
         }
         return DOM.element(tagName, domProps, listeners, ...children);
     }
@@ -107,13 +105,13 @@ class Component {
     }
 
     child(role, ix=null) {
-        const child = (ix !== null) ? this.props[role][ix] : this.props[role];
+        const child = (ix !== null) ? this[role][ix] : this[role];
         if (Array.isArray(child)) {
             return child.map( (element, ix) => this.child(role, ix) );
         } else if (typeof child === 'object') {
-            return this.component(child, this.props.context);
+            return this.component(child, this.context);
         } else {
-            return this.input(this.props, child);
+            return this.input(this, child);
         }
     }
 
@@ -127,7 +125,6 @@ class Component {
 class Input extends Component {
     constructor(props) {
         super(props);
-        this.state = {value: props.value};
 
         this.handleChange = this.handleChange.bind(this);
     }
@@ -138,14 +135,14 @@ class Input extends Component {
 
     render() {
         let domProps= {
-            value: this.state.value,
-            size: Math.max(this.state.value.length, 1), // html does not allow zero
+            value: this.value,
+            size: Math.max(this.value.length, 1), // html does not allow zero
             autofocus: true // Controls focus on initial load - focus will fall on first DOM element with autofocus.
         };
-        if (this.props.placeholder) domProps.placeholder = Unicode.mapToken(this.props.placeholder);
+        if (this.placeholder) domProps.placeholder = Unicode.mapToken(this.placeholder);
         let listeners= {
             change: this.handleChange,
-            keydown: handleKey(this.props.context.onAction, ['input'], this.props.fieldPath)
+            keydown: handleKey(this.context.onAction, ['input'], this.fieldPath)
         };
 
         return DOM.element('input', domProps, listeners);

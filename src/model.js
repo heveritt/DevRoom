@@ -1,5 +1,6 @@
 import Serializer from './serializer';
 import Database from './db';
+import client from './client'
 
 const db = new Database();
 
@@ -128,28 +129,12 @@ class Nodule extends Code {
     }
 
     save() {
-        console.log('Saving nodule: ' + this.id);
-        const json = serialize(this);
-        db.updateNode(this.id, json);
-        const options = {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: json
-        }
-        fetch("/nodes/" + this.id, options)
-            .then((res) => res.json())
-            .then((data) => console.log(data.message));
+        db.updateNode(this.id, serialize(this));
+        client.save(this);
     }
 
     generate() {
-        const options = {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: serialize(this)
-        }
-        fetch("/generated/" + this.id, options)
-            .then((res) => res.json())
-            .then((data) => console.log(data.message));
+        client.generate(this);
     }
 }
 
@@ -310,7 +295,7 @@ class Expression extends Code {
         this.left = typeof props.left === 'object' ? props.left : new Field({domain: props.left});
         this.operator = props.operator;
         this.right = typeof props.right === 'object' ? props.right : new Field({domain: props.right});
-        this.output = new Field({domain: props.output});
+        this.output = typeof props.output === 'object' ? props.output : new Field({domain: props.output});
     }
 }
 

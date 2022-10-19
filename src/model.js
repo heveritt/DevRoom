@@ -36,18 +36,14 @@ class Model {
  
 }
 
-class Sememe {
-    constructor(props) {
-        this.className = 'Sememe';
-        this.id = props.id;
-        this.symbol = props.symbol;
-        this.realm = props.realm;
-    }
-}
-
 class Code {
-    constructor(className) {
-        this.className = className;
+
+    constructor(props) {
+        Object.assign(this, props);
+    }
+
+    init(props) {
+        console.log('No initialisation provided for code elements of class: ' + this.className);
     }
 
     getChild(child) {
@@ -78,11 +74,20 @@ class Code {
     }
 }
 
-class Nodule extends Code {
-    constructor(props) {
-        super('Nodule');
+class Sememe extends Code{
+    init(props) {
+        /* TODO
         this.id = props.id;
-        this.code = props.code;
+        this.symbol = props.symbol;
+        this.realm = props.realm; */
+    }
+}
+
+class Nodule extends Code {
+    init(props) {
+        /* TODO
+        this.id = props.id;
+        this.code = props.code; */
     }
 
     withModel(model) {
@@ -93,7 +98,7 @@ class Nodule extends Code {
 
     input(path, info) {
         let {value, fieldComplete, lineComplete} = info;
-        console.log('Path: ' + path + ' value: ' + value + (fieldComplete ? ' +' : ' -') + (lineComplete ? ' +' : ' -'));
+        //console.log('Path: ' + path + ' value: ' + value + (fieldComplete ? ' +' : ' -') + (lineComplete ? ' +' : ' -'));
 
         this.getElement(path).input(value, fieldComplete);
 
@@ -139,19 +144,18 @@ class Nodule extends Code {
 }
 
 class Procedure extends Code {
-    constructor(props) {
-        super('Procedure');
+    init(props) {
+        /* TODO
         this.operation = props.operation;
         this.inputs = props.inputs;
         this.output = props.output;
-        this.implementation = props.implementation || new Field({domain: props.output.domain});
+        this.implementation = create('Field', {domain: props.output.domain}); */
     }
 }
 
 class Block extends Code {
-    constructor(props) {
-        super('Block');
-        this.lines = props.lines || [new Line({})];
+    init(props) {
+        this.lines = [create('Line')];
     }
 
     deleteContents() {
@@ -159,7 +163,7 @@ class Block extends Code {
             return '';
         } else {
             let contents = this.lines;
-            this.lines = [new Line({})];
+            this.lines = [create('Line')];
             return contents;
         }
     }
@@ -178,7 +182,7 @@ class Block extends Code {
     }
 
     addLineBelow(ix) {
-        this.lines.splice(ix + 1, 0, new Line({}));
+        this.lines.splice(ix + 1, 0, create('Line'));
     }
 }
 
@@ -193,21 +197,19 @@ class Line extends Code {
         '$?': {className: 'Iteration', optional: false}
     };
 
-    constructor(props) {
-        super('Line');
-        this.instruction = props.instruction || '';
+    init(props) {
+        this.instruction = '';
     }
 
     input(value, complete) {
         if (Line.inputs[value]) {
             let props = Object.assign({}, Line.inputs[value]);
-            const classConstructor = classMap[props.className];
             if ( Array.isArray(this.instruction) ) {
-                props.left = new Field({domain: props.left, value: this.instruction[0]});
+                props.left = create('Field', {domain: props.left, value: this.instruction[0]});
             }
-            this.instruction = new classConstructor(props);
+            this.instruction = create(props.className, props);
         } else {
-            const token = new Token({value});
+            const token = create('Token', {value});
             if (Array.isArray(this.instruction) ) {
                 this.instruction.splice(-1, 1, token);
                 if (! complete) this.instruction.push('');
@@ -246,8 +248,7 @@ class Field extends Code {
         '||': {left: '|', right: '|', output: '|'}
     };
 
-    constructor(props) {
-        super('Field');
+    init(props) {
         this.domain = props.domain;
         this.value = props.value || '';
     }
@@ -256,11 +257,11 @@ class Field extends Code {
         if (Field.inputs[value]) {
             let props = Object.assign({operator: value}, Field.inputs[value]);
             if ( Array.isArray(this.value) ) {
-                props.left = new Field({domain: props.left, value: this.value[0]});
+                props.left = create('Field', {domain: props.left, value: this.value[0]});
             }
-            this.value = new Expression(props);
+            this.value = create('Expression', props);
         } else {
-            const token = (isNaN(value) && !value.startsWith('|')) ? new Token({value}) : new Literal({value});
+            const token = (isNaN(value) && !value.startsWith('|')) ? create('Token', {value}) : create('Literal', {value});
             if (Array.isArray(this.value) ) {
                 this.value.splice(-1, 1, token);
                 if (! complete) this.value.push('');
@@ -282,43 +283,37 @@ class Field extends Code {
 }
 
 class Declaration extends Code {
-    constructor(props) {
-        super('Declaration');
-        this.role = props.role;
-        this.domain = props.domain;
+    init(props) {
+        // TODO
     }
 }
 
 class Expression extends Code {
-    constructor(props) {
-        super('Expression');
-        this.left = typeof props.left === 'object' ? props.left : new Field({domain: props.left});
+    init(props) {
+        this.left =  create('Field', {domain: props.left});
         this.operator = props.operator;
-        this.right = typeof props.right === 'object' ? props.right : new Field({domain: props.right});
-        this.output = typeof props.output === 'object' ? props.output : new Field({domain: props.output});
+        this.right = create('Field', {domain: props.right});
+        this.output = create('Field', {domain: props.output});
     }
 }
 
 class Assignment extends Code {
-    constructor(props) {
-        super('Assignment');
-        this.left = props.left ? props.left : new Field({domain: '.'});
-        this.right = props.right ? props.right : new Field({domain: '.'});
+    init(props) {
+        this.left = create('Field', {domain: '.'});
+        this.right = create('Field', {domain: '.'});
     }
 }
 
 class Return extends Code {
-    constructor(props) {
-        super('Return');
-        this.right = props.right ? props.right : new Field({domain: '.'}); // TODO - Should be output domain
+    init(props) {
+        this.right = create('Field', {domain: '.'}); // TODO - Should be output domain
     }
 }
 
 class Selection extends Code {
-    constructor(props) {
-        super('Selection');
-        this.condition = typeof props.condition === 'object' ? props.condition : new Field({domain: props.condition});
-        this.branchs = props.branchs.map( branch => typeof branch === 'object' ? branch : new Branch({label: branch}));
+    init(props) {
+        this.condition = create('Field', {domain: props.condition});
+        this.branchs = props.branchs.map( branch => create('Branch', {label: branch}));
     }
 
     deleteChild(child) {
@@ -333,38 +328,41 @@ class Selection extends Code {
 }
 
 class Branch extends Code {
-    constructor(props) {
-        super('Branch');
+    init(props) {
         this.label = props.label;
-        this.code = props.code ? props.code : new Block({});
+        this.code = create('Block');
     }
 }
 
 class Iteration extends Code {
-    constructor(props) {
-        super('Iteration');
+    init(props) {
         this.optional = props.optional;
-        this.condition = props.condition ? props.condition : new Field({domain: '|'});
-        this.code = props.code ? props.code : new Block({});
+        this.condition = create('Field', {domain: '|'});
+        this.code = create('Block');
     }
 }
 
 class Token extends Code {
-    constructor(props) {
-        super('Token');
+    init(props) {
         this.value = props.value;
     }
 }
 
 class Literal extends Code {
-    constructor(props) {
-        super('Literal');
+    init(props) {
         this.value = props.value;
         this.domain = props.value.startsWith('|') ? '|' : '#';
     }
 }
 
 const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Assignment, Return, Token, Literal, Selection, Branch, Iteration};
+
+function create(className, props={}) {
+    let element = new classMap[className]({className});
+    element.init(props);
+    return element;
+}
+
 const { serialize, deserialize } = new Serializer(classMap);
 
 export default Model;

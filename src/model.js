@@ -290,7 +290,7 @@ class Declaration extends Code {
 
 class Expression extends Code {
     init(props) {
-        this.left =  create('Field', {domain: props.left});
+        this.left = typeof props.left === 'object' ? props.left : create('Field', {domain: props.left});
         this.operator = props.operator;
         this.right = create('Field', {domain: props.right});
         this.output = create('Field', {domain: props.output});
@@ -299,7 +299,7 @@ class Expression extends Code {
 
 class Assignment extends Code {
     init(props) {
-        this.left = create('Field', {domain: '.'});
+        this.left = props.left ? props.left : create('Field', {domain: '.'});
         this.right = create('Field', {domain: '.'});
     }
 }

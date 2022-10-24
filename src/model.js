@@ -97,12 +97,10 @@ class Nodule extends Code {
     }
 
     input(path, info) {
-        let {value, fieldComplete, lineComplete} = info;
-        //console.log('Path: ' + path + ' value: ' + value + (fieldComplete ? ' +' : ' -') + (lineComplete ? ' +' : ' -'));
+        let {value, complete} = info;
+        //console.log('Path: ' + path + ' value: ' + value + (complete ? ' +' : ' -'));
 
-        this.getElement(path).input(value, fieldComplete);
-
-        if (lineComplete) this.addLineBelow(path);
+        this.getElement(path).input(value, complete);
     }
 
     delete(path) {
@@ -126,7 +124,7 @@ class Nodule extends Code {
         return {parent, child};
     }
 
-    addLineBelow(path) {
+    newline(path) {
         let cut = path.lastIndexOf('.lines#');
         let block = this.getElement(path.slice(0, cut));
         let ix = +path.slice(cut + 7).split('.')[0];

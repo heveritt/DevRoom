@@ -78,11 +78,15 @@ class Component {
 
     element(tagName, classes, ...children) {
         const domProps = {className: classes};
+        if (classes.split(' ').includes('selectable')) domProps.tabIndex = 0;
+
         const listeners = {};
-        if (classes.split(' ').includes('selectable')) {
-            domProps.tabIndex = 0;
-            listeners.keydown = handleKey(this.context.onAction, ['delete', 'save', 'generate'], this.path);
+        const actions = getActions(classes.split(' '));
+        if (actions.length > 0) {
+            let handler = this.handleAction ? this.handleAction : this.context.onAction;
+            listeners.keydown = handleKey(handler, actions, this.path);
         }
+
         return DOM.element(tagName, domProps, listeners, ...children);
     }
 
@@ -149,32 +153,34 @@ class Input extends Component {
     }
 }
 
-var handleKey = (handler, actions, path) => (e) => {
+function getActions(categorys) {
+    const map = {
+        'selectable': ['delete'],
+        'code-line': ['newline'],
+        'frame': ['save', 'generate']
+    }
+    return categorys.reduce( (actions, category) => map[category] ? actions.concat(map[category]) : actions, []); 
+}
 
-    //console.log('Key: ', e.key, 'actions: ', actions, 'path: ', path)
-    if (actions.includes('save') && e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+function handleKey(handler, actions, path) {
 
-        e.stopPropagation();
-        e.preventDefault();
-        handler('save');
+    const keyMap = {
+        'save': e => e.ctrlKey && (e.key === 's' || e.key === 'S'),
+        'generate': e => e.ctrlKey && (e.key === 'g' || e.key === 'G'),
+        'input': e => e.target.value && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab'),
+        'newline': e => e.key === 'Enter',
+        'delete': e => e.key === 'Delete'
+    }
 
-    } else if (actions.includes('generate') && e.ctrlKey && (e.key === 'g' || e.key === 'G')) {
-
-        e.stopPropagation();
-        e.preventDefault();
-        handler('generate');
-
-   } else if (actions.includes('input') && e.target.value && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab')) {
-
-        e.stopPropagation();
-        e.preventDefault();
-        handler('input', path, { value: e.target.value, fieldComplete: (e.key !== ' '), lineComplete:  (e.key === 'Enter')});
-
-    } else if (actions.includes('delete') && e.key === 'Delete') {
-
-        e.stopPropagation();
-        handler('delete', path);
-
+    return function(e) {
+        for (const action of actions) {
+            if (keyMap[action](e)) {
+                if (! (action === 'input' && e.key === 'Enter') ) e.stopPropagation();
+                if (! (action === 'delete') ) e.preventDefault();
+                const info = (action === 'input') ? {value: e.target.value, complete: (e.key !== ' ')} : null;
+                handler(action, path, info);
+            }
+        }
     }
 }
 

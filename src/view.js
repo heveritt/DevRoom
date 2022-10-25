@@ -28,7 +28,7 @@ class Frame extends Component {
                             ...this.contexts.map( (context) => this.block('context', this.inline('lozenge', context)) )
                         ),
                     this.block('frame-contents',
-                        this.component(this.view, {onAction: this.handleAction, onCreate: this.handleCreate} )
+                        this.child('view', {onAction: this.handleAction, onCreate: this.handleCreate} )
                     )
                 )
             )

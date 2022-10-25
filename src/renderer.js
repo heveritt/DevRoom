@@ -108,12 +108,12 @@ class Component {
         return component.renderToDom();
     }
 
-    child(role, ix=null) {
-        const child = (ix !== null) ? this[role][ix] : this[role];
+    child(role, context=this.context) {
+        let child = role.split('#').reduce( (element, ix) => element[ix], this);
         if (Array.isArray(child)) {
-            return child.map( (element, ix) => this.child(role, ix) );
+            return child.map( (element, ix) => this.child(role + '#' + ix) );
         } else if (typeof child === 'object') {
-            return this.component(child, this.context);
+            return this.component(child, context);
         } else {
             return this.input(this, child);
         }

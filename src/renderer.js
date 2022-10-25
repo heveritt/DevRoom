@@ -99,13 +99,7 @@ class Component {
             fieldPath: field.path,
             placeholder: field.domain
         }
-        return this.component(props, field.context);
-    }
-
-    component(data, context={}) {
-        let component = new data.classConstructor(Object.assign({context}, data));
-        if (context.onCreate) context.onCreate(component);
-        return component.renderToDom();
+        return render.component(props, field.context);
     }
 
     child(role, context=this.context) {
@@ -113,7 +107,7 @@ class Component {
         if (Array.isArray(child)) {
             return child.map( (element, ix) => this.child(role + '#' + ix) );
         } else if (typeof child === 'object') {
-            return this.component(child, context);
+            return render.component(child, context);
         } else {
             return this.input(this, child);
         }
@@ -189,7 +183,14 @@ var render = {
         let app = new appClass({});
         parentElement.appendChild(app.renderToDom());
         app.componentDidMount();
+    },
+
+    component(data, context={}) {
+        let component = new data.classConstructor(Object.assign({context}, data));
+        if (context.onCreate) context.onCreate(component);
+        return component.renderToDom();
     }
+
 }
 
 export {Component, render};

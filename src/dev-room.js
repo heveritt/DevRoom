@@ -20,7 +20,7 @@ class DevRoom extends Component {
 
     render() {
         if (this.model) {
-            const frame = {
+            this.frame = {
                 classConstructor: Frame,
                 className: 'Frame',
                 node: this.node,
@@ -29,7 +29,7 @@ class DevRoom extends Component {
             };
             return (
                 this.block('dev-room',
-                    this.component(frame)
+                    this.child('frame')
                 )
             );
         } else {

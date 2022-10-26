@@ -232,7 +232,7 @@ const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Assign
 const serializer = new Serializer(classMap);
 
 function deserialize(jsonString) {
-    return serializer.deserialize(jsonString, false);
+    return serializer.deserialize(jsonString);
 }
 
 export default Frame;

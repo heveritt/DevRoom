@@ -91,15 +91,14 @@ class Component {
     }
 
     input(field, value) {
-        let props = {
+        let component = new Input({
             className: 'Input',
-            classConstructor: Input,
             path: field.path + '.value',
             value: value,
             fieldPath: field.path,
             placeholder: field.domain
-        }
-        return render.component(props, field.context);
+        });
+        return render.component(component, field.context);
     }
 
     child(role, context=this.context) {
@@ -185,8 +184,8 @@ var render = {
         app.componentDidMount();
     },
 
-    component(data, context={}) {
-        let component = new data.classConstructor(Object.assign({context}, data));
+    component(component, context={}) {
+        Object.assign(component, {context});
         if (context.onCreate) context.onCreate(component);
         return component.renderToDom();
     }

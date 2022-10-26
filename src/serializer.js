@@ -67,17 +67,12 @@ class Serializer {
         }
     }
 
-    reviver(reconstruct) {
+    reviver() {
         const classRestorer = (key, value) => {
             if (typeof value === 'object' && value.className) {
                 const classConstructor = this.classMap[value.className];
                 if (classConstructor) {
-                    if (reconstruct) {
-                        return new classConstructor(value, key);
-                    } else {
-                        value.classConstructor = classConstructor;
-                        return value;
-                    }
+                    return Object.setPrototypeOf(value, classConstructor.prototype);
                 } else {
                     throw new Error('Atttempt to de-serialize unmapped class: ' + value.className);
                 }
@@ -85,7 +80,7 @@ class Serializer {
             return value;
         }
 
-        return (key, value) => classRestorer(key, value);
+        return classRestorer;
     }
 
 }

@@ -20,13 +20,12 @@ class DevRoom extends Component {
 
     render() {
         if (this.model) {
-            this.frame = {
-                classConstructor: Frame,
+            this.frame = new Frame ({
                 className: 'Frame',
                 node: this.node,
                 contexts: this.contexts,
                 model: this.model
-            };
+            });
             return (
                 this.block('dev-room',
                     this.child('frame')

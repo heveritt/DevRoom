@@ -35,7 +35,7 @@ function translate(nodule) {
         },
         
         Declaration: function(props) {
-            return props.role;
+            return props.identifier;
         },
 
         Expression: function(props) {

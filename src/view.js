@@ -119,8 +119,8 @@ class Field extends Component {
 class Declaration extends Component {
     render() {
         return (
-            this.inline(this.getRole() + ' declaration',
-                this.role ? this.inline('token', this.role) : null,
+            this.inline(this.role + ' declaration',
+                this.identifier ? this.inline('token', this.identifier) : null,
                 this.inline('domain', this.domain)
             )
         );

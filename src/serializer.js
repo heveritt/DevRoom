@@ -68,10 +68,26 @@ class Serializer {
     }
 
     reviver() {
-        const classRestorer = (key, value) => {
-            if (typeof value === 'object' && value.className) {
+        const classRestorer = (parent, key, value) => {
+
+            function giveGrandParentCustody(element, ix) {
+                if (typeof element === 'object' && element.className) {
+                    Object.defineProperty(element, 'parent', {value: parent, enumerable: false});
+                    Object.defineProperty(element, 'role', {value: key + '#' + ix, enumerable: false});
+                }
+                return element;
+            }
+
+            if (Array.isArray(value)) {
+                return value.map(giveGrandParentCustody);
+            } else if (typeof value === 'object' && value.className) {
                 const classConstructor = this.classMap[value.className];
                 if (classConstructor) {
+                    if (! Array.isArray(parent) && key) {
+                        // Establish outward (parent) relationships as well as inward (child) relationships
+                        Object.defineProperty(value, 'parent', {value: parent, enumerable: false});
+                        Object.defineProperty(value, 'role', {value: key, enumerable: false});
+                    }
                     return Object.setPrototypeOf(value, classConstructor.prototype);
                 } else {
                     throw new Error('Atttempt to de-serialize unmapped class: ' + value.className);
@@ -80,7 +96,10 @@ class Serializer {
             return value;
         }
 
-        return classRestorer;
+        return function(key, value) {
+            const parent = this; // Bound to the object currently being restored
+            return classRestorer(parent, key, value);
+        }
     }
 
 }

@@ -64,10 +64,6 @@ class Component {
         return this.token('Missing render() implementation!');
     }
 
-    getRole() {
-        return this.path.split('.').pop().split('s#')[0];
-    }
-
     block(classes, ...children) {
         return this.element('div', classes, ...children);
     }

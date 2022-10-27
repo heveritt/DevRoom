@@ -41,18 +41,18 @@
         "inputs": [
           {
             "className": "Declaration",
-            "role": "x",
+            "identifier": "x",
             "domain": "#"
           },
           {
             "className": "Declaration",
-            "role": "y",
+            "identifier": "y",
             "domain": "#"
           }
         ],
         "output": {
           "className": "Declaration",
-          "role": "",
+          "identifier": "",
           "domain": "#"
         },
         "implementation": {

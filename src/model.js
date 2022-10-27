@@ -46,12 +46,24 @@ class Code {
         console.log('No initialisation provided for code elements of class: ' + this.className);
     }
 
-    getChild(child) {
-        if (child.includes('#')) {
-            let [children, ix] = child.split('#');
-            return this[children][ix];
+    setChild(role, child) {
+        Object.defineProperty(child, 'parent', {value: this, enumerable: false});
+        Object.defineProperty(child, 'role', {value: role, enumerable: false});
+        this[role] = child;
+    }
+
+    addChild(role, child, ix=this[role].length) {
+        Object.defineProperty(child, 'parent', {value: this, enumerable: false});
+        Object.defineProperty(child, 'role', {value: role + '#' + ix, enumerable: false});
+        this[role].splice(ix, 0, child);
+    }
+
+    getChild(role) {
+        if (role.includes('#')) {
+            let [stem, ix] = role.split('#');
+            return this[stem][ix];
         } else {
-            return this[child];
+            return this[role];
         }
     }
 
@@ -63,10 +75,10 @@ class Code {
         return '';
     }
 
-    deleteChild(child) {
-        if (this[child] && this[child].isOptional()) {
-            let deleted = this[child];
-            delete this[child];
+    deleteChild(role) {
+        if (this[role] && this[role].isOptional()) {
+            let deleted = this[role];
+            delete this[role];
             return deleted;
         } else {
             return '';
@@ -153,7 +165,8 @@ class Procedure extends Code {
 
 class Block extends Code {
     init(props) {
-        this.lines = [create('Line')];
+        this.lines = [];
+        this.addChild('lines', create('Line'));
     }
 
     deleteContents() {
@@ -161,7 +174,8 @@ class Block extends Code {
             return '';
         } else {
             let contents = this.lines;
-            this.lines = [create('Line')];
+            this.lines = [];
+            this.addChild('lines', create('Line'));
             return contents;
         }
     }
@@ -180,7 +194,7 @@ class Block extends Code {
     }
 
     addLineBelow(ix) {
-        this.lines.splice(ix + 1, 0, create('Line'));
+        this.addChild('lines', create('Line'), ix + 1);
     }
 }
 
@@ -205,14 +219,14 @@ class Line extends Code {
             if ( Array.isArray(this.instruction) ) {
                 props.left = create('Field', {domain: props.left, value: this.instruction[0]});
             }
-            this.instruction = create(props.className, props);
+            this.setChild('instruction', create(props.className, props));
         } else {
             const token = create('Token', {value});
-            if (Array.isArray(this.instruction) ) {
-                this.instruction.splice(-1, 1, token);
-                if (! complete) this.instruction.push('');
+            if (complete) {
+                this.setChild('instruction', token);
             } else {
-                this.instruction = complete ? token : [token, ''];
+                if (! this.instruction) this.instruction = [''];
+                this.instruction.splice(-1, 0, token);
             }
         }
     }
@@ -248,7 +262,11 @@ class Field extends Code {
 
     init(props) {
         this.domain = props.domain;
-        this.value = props.value || '';
+        if (props.value) {
+            this.setChild('value', props.value);
+        } else {
+            this.value = '';
+        }
     }
 
     input(value, complete) {
@@ -257,14 +275,14 @@ class Field extends Code {
             if ( Array.isArray(this.value) ) {
                 props.left = create('Field', {domain: props.left, value: this.value[0]});
             }
-            this.value = create('Expression', props);
+            this.setChild('value', create('Expression', props));
         } else {
             const token = (isNaN(value) && !value.startsWith('|')) ? create('Token', {value}) : create('Literal', {value});
-            if (Array.isArray(this.value) ) {
-                this.value.splice(-1, 1, token);
-                if (! complete) this.value.push('');
+            if (complete) {
+                this.setChild('value', token);
             } else {
-                this.value = complete ? token : [token, ''];
+                if (! this.value) this.value = [''];
+                this.value.splice(-1, 0, token);
             }
         }
     }
@@ -288,30 +306,33 @@ class Declaration extends Code {
 
 class Expression extends Code {
     init(props) {
-        this.left = typeof props.left === 'object' ? props.left : create('Field', {domain: props.left});
+        this.setChild('left', typeof props.left === 'object' ? props.left : create('Field', {domain: props.left}));
         this.operator = props.operator;
-        this.right = create('Field', {domain: props.right});
-        this.output = create('Field', {domain: props.output});
+        this.setChild('right', create('Field', {domain: props.right}));
+        this.setChild('output', create('Field', {domain: props.output}));
     }
 }
 
 class Assignment extends Code {
     init(props) {
-        this.left = props.left ? props.left : create('Field', {domain: '.'});
-        this.right = create('Field', {domain: '.'});
+        this.setChild('left', props.left ? props.left : create('Field', {domain: '.'}));
+        this.setChild('right', create('Field', {domain: '.'}));
     }
 }
 
 class Return extends Code {
     init(props) {
-        this.right = create('Field', {domain: '.'}); // TODO - Should be output domain
+        this.setChild('right', create('Field', {domain: '.'})); // TODO - Should be output domain
     }
 }
 
 class Selection extends Code {
     init(props) {
-        this.condition = create('Field', {domain: props.condition});
-        this.branchs = props.branchs.map( branch => create('Branch', {label: branch}));
+        this.setChild('condition', create('Field', {domain: props.condition}));
+        this.branchs = [];
+        for (let branch of props.branchs) {
+            this.addChild('branchs', create('Branch', {label: branch}));
+        }
     }
 
     deleteChild(child) {
@@ -328,15 +349,15 @@ class Selection extends Code {
 class Branch extends Code {
     init(props) {
         this.label = props.label;
-        this.code = create('Block');
+        this.setChild('code', create('Block'));
     }
 }
 
 class Iteration extends Code {
     init(props) {
         this.optional = props.optional;
-        this.condition = create('Field', {domain: '|'});
-        this.code = create('Block');
+        this.setChild('condition', create('Field', {domain: '|'}));
+        this.setChild('code', create('Block'));
     }
 }
 

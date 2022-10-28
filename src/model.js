@@ -1,6 +1,7 @@
 import Serializer from './serializer';
 import Database from './db';
 import client from './client'
+import lookup from './codes'
 
 const db = new Database();
 
@@ -200,22 +201,13 @@ class Block extends Code {
 
 class Line extends Code {
 
-    static inputs = {
-        '=' : {className: 'Assignment'},
-        '<' : {className: 'Return'},
-        '?' : {className: 'Selection', condition: '|', branchs: ['|1']},
-        '?|': {className: 'Selection', condition: '|', branchs: ['|1', '|0']},
-        '?$': {className: 'Iteration', optional: true},
-        '$?': {className: 'Iteration', optional: false}
-    };
-
     init(props) {
         this.instruction = '';
     }
 
     input(value, complete) {
-        if (Line.inputs[value]) {
-            let props = Object.assign({}, Line.inputs[value]);
+        let props = lookup.instruction(value);
+        if (props) {
             if ( Array.isArray(this.instruction) ) {
                 props.left = create('Field', {domain: props.left, value: this.instruction[0]});
             }
@@ -244,22 +236,6 @@ class Line extends Code {
 
 class Field extends Code {
 
-    static inputs = {
-        '+' : {left: '#', right: '#', output: '#'},
-        '-' : {left: '#', right: '#', output: '#'},
-        '*' : {left: '#', right: '#', output: '#'},
-        '/' : {left: '#', right: '#', output: '#'},
-        '%' : {left: '#', right: '#', output: '#'},
-        '==': {left: '.', right: '.', output: '|'},
-        '!=': {left: '.', right: '.', output: '|'},
-        '<' : {left: '#', right: '#', output: '|'},
-        '>' : {left: '#', right: '#', output: '|'},
-        '<=': {left: '#', right: '#', output: '|'},
-        '>=': {left: '#', right: '#', output: '|'},
-        '&&': {left: '|', right: '|', output: '|'},
-        '||': {left: '|', right: '|', output: '|'}
-    };
-
     init(props) {
         this.domain = props.domain;
         if (props.value) {
@@ -270,14 +246,14 @@ class Field extends Code {
     }
 
     input(value, complete) {
-        if (Field.inputs[value]) {
-            let props = Object.assign({operator: value}, Field.inputs[value]);
-            if ( Array.isArray(this.value) ) {
+        let props = lookup.field(value);
+        if (props) {
+            if ( props.className === 'Expression' && Array.isArray(this.value) ) {
                 props.left = create('Field', {domain: props.left, value: this.value[0]});
             }
-            this.setChild('value', create('Expression', props));
+            this.setChild('value', create(props.className, props));
         } else {
-            const token = (isNaN(value) && !value.startsWith('|')) ? create('Token', {value}) : create('Literal', {value});
+            const token = (isNaN(value)) ? create('Token', {value}) : create('Literal', {domain: '#', value});
             if (complete) {
                 this.setChild('value', token);
             } else {
@@ -369,8 +345,8 @@ class Token extends Code {
 
 class Literal extends Code {
     init(props) {
+        this.domain = props.domain;
         this.value = props.value;
-        this.domain = props.value.startsWith('|') ? '|' : '#';
     }
 }
 

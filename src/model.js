@@ -137,13 +137,13 @@ class Nodule extends Code {
             return contents;
         }
     }
-    
+
     getPath() {
         return '';
     }
 
     getElement(path) {
-        return path.split('.').reduce( (node, child) => node.getChild(child), this.code);
+        return path.split('.').reduce( (node, child) => node.getChild(child), this);
     }
 
     getParentChild(path) {

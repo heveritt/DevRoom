@@ -42,28 +42,18 @@ class Serializer {
         };
 
         */
-        const generatePath = (parent, key, value) =>
+        const addPath = (value) =>
         {
-            function addParentPath(parentPath, key, child, separator = '.')
-            {
-                const childPath = parentPath ? parentPath + separator + key : key;
-                if (key !== '' && typeof child === 'object') {
-                    if (Array.isArray(child)) {
-                        return value.map( (element, ix) => addParentPath(childPath, ix, element, '#'));
-                    }
-                    // Need to shallow copy object to avoid infinite recursion
-                    return Object.assign({path: childPath}, child);
-                } else {
-                    return child;
-                }
+            if (typeof value === 'object' && value.className) {
+                return Object.assign({path: value.getPath()}, value);
+            } else {
+                return value;
             }
-            return addParentPath(parent.path || '', key, value);
         }
 
         return function(key, value) {
-            const parent = this; // Bound to JSON object currently being stringified
             duplicateDetector(value);
-            return genPath ? generatePath(parent, key, value) : value;
+            return genPath ? addPath(value) : value;
         }
     }
 

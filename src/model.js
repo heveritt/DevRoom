@@ -59,6 +59,10 @@ class Code {
         this[role].splice(ix, 0, child);
     }
 
+    getPath() {
+        return this.parent.getPath() ? this.parent.getPath() + '.' + this.role: this.role;
+    }
+
     getChild(role) {
         if (role.includes('#')) {
             let [stem, ix] = role.split('#');
@@ -66,6 +70,10 @@ class Code {
         } else {
             return this[role];
         }
+    }
+
+    lookupSymbol(token, line=0) {
+        return this.parent.lookupSymbol(token, line);
     }
 
     isOptional() {
@@ -116,6 +124,10 @@ class Nodule extends Code {
         this.getElement(path).input(value, complete);
     }
 
+    lookupSymbol(token) {
+        return null;
+    }
+
     delete(path) {
         let contents = this.getElement(path).deleteContents();
         if (! contents) {
@@ -124,6 +136,10 @@ class Nodule extends Code {
         } else {
             return contents;
         }
+    }
+    
+    getPath() {
+        return '';
     }
 
     getElement(path) {
@@ -161,6 +177,15 @@ class Procedure extends Code {
         this.inputs = props.inputs;
         this.output = props.output;
         this.implementation = create('Field', {domain: props.output.domain}); */
+    }
+
+    lookupSymbol(token) {
+        for (const input of this.inputs) {
+            if (input.identifier === token) {
+                return input;
+            }
+        }
+        return this.parent.lookupSymbol(token);
     }
 }
 
@@ -227,6 +252,10 @@ class Line extends Code {
         return ! this.instruction;
     }
 
+    lookupSymbol(token) {
+        return this.parent.lookupSymbol(token, Number(this.role.split('#').pop()));
+    }
+
     deleteContents() {
         let contents = this.instruction;
         this.instruction = '';
@@ -252,14 +281,21 @@ class Field extends Code {
                 props.left = create('Field', {domain: props.left, value: this.value[0]});
             }
             this.setChild('value', create(props.className, props));
+        }
+
+        let referent = this.lookupSymbol(value);
+        let token;
+        if (referent) {
+            token = create('Reference', {referent});
         } else {
-            const token = (isNaN(value)) ? create('Token', {value}) : create('Literal', {domain: '#', value});
-            if (complete) {
-                this.setChild('value', token);
-            } else {
-                if (! this.value) this.value = [''];
-                this.value.splice(-1, 0, token);
-            }
+            token = (isNaN(value)) ? create('Token', {value}) : create('Literal', {domain: '#', value});
+        }
+
+        if (complete) {
+            this.setChild('value', token);
+        } else {
+            if (! this.value) this.value = [''];
+            this.value.splice(-1, 0, token);
         }
     }
 
@@ -337,6 +373,14 @@ class Iteration extends Code {
     }
 }
 
+class Reference extends Code {
+    init(props) {
+        this.refPath = props.referent.getPath();
+        this.identifier = props.referent.identifier;
+        this.domain = props.referent.domain
+    }
+}
+
 class Token extends Code {
     init(props) {
         this.value = props.value;
@@ -350,7 +394,7 @@ class Literal extends Code {
     }
 }
 
-const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Assignment, Return, Token, Literal, Selection, Branch, Iteration};
+const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Assignment, Return, Reference, Token, Literal, Selection, Branch, Iteration};
 
 function create(className, props={}) {
     let element = new classMap[className]({className});

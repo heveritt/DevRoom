@@ -214,6 +214,12 @@ class Iteration extends Component {
     }
 }
 
+class Reference extends Component {
+    render() {
+        return this.token(this.identifier, 'reference');
+    }
+}
+
 class Token extends Component {
     render() {
         return this.token(this.value);
@@ -227,7 +233,7 @@ class Literal extends Component {
 }
 
 
-const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Assignment, Return, Token, Literal, Selection, Branch, Iteration};
+const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Assignment, Return, Reference, Token, Literal, Selection, Branch, Iteration};
 
 const serializer = new Serializer(classMap);
 

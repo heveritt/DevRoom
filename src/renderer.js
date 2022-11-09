@@ -108,8 +108,10 @@ class Component {
         }
     }
 
-    token(token, classes='token') {
-        if (token === ':=') classes = 'arrow';
+    token(token, variants) {
+        let classes = 'token';
+        if (variants) classes = classes + ' ' + variants;
+        if (token === ':=') classes += ' arrow';
         if (token === '|0') classes += ' falsy';
         return this.inline(classes, Unicode.mapToken(token));
     }

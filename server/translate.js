@@ -50,6 +50,10 @@ function translate(nodule) {
             return 'return ' + trObject(props.right) + ';';
         },
 
+        Reference: function(props) {
+            return props.identifier;
+        },
+
         Token: function(props) {
             return props.value;
         },

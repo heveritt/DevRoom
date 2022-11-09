@@ -162,11 +162,6 @@
     border-radius: 5px;
 }
 
-.token, .literal, .separator, .arrow, .operation {
-    padding: 0px 5px;
-    text-align: center;
-}
-
 span {
     display: inline-block;
 }
@@ -187,12 +182,21 @@ input {
   text-align: center;
 }
 
+.token {
+    padding: 0px 5px;
+    text-align: center;
+}
+
 .literal {
     color: lime;
 }
 
 .literal.falsy {
     color: red;
+}
+
+.reference {
+    color: yellow;
 }
 
 .operation, .expression > .token {

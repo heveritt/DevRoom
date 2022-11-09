@@ -71,8 +71,10 @@
                       "className": "Field",
                       "domain": "#",
                       "value": {
-                        "className": "Token",
-                        "value": "x"
+                        "className": "Reference",
+                        "refPath": "code.inputs#0",
+                        "identifier": "x",
+                        "domain": "#"
                       }
                     },
                     "operator": ">",
@@ -80,8 +82,10 @@
                       "className": "Field",
                       "domain": "#",
                       "value": {
-                        "className": "Token",
-                        "value": "y"
+                        "className": "Reference",
+                        "refPath": "code.inputs#1",
+                        "identifier": "y",
+                        "domain": "#"
                       }
                     },
                     "output": {
@@ -106,8 +110,10 @@
                               "className": "Field",
                               "domain": ".",
                               "value": {
-                                "className": "Token",
-                                "value": "x"
+                                "className": "Reference",
+                                "refPath": "code.inputs#0",
+                                "identifier": "x",
+                                "domain": "#"
                               }
                             }
                           }
@@ -129,8 +135,10 @@
                               "className": "Field",
                               "domain": ".",
                               "value": {
-                                "className": "Token",
-                                "value": "y"
+                                "className": "Reference",
+                                "refPath": "code.inputs#1",
+                                "identifier": "y",
+                                "domain": "#"
                               }
                             }
                           }

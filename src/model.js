@@ -63,6 +63,10 @@ class Code {
         return this.parent.getPath() ? this.parent.getPath() + '.' + this.role: this.role;
     }
 
+    getElement(path) {
+        return this.parent.getElement(path);
+    }
+
     getChild(role) {
         if (role.includes('#')) {
             let [stem, ix] = role.split('#');
@@ -376,8 +380,11 @@ class Iteration extends Code {
 class Reference extends Code {
     init(props) {
         this.refPath = props.referent.getPath();
-        this.identifier = props.referent.identifier;
-        this.domain = props.referent.domain
+        Object.defineProperty(this, 'identifier', {
+            enumerable: true,
+            get: () => this.getElement(this.refPath).identifier,
+            set(value) {}
+        });
     }
 }
 

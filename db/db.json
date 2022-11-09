@@ -73,8 +73,7 @@
                       "value": {
                         "className": "Reference",
                         "refPath": "code.inputs#0",
-                        "identifier": "x",
-                        "domain": "#"
+                        "identifier": "x"
                       }
                     },
                     "operator": ">",
@@ -84,8 +83,7 @@
                       "value": {
                         "className": "Reference",
                         "refPath": "code.inputs#1",
-                        "identifier": "y",
-                        "domain": "#"
+                        "identifier": "y"
                       }
                     },
                     "output": {
@@ -112,8 +110,7 @@
                               "value": {
                                 "className": "Reference",
                                 "refPath": "code.inputs#0",
-                                "identifier": "x",
-                                "domain": "#"
+                                "identifier": "x"
                               }
                             }
                           }
@@ -137,8 +134,7 @@
                               "value": {
                                 "className": "Reference",
                                 "refPath": "code.inputs#1",
-                                "identifier": "y",
-                                "domain": "#"
+                                "identifier": "y"
                               }
                             }
                           }

@@ -35,7 +35,11 @@ function translate(nodule) {
         },
         
         Declaration: function(props) {
-            return props.identifier;
+            if (props.assignee) {
+                return 'let ' + props.identifier;
+            } else {
+                return props.identifier;
+            }
         },
 
         Expression: function(props) {
@@ -43,6 +47,7 @@ function translate(nodule) {
         },
 
         Assignment: function(props) {
+            props.left.value.assignee = true;
             return trObject(props.left) + ' = ' + trObject(props.right) + ';';
         },
 

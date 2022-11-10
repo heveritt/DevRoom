@@ -199,6 +199,20 @@ class Block extends Code {
         this.addChild('lines', create('Line'));
     }
 
+    lookupSymbol(token, line=0) {
+        for (let i = 0; i < line; i++ ) {
+            console.log(this.lines[i]);
+            const instruction = this.lines[i].instruction;
+            if (instruction && instruction.className === 'Assignment') {
+                const assignee = instruction.left.value;
+                if (assignee && assignee.className === 'Declaration' && assignee.identifier === token) {
+                    return assignee;
+                }
+            }
+        }
+        return this.parent.lookupSymbol(token);
+    }
+
     deleteContents() {
         if (this.isEmpty()) {
             return '';
@@ -242,7 +256,16 @@ class Line extends Code {
             }
             this.setChild('instruction', create(props.className, props));
         } else {
-            const token = create('Token', {value});
+
+            let referent = this.lookupSymbol(value);
+            let token;
+            if (referent) {
+                token = create('Reference', {referent});
+            } else {
+                // TODO Assume in dictionary at this point and default a domain
+                token = create('Declaration', {identifier: value, domain: '.'})
+            }
+
             if (complete) {
                 this.setChild('instruction', token);
             } else {
@@ -316,7 +339,8 @@ class Field extends Code {
 
 class Declaration extends Code {
     init(props) {
-        // TODO
+        this.identifier = props.identifier;
+        if (props.domain) this.domain = props.domain;
     }
 }
 

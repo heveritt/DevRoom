@@ -48,14 +48,14 @@ class Code {
     }
 
     setChild(role, child) {
-        Object.defineProperty(child, 'parent', {value: this, enumerable: false});
-        Object.defineProperty(child, 'role', {value: role, enumerable: false});
+        Object.defineProperty(child, 'parent', {value: this, configurable: true});
+        Object.defineProperty(child, 'role', {value: role, configurable: true});
         this[role] = child;
     }
 
     addChild(role, child, ix=this[role].length) {
-        Object.defineProperty(child, 'parent', {value: this, enumerable: false});
-        Object.defineProperty(child, 'role', {value: role + '#' + ix, enumerable: false});
+        Object.defineProperty(child, 'parent', {value: this, configurable: true});
+        Object.defineProperty(child, 'role', {value: role + '#' + ix, configurable: true});
         this[role].splice(ix, 0, child);
     }
 
@@ -247,7 +247,7 @@ class Line extends Code {
                 this.setChild('instruction', token);
             } else {
                 if (! this.instruction) this.instruction = [''];
-                this.instruction.splice(-1, 0, token);
+                this.addChild('instruction', token, this.instruction.length - 1);
             }
         }
     }
@@ -285,21 +285,21 @@ class Field extends Code {
                 props.left = create('Field', {domain: props.left, value: this.value[0]});
             }
             this.setChild('value', create(props.className, props));
-        }
-
-        let referent = this.lookupSymbol(value);
-        let token;
-        if (referent) {
-            token = create('Reference', {referent});
         } else {
-            token = (isNaN(value)) ? create('Token', {value}) : create('Literal', {domain: '#', value});
-        }
+            let referent = this.lookupSymbol(value);
+            let token;
+            if (referent) {
+                token = create('Reference', {referent});
+            } else {
+                token = (isNaN(value)) ? create('Token', {value}) : create('Literal', {domain: '#', value});
+            }
 
-        if (complete) {
-            this.setChild('value', token);
-        } else {
-            if (! this.value) this.value = [''];
-            this.value.splice(-1, 0, token);
+            if (complete) {
+                this.setChild('value', token);
+            } else {
+                if (! this.value) this.value = [''];
+                this.addChild('value', token, this.value.length - 1);
+            }
         }
     }
 
@@ -382,7 +382,7 @@ class Reference extends Code {
         this.refPath = props.referent.getPath();
         Object.defineProperty(this, 'identifier', {
             enumerable: true,
-            get: () => this.getElement(this.refPath).identifier,
+            get() { return this.getElement(this.refPath).identifier; },
             set(value) {}
         });
     }

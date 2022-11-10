@@ -201,7 +201,7 @@ class Block extends Code {
 
     lookupSymbol(token, line=0) {
         for (let i = 0; i < line; i++ ) {
-            console.log(this.lines[i]);
+            //console.log(this.lines[i]);
             const instruction = this.lines[i].instruction;
             if (instruction && instruction.className === 'Assignment') {
                 const assignee = instruction.left.value;

@@ -22,11 +22,17 @@ var expressions = {
     '>=': {left: '#', right: '#', output: '|'},
     '&&': {left: '|', right: '|', output: '|'},
     '||': {left: '|', right: '|', output: '|'},
+    '<<': {left: "'", right: "#N", output: "'"},
+    '>>': {left: "'", right: "#N", output: "'"},
+    '&' : {left: "'", right: "'", output: "'"},
+    '|' : {left: "'", right: "'", output: "'"},
+    '^' : {left: "'", right: "'", output: "'"}
 }
 
 var literals = {
     '|0': {domain: '|'},
-    '|1': {domain: '|'}
+    '|1': {domain: '|'},
+    '/0': {domain: '.'}
 }
 
 var lookup = {

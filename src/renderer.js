@@ -112,7 +112,8 @@ class Component {
         let classes = 'token';
         if (variants) classes = classes + ' ' + variants;
         if (token === ':=') classes += ' arrow';
-        if (token === '|0') classes += ' falsy';
+        if (token === '|0' || token === '/0') classes += ' falsy';
+        if (token === '&&' || token === '||') classes += ' keyword';
         return this.inline(classes, Unicode.mapToken(token));
     }
 }
@@ -134,7 +135,7 @@ class Input extends Component {
             size: Math.max(this.value.length, 1), // html does not allow zero
             autofocus: true // Controls focus on initial load - focus will fall on first DOM element with autofocus.
         };
-        if (this.placeholder) domProps.placeholder = Unicode.mapToken(this.placeholder);
+        if (this.placeholder) domProps.placeholder = Unicode.mapDomain(this.placeholder);
         let listeners= {
             change: this.handleChange,
             keydown: handleKey(this.context.onAction, ['input'], this.fieldPath)

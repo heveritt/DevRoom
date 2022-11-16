@@ -64,7 +64,12 @@ function translate(nodule) {
         },
 
         Literal: function(props) {
-            return props.value;
+            const map = {
+                '|1': 'true',
+                '|0': 'false',
+                '/0': 'null'
+            }
+            return map[props.value] ? map[props.value] : props.value;
         },
 
         Selection: function(props) {

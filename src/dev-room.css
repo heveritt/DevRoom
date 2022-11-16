@@ -87,7 +87,7 @@
     display:  inline-block;
 }
 
-.domain {
+.domain.token {
     padding: 0px 10px;
     color: gray;
     background-color: lightgrey;
@@ -209,4 +209,8 @@ input {
 
 .selection > .token, .loop-condition > .token, .arrow {
     color: violet;
+}
+
+.keyword {
+    font-size: 12px;
 }

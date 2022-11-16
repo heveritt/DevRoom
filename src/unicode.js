@@ -1,5 +1,5 @@
 const Unicode = {
-    map: {
+    token: {
         '=>': '\u21D2', // Is a sub-class of
         ':=': '\u2B60', // Assign
         '*' : '\u00D7', // Multiply
@@ -8,18 +8,35 @@ const Unicode = {
         '!=': '\u2260', // Not equal to
         '<=': '\u2264', // Less-than or equal to
         '>=': '\u2265', // Greater-than or equal to
-        '&&': '\u2227', // Logical AND
-        '||': '\u2228', // Logical OR
+        '&&': 'AND',    // Logical AND
+        '||': 'OR',     // Logical OR
         '|1': '\u2714', // TRUE (Heavy check mark)
         '|0': '\u2718', // FALSE (Heavy ballot X)
-        '.' : '\u00B7', // Data domain (Middle Dot)
-        '|' : '\u2713|\u2717', // Boolean domain
         '[$': '\u2B8D', // Loop symbol
+        '&' : '\u2227', // Bitwise AND
+        '|' : '\u2228', // Bitwise inlusive OR
+        '^' : '\u22BB', // Bitwise exclusive OR
+        '>>': '\u226B', // Right shift (bits)
+        '<<': '\u226A', // Left shift (bits)
+        '/0': '\u2205', // Null sign
     },
 
-    mapToken: function(rawToken) {
-        const token = this.map[rawToken];
-        return token ? token : rawToken;
+    domain: {
+        '.' : '\u00B7', // Data domain (Middle Dot)
+        '|' : '\u2611', // Boolean domain (Ballot box with check)
+        '#N': '\u2115', // Set of all natural numbers (unsigned integers)
+        '#Z': '\u2124', // Set of all integers (signed integers)
+        '#R': '\u211D', // Set of all real numbers (floating point numbers)
+    },
+
+    mapToken: function(code) {
+        const token = this.token[code];
+        return token ? token : code;
+    },
+
+    mapDomain: function(code) {
+        const token = this.domain[code];
+        return token ? token : code;
     }
 }
 

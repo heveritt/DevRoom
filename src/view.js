@@ -121,7 +121,7 @@ class Declaration extends Component {
         return (
             this.inline(this.role + ' declaration',
                 this.identifier ? this.inline('token', this.identifier) : null,
-                this.inline('domain', this.domain)
+                this.token(this.domain, 'domain')
             )
         );
     }

@@ -2,6 +2,7 @@ const Unicode = {
     token: {
         '=>': '\u21D2', // Is a sub-class of
         ':=': '\u2B60', // Assign
+        '-' : '\u2212', // Minus
         '*' : '\u00D7', // Multiply
         '/' : '\u00F7', // Divide
         '==': '\u225F', // Equal to

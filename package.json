@@ -12,7 +12,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "db": "json-server -p 8080 db/db.json",
-    "server": "node server/server.js"
+    "server": "nodemon server/server.js"
   },
   "proxy": "http://localhost:3001",
   "homepage": "/"

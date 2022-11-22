@@ -113,7 +113,8 @@ class Component {
         if (variants) classes = classes + ' ' + variants;
         if (token === ':=') classes += ' arrow';
         if (token === '|0' || token === '/0') classes += ' falsy';
-        if (token === '&&' || token === '||') classes += ' keyword';
+        if (token === '&&' || token === '||' || token === '!_') classes += ' keyword';
+        if (token === '-_' || token === '~_') classes += ' prefix';
         const unicode = classes.split(' ').includes('domain') ? Unicode.mapDomain(token) : Unicode.mapToken(token);
         return this.inline(classes, unicode);
     }

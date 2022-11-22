@@ -187,6 +187,10 @@ input {
     text-align: center;
 }
 
+.token.prefix {
+    padding: 0px 0px 0px 5px;
+}
+
 .literal {
     color: lime;
 }

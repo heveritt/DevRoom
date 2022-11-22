@@ -131,7 +131,7 @@ class Expression extends Component {
     render() {
         return (
             this.inline('expression',
-                this.child('left'),
+                this.left ? this.child('left') : null,
                 this.token(this.operator),
                 this.child('right')
             )

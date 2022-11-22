@@ -350,7 +350,9 @@ class Declaration extends Code {
 
 class Expression extends Code {
     init(props) {
-        this.setChild('left', typeof props.left === 'object' ? props.left : create('Field', {domain: props.left}));
+        if (props.left) {
+            this.setChild('left', typeof props.left === 'object' ? props.left : create('Field', {domain: props.left}));
+        }
         this.operator = props.operator;
         this.setChild('right', create('Field', {domain: props.right}));
         this.setChild('output', create('Field', {domain: props.output}));

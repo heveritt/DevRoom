@@ -5,20 +5,23 @@ const Unicode = {
         '-' : '\u2212', // Minus
         '*' : '\u00D7', // Multiply
         '/' : '\u00F7', // Divide
+        '-_': '\u2212', // Unary Minus
         '==': '\u225F', // Equal to
         '!=': '\u2260', // Not equal to
         '<=': '\u2264', // Less-than or equal to
         '>=': '\u2265', // Greater-than or equal to
         '&&': 'AND',    // Logical AND
         '||': 'OR',     // Logical OR
+        '!_': 'NOT',    // Logical NOT
         '|1': '\u2714', // TRUE (Heavy check mark)
         '|0': '\u2718', // FALSE (Heavy ballot X)
         '[$': '\u2B8D', // Loop symbol
-        '&' : '\u2227', // Bitwise AND
-        '|' : '\u2228', // Bitwise inlusive OR
-        '^' : '\u22BB', // Bitwise exclusive OR
+        //'&' : '\u2227', // Bitwise AND
+        //'|' : '\u2228', // Bitwise inlusive OR
+        //'^' : '\u22BB', // Bitwise exclusive OR
         '>>': '\u226B', // Right shift (bits)
         '<<': '\u226A', // Left shift (bits)
+        '~_': '~',      // Bitwise one's complement
         '/0': '\u2205', // Null sign
     },
 

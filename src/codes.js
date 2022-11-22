@@ -26,7 +26,10 @@ var expressions = {
     '>>': {left: "'", right: "#N", output: "'"},
     '&' : {left: "'", right: "'", output: "'"},
     '|' : {left: "'", right: "'", output: "'"},
-    '^' : {left: "'", right: "'", output: "'"}
+    '^' : {left: "'", right: "'", output: "'"},
+    '-_': {right: '#', output: '#'},
+    '!_': {right: '|', output: '|'},
+    '~_': {right: "'", output: "'"}
 }
 
 var literals = {

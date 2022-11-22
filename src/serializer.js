@@ -44,7 +44,7 @@ class Serializer {
         */
         const addPath = (value) =>
         {
-            if (typeof value === 'object' && value.className) {
+            if (type(value) === 'class') {
                 return Object.assign({path: value.getPath()}, value);
             } else {
                 return value;
@@ -57,28 +57,12 @@ class Serializer {
         }
     }
 
-    reviver() {
-        const classRestorer = (parent, key, value) => {
-
-            function giveGrandParentCustody(element, ix) {
-                if (typeof element === 'object' && element.className) {
-                    Object.defineProperty(element, 'parent', {value: parent, enumerable: false});
-                    Object.defineProperty(element, 'role', {value: key + '#' + ix, enumerable: false});
-                }
-                return element;
-            }
-
-            if (Array.isArray(value)) {
-                return value.map(giveGrandParentCustody);
-            } else if (typeof value === 'object' && value.className) {
+    reviver(reconstruct) {
+        const classRestorer = (value) => {
+            if (type(value) === 'class') {
                 const classConstructor = this.classMap[value.className];
                 if (classConstructor) {
-                    if (! Array.isArray(parent) && key) {
-                        // Establish outward (parent) relationships as well as inward (child) relationships
-                        Object.defineProperty(value, 'parent', {value: parent, enumerable: false});
-                        Object.defineProperty(value, 'role', {value: key, enumerable: false});
-                    }
-                    return Object.setPrototypeOf(value, classConstructor.prototype);
+                    Object.setPrototypeOf(value, classConstructor.prototype);
                 } else {
                     throw new Error('Atttempt to de-serialize unmapped class: ' + value.className);
                 }
@@ -86,12 +70,40 @@ class Serializer {
             return value;
         }
 
+        const parentRestorer = (parent, key, value) => {
+
+            if (type(value) === 'array') {
+                return value.map(function (element, ix) {
+                    if (type(element) === 'class') {
+                        Object.defineProperty(element, 'parent', {value: parent, enumerable: false});
+                        Object.defineProperty(element, 'role', {value: key + '#' + ix, enumerable: false});
+                    }
+                    return element;
+                });
+            } else if (type(parent) !== 'array' && key && type(value) === 'class') {
+                // Establish outward (parent) relationships as well as inward (child) relationships
+                Object.defineProperty(value, 'parent', {value: parent, enumerable: false});
+                Object.defineProperty(value, 'role', {value: key, enumerable: false});
+            }
+            return value;
+        }
+
         return function(key, value) {
             const parent = this; // Bound to the object currently being restored
-            return classRestorer(parent, key, value);
+            value = classRestorer(value);
+            return reconstruct ? parentRestorer(parent, key, value): value;
         }
     }
+}
 
+function type(value) {
+    if (Array.isArray(value)) {
+        return 'array';
+    } else if (typeof value === 'object' && value.className) {
+        return 'class';
+    } else {
+        return typeof value;
+    }
 }
 
 export default Serializer

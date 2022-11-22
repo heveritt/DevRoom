@@ -20,7 +20,7 @@ class Frame extends Component {
             this.block('frame',
                 this.block('frame-header',
                     this.block('frame-node', 'Node: ',
-                        this.inline('token', this.node)
+                        this.token(this.node)
                     )
                 ),
                 this.block('frame-body',
@@ -119,8 +119,8 @@ class Field extends Component {
 class Declaration extends Component {
     render() {
         return (
-            this.inline(this.role + ' declaration',
-                this.identifier ? this.inline('token', this.identifier) : null,
+            this.inline('declaration',
+                this.identifier ? this.token(this.identifier) : null,
                 this.token(this.domain, 'domain')
             )
         );
@@ -238,7 +238,7 @@ const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Assign
 const serializer = new Serializer(classMap);
 
 function deserialize(jsonString) {
-    return serializer.deserialize(jsonString);
+    return serializer.deserialize(jsonString, false);
 }
 
 export default Frame;

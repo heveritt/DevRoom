@@ -133,7 +133,9 @@ class Expression extends Component {
             this.inline('expression',
                 this.left ? this.child('left') : null,
                 this.token(this.operator),
-                this.child('right')
+                this.child('right'),
+                this.altRight ? this.token(':') : null,
+                this.altRight ? this.child('altRight') : null
             )
         );
     }

@@ -43,9 +43,11 @@ function translate(nodule) {
         },
 
         Expression: function(props) {
-            if (props.left) {   // Binary
+            if (props.altRight) {       // Ternary
+                return '(' + trObject(props.left) + ' ' + props.operator + ' ' + trObject(props.right) + ' : ' + trObject(props.altRight) + ')';
+            } else if (props.left) {    // Binary
                 return '(' + trObject(props.left) + ' ' + props.operator + ' ' + trObject(props.right) + ')';
-            } else {            // Unary
+            } else {                    // Unary
                 return '(' + props.operator.slice(0, 1) + trObject(props.right) + ')';
             }
         },

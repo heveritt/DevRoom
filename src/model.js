@@ -356,6 +356,9 @@ class Expression extends Code {
         this.operator = props.operator;
         this.setChild('right', create('Field', {domain: props.right}));
         this.setChild('output', create('Field', {domain: props.output}));
+        if (props.altRight) {
+            this.setChild('altRight', create('Field', {domain: props.altRight}));
+        }
     }
 }
 

@@ -48,15 +48,19 @@ class Code {
     }
 
     setChild(role, child) {
-        Object.defineProperty(child, 'parent', {value: this, configurable: true});
-        Object.defineProperty(child, 'role', {value: role, configurable: true});
         this[role] = child;
+        child.setParent(this, role);
     }
 
     addChild(role, child, ix=this[role].length) {
-        Object.defineProperty(child, 'parent', {value: this, configurable: true});
-        Object.defineProperty(child, 'role', {value: role + '#' + ix, configurable: true});
         this[role].splice(ix, 0, child);
+        child.setParent(this, role, ix);
+    }
+
+    setParent(parent, role, ix) {
+        if (ix !== undefined) role = role + '#' + ix;
+        Object.defineProperty(this, 'parent', {value: parent, configurable: true});
+        Object.defineProperty(this, 'role', {value: role, configurable: true});
     }
 
     getPath() {

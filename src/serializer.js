@@ -75,15 +75,12 @@ class Serializer {
             if (type(value) === 'array') {
                 return value.map(function (element, ix) {
                     if (type(element) === 'class') {
-                        Object.defineProperty(element, 'parent', {value: parent, enumerable: false});
-                        Object.defineProperty(element, 'role', {value: key + '#' + ix, enumerable: false});
+                        element.setParent(parent, key, ix);
                     }
                     return element;
                 });
             } else if (type(parent) !== 'array' && key && type(value) === 'class') {
-                // Establish outward (parent) relationships as well as inward (child) relationships
-                Object.defineProperty(value, 'parent', {value: parent, enumerable: false});
-                Object.defineProperty(value, 'role', {value: key, enumerable: false});
+                value.setParent(parent, key);
             }
             return value;
         }

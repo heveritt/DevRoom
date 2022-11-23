@@ -151,7 +151,7 @@ class Nodule extends Code {
     }
 
     getElement(path) {
-        return path.split('.').reduce( (node, child) => node.getChild(child), this);
+        return path.split('.').reduce( (node, child) => node && node.getChild ? node.getChild(child): null, this);
     }
 
     getParentChild(path) {
@@ -415,7 +415,10 @@ class Reference extends Code {
         this.refPath = props.referent.getPath();
         Object.defineProperty(this, 'identifier', {
             enumerable: true,
-            get() { return this.getElement(this.refPath).identifier; },
+            get() {
+                let element = this.getElement(this.refPath);
+                return element ? element.identifier : '!UNRESOLVED!';
+            },
             set(value) {}
         });
     }

@@ -31,6 +31,7 @@ const Unicode = {
         '#N': '\u2115', // Set of all natural numbers (unsigned integers)
         '#Z': '\u2124', // Set of all integers (signed integers)
         '#R': '\u211D', // Set of all real numbers (floating point numbers)
+        '...' : '\u22EF', // Unknown (Middle ellipsis)
     },
 
     mapToken: function(code) {

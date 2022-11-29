@@ -86,15 +86,15 @@ class Component {
         return DOM.element(tagName, domProps, listeners, ...children);
     }
 
-    input(field, value) {
+    input(parent, value) {
         let component = new Input({
             className: 'Input',
-            path: field.path + '.value',
+            path: parent.path + '.input',
             value: value,
-            fieldPath: field.path,
-            placeholder: field.domain
+            parentPath: parent.path,
+            domain: parent.domain ? parent.domain : '...'
         });
-        return render.component(component, field.context);
+        return render.component(component, parent.context);
     }
 
     child(role, context=this.context) {
@@ -124,26 +124,46 @@ class Input extends Component {
     constructor(props) {
         super(props);
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleInput = this.handleInput.bind(this);
     }
 
-    handleChange(e) {
-        this.setState({value: e.target.value});
+    handleInput(e) {
+        this.value = e.target.value;
+        let oldContent = this.content;
+        this.renderContent();
+        oldContent.replaceWith(this.content);
+    }
+
+    focus() {
+        this.facade.focus();
+    }
+
+    renderContent() {
+        this.content = (this.value) ? this.token(this.value) : this.token(this.domain, 'domain');
+    }
+
+    renderFacade() {
+        let domProps= {
+            value: this.value,
+            autofocus: true, // Controls focus on initial load - focus will fall on first DOM element with autofocus.
+            className: 'facade'
+        };
+        let listeners = {
+            input: this.handleInput,
+            keydown: handleKey(this.context.onAction, ['input'], this.parentPath)
+        };
+        this.facade = DOM.element('input', domProps, listeners);
     }
 
     render() {
-        let domProps= {
-            value: this.value,
-            size: Math.max(this.value.length, 1), // html does not allow zero
-            autofocus: true // Controls focus on initial load - focus will fall on first DOM element with autofocus.
-        };
-        if (this.placeholder) domProps.placeholder = Unicode.mapDomain(this.placeholder);
-        let listeners= {
-            change: this.handleChange,
-            keydown: handleKey(this.context.onAction, ['input'], this.fieldPath)
-        };
-
-        return DOM.element('input', domProps, listeners);
+        this.renderContent();
+        this.renderFacade();
+        return (
+            this.inline('input',
+                this.content,
+                this.facade
+            )
+        );
     }
 }
 

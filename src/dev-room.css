@@ -90,14 +90,10 @@
 .domain.token {
     padding: 0px 10px;
     color: gray;
-    background-color: lightgrey;
+    background-color: inherit;
     line-height: 18px;
     border: 1px solid gray;
     border-radius: 5px;
-}
-
-.output > .domain {
-    background-color: inherit;
 }
 
 .procedure-code, .branch, .loop-code {
@@ -166,22 +162,6 @@ span {
     display: inline-block;
 }
 
-input {
-    margin: 0px 2px;
-    padding: 0px 0px 0px 2px;
-    font: 16px arial, sans-serif;
-    background-color: lightgrey;
-    text-align: left;
-}
-
-::-webkit-input-placeholder {
-  text-align: center;
-}
-
-:-moz-placeholder {
-  text-align: center;
-}
-
 .token {
     padding: 0px 5px;
     text-align: center;
@@ -217,4 +197,28 @@ input {
 
 .keyword {
     font-size: 12px;
+}
+
+.input {
+    position: relative;
+    min-width: 1em;
+    width: min-content;
+}
+
+input.facade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 0px 4px;
+    font: 16px arial, sans-serif;
+    background-color: transparent;
+    color: transparent;
+    border: 1px solid gray;
+    border-radius: 5px;
+    caret-color: gray;
+    text-align: left;
+    outline: none;
 }

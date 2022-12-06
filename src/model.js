@@ -433,7 +433,11 @@ class Token extends Code {
 class Literal extends Code {
     init(props) {
         this.domain = props.domain;
-        this.value = props.value;
+        if (props.domain === '#') {
+            this.value = props.value.toUpperCase(); // Standardise Exponent as capital E
+        } else {
+            this.value = props.value;
+        }
     }
 }
 

@@ -108,7 +108,7 @@ class Component {
         }
     }
 
-    token(token, variants) {
+    token(token, variants, ...children) {
         let classes = 'token';
         if (variants) classes = classes + ' ' + variants;
         if (token === ':=') classes += ' arrow';
@@ -116,7 +116,7 @@ class Component {
         if (token === '&&' || token === '||' || token === '!_') classes += ' keyword';
         if (token === '-_' || token === '~_') classes += ' prefix';
         const unicode = classes.split(' ').includes('domain') ? Unicode.mapDomain(token) : Unicode.mapToken(token);
-        return this.inline(classes, unicode);
+        return this.inline(classes, unicode, children);
     }
 }
 

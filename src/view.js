@@ -230,7 +230,16 @@ class Token extends Component {
 
 class Literal extends Component {
     render() {
-        return this.token(this.value, 'literal');
+        if (this.domain === '#' && this.value.includes('E')) {
+            const [significand, exponent] = this.value.split('E');
+            return (
+                this.token(significand, 'literal',
+                    this.inline('superscript', 'E' + exponent)
+                )
+            );
+        } else {
+            return this.token(this.value, 'literal');
+        }
     }
 }
 

@@ -171,6 +171,11 @@ span {
     padding: 0px 0px 0px 5px;
 }
 
+.token > .superscript {
+    vertical-align: super;
+    font-size: x-small;
+}
+
 .literal {
     color: lime;
 }

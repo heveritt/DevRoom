@@ -124,14 +124,30 @@ class Input extends Component {
     constructor(props) {
         super(props);
 
+        this.literal = '';
         this.handleInput = this.handleInput.bind(this);
+        this.handleKey = this.handleKey.bind(this);
     }
 
     handleInput(e) {
-        this.value = e.target.value;
-        let oldContent = this.content;
-        this.renderContent();
-        oldContent.replaceWith(this.content);
+        const input = e.target.value;
+        if (input === '"') {
+            this.setState({value: '', domain: '"', literal: 'string'});
+            this.focus();
+        } else {
+            this.value = input;
+            let oldContent = this.content;
+            this.renderContent();
+            oldContent.replaceWith(this.content);
+        }
+    }
+
+    handleKey(e) {
+        if (e.target.value && ( (e.key === ' ' && this.literal !== 'string') || e.key === 'Enter' || e.key === 'Tab') ) {
+            e.preventDefault();
+            let info = {value: e.target.value, complete: (e.key !== ' '), literal: this.literal};
+            this.context.onAction('input', this.parentPath, info);
+        }
     }
 
     focus() {
@@ -150,7 +166,7 @@ class Input extends Component {
         };
         let listeners = {
             input: this.handleInput,
-            keydown: handleKey(this.context.onAction, ['input'], this.parentPath)
+            keydown: this.handleKey
         };
         this.facade = DOM.element('input', domProps, listeners);
     }
@@ -158,12 +174,25 @@ class Input extends Component {
     render() {
         this.renderContent();
         this.renderFacade();
-        return (
-            this.inline('input',
-                this.content,
-                this.facade
-            )
-        );
+        if (this.literal) {
+            return (
+                this.inline(this.literal,
+                    this.token('("', 'prefix'),
+                    this.inline('input ',
+                        this.content,
+                        this.facade
+                    ),
+                    this.token(')"', 'suffix')
+                )
+            );
+        } else {
+            return (
+                this.inline('input',
+                    this.content,
+                    this.facade
+                )
+            );
+        }
     }
 }
 
@@ -181,7 +210,6 @@ function handleKey(handler, actions, path) {
     const keyMap = {
         'save': e => e.ctrlKey && (e.key === 's' || e.key === 'S'),
         'generate': e => e.ctrlKey && (e.key === 'g' || e.key === 'G'),
-        'input': e => e.target.value && (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab'),
         'newline': e => e.key === 'Enter',
         'delete': e => e.key === 'Delete'
     }
@@ -189,10 +217,9 @@ function handleKey(handler, actions, path) {
     return function(e) {
         for (const action of actions) {
             if (keyMap[action](e)) {
-                if (! (action === 'input' && e.key === 'Enter') ) e.stopPropagation();
+                e.stopPropagation();
                 if (! (action === 'delete') ) e.preventDefault();
-                const info = (action === 'input') ? {value: e.target.value, complete: (e.key !== ' ')} : null;
-                handler(action, path, info);
+                handler(action, path);
             }
         }
     }

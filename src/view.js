@@ -237,6 +237,14 @@ class Literal extends Component {
                     this.inline('superscript', 'E' + exponent)
                 )
             );
+        } else if (this.domain === '"') {
+            return (
+                this.inline('string',
+                    this.token('("', 'prefix'),
+                    this.inline('literal', this.value),
+                    this.token(')"', 'suffix')
+                )
+            );
         } else {
             return this.token(this.value, 'literal');
         }

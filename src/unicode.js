@@ -23,6 +23,8 @@ const Unicode = {
         '<<': '\u226A', // Left shift (bits)
         '~_': '~',      // Bitwise one's complement
         '/0': '\u2205', // Null sign
+        '("': '\u201C', // Left double quotation mark
+        ')"': '\u201D', // Right double quotation mark
     },
 
     domain: {

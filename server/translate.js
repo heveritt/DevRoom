@@ -75,7 +75,11 @@ function translate(nodule) {
                 '|0': 'false',
                 '/0': 'null'
             }
-            return map[props.value] ? map[props.value] : props.value;
+            if (props.domain === '"') {
+                return JSON.stringify(props.value);
+            } else {
+                return map[props.value] ? map[props.value] : props.value;
+            }
         },
 
         Selection: function(props) {

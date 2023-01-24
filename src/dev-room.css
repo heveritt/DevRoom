@@ -162,6 +162,10 @@ span {
     display: inline-block;
 }
 
+.string {
+    font-family: "Times New roman", serif;
+}
+
 .token {
     padding: 0px 5px;
     text-align: center;
@@ -169,6 +173,10 @@ span {
 
 .token.prefix {
     padding: 0px 0px 0px 5px;
+}
+
+.token.suffix {
+    padding: 0px 5px 0px 0px;
 }
 
 .token > .superscript {
@@ -208,6 +216,7 @@ span {
     position: relative;
     min-width: 1em;
     width: min-content;
+    white-space: pre;
 }
 
 input.facade {

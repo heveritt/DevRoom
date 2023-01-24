@@ -126,10 +126,7 @@ class Nodule extends Code {
     }
 
     input(path, info) {
-        let {value, complete} = info;
-        //console.log('Path: ' + path + ' value: ' + value + (complete ? ' +' : ' -'));
-
-        this.getElement(path).input(value, complete);
+        this.getElement(path).input(info);
     }
 
     lookupSymbol(token) {
@@ -252,7 +249,8 @@ class Line extends Code {
         this.instruction = '';
     }
 
-    input(value, complete) {
+    input(info) {
+        let {value, complete} = info;
         let props = lookup.instruction(value);
         if (props) {
             if ( Array.isArray(this.instruction) ) {
@@ -305,27 +303,32 @@ class Field extends Code {
         }
     }
 
-    input(value, complete) {
-        let props = lookup.field(value);
-        if (props) {
-            if ( props.className === 'Expression' && Array.isArray(this.value) ) {
-                props.left = create('Field', {domain: props.left, value: this.value[0]});
-            }
-            this.setChild('value', create(props.className, props));
+    input(info) {
+        let {value, complete, literal} = info;
+        if (literal === 'string') {
+            this.setChild('value', create('Literal', {domain: '"', value}));
         } else {
-            let referent = this.lookupSymbol(value);
-            let token;
-            if (referent) {
-                token = create('Reference', {referent});
+            let props = lookup.field(value);
+            if (props) {
+                if ( props.className === 'Expression' && Array.isArray(this.value) ) {
+                    props.left = create('Field', {domain: props.left, value: this.value[0]});
+                }
+                this.setChild('value', create(props.className, props));
             } else {
-                token = (isNaN(value)) ? create('Token', {value}) : create('Literal', {domain: '#', value});
-            }
+                let referent = this.lookupSymbol(value);
+                let token;
+                if (referent) {
+                    token = create('Reference', {referent});
+                } else {
+                    token = (isNaN(value)) ? create('Token', {value}) : create('Literal', {domain: '#', value});
+                }
 
-            if (complete) {
-                this.setChild('value', token);
-            } else {
-                if (! this.value) this.value = [''];
-                this.addChild('value', token, this.value.length - 1);
+                if (complete) {
+                    this.setChild('value', token);
+                } else {
+                    if (! this.value) this.value = [''];
+                    this.addChild('value', token, this.value.length - 1);
+                }
             }
         }
     }

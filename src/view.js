@@ -1,5 +1,6 @@
 import {Component} from './renderer';
 import Serializer from './serializer';
+import Literal from './literals';
 
 
 class Frame extends Component {
@@ -227,30 +228,6 @@ class Token extends Component {
         return this.token(this.value);
     }
 }
-
-class Literal extends Component {
-    render() {
-        if (this.domain === '#' && this.value.includes('E')) {
-            const [significand, exponent] = this.value.split('E');
-            return (
-                this.token(significand, 'literal',
-                    this.inline('superscript', 'E' + exponent)
-                )
-            );
-        } else if (this.domain === '"') {
-            return (
-                this.inline('string',
-                    this.token('("', 'prefix'),
-                    this.inline('literal', this.value),
-                    this.token(')"', 'suffix')
-                )
-            );
-        } else {
-            return this.token(this.value, 'literal');
-        }
-    }
-}
-
 
 const classMap = {Procedure, Block, Line, Field, Declaration, Expression, Assignment, Return, Reference, Token, Literal, Selection, Branch, Iteration};
 

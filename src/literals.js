@@ -1,25 +1,33 @@
 import {Component} from './renderer';
 
+const render = {
+    '#' : function(props) {
+        if (props.value.includes('E')) {
+            const [significand, exponent] = props.value.split('E');
+            return (
+                props.token(significand, 'literal',
+                    props.inline('superscript', 'E' + exponent)
+                )
+            )
+        } else {
+            return props.token(props.value, 'literal');
+        }
+    },
+
+    '"' : function(props) {
+        return (
+            props.inline('string',
+                props.token('("', 'prefix'),
+                props.inline('literal', props.value),
+                props.token(')"', 'suffix')
+            )
+        );
+    }
+};
+
 class Literal extends Component {
     render() {
-        if (this.domain === '#' && this.value.includes('E')) {
-            const [significand, exponent] = this.value.split('E');
-            return (
-                this.token(significand, 'literal',
-                    this.inline('superscript', 'E' + exponent)
-                )
-            );
-        } else if (this.domain === '"') {
-            return (
-                this.inline('string',
-                    this.token('("', 'prefix'),
-                    this.inline('literal', this.value),
-                    this.token(')"', 'suffix')
-                )
-            );
-        } else {
-            return this.token(this.value, 'literal');
-        }
+        return render[this.domain](this);
     }
 }
 

@@ -2,16 +2,12 @@ import {Component} from './renderer';
 
 const render = {
     '#' : function(props) {
-        if (props.value.includes('E')) {
-            const [significand, exponent] = props.value.split('E');
-            return (
-                props.token(significand, 'literal',
-                    props.inline('superscript', 'E' + exponent)
-                )
+        const [significand, exponent] = props.value.split('E');
+        return (
+            props.token(significand, 'literal',
+                exponent ? props.inline('superscript', 'E' + exponent) : null
             )
-        } else {
-            return props.token(props.value, 'literal');
-        }
+        )
     },
 
     '"' : function(props) {
@@ -22,6 +18,10 @@ const render = {
                 props.token(')"', 'suffix')
             )
         );
+    },
+
+    '|': function(props) {
+        return props.token(props.value, 'literal');
     }
 };
 

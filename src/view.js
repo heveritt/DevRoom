@@ -44,6 +44,8 @@ class Frame extends Component {
         let view = this.getView();
         this.components = {};
         this.setState({view});
+        // TODO - Temporary fudge to ensure focus moves to string literal
+        if (action === 'input' && info.literal === 'string' && info.value ==='') this.focus = path + '.value';
         //console.log('Focus: ' + this.focus);
         if (this.focus && this.components[this.focus]) this.components[this.focus].focus();
         //console.log(this.components);

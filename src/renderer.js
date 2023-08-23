@@ -51,6 +51,17 @@ class Component {
         this.domElement = newElement;
     }
 
+    handleEdit(e) {
+        if (e.type === 'input') {
+            //console.log("Edited value: " + e.target.textContent);
+            e.stopPropagation();
+            this.value = e.target.textContent;
+        } else if (e.type === 'blur') {
+            //console.log("Submitted value: " + this.value);
+            this.context.onAction('input', this.path, {value: this.value});
+        }
+    }
+
     focus() {
         if (this.domElement) this.domElement.focus();
     }
@@ -75,8 +86,14 @@ class Component {
     element(tagName, classes, ...children) {
         const domProps = {className: classes};
         if (classes.split(' ').includes('selectable')) domProps.tabIndex = 0;
+        if (classes.split(' ').includes('editable')) domProps.contenteditable = true;
 
         const listeners = {};
+        if (classes.split(' ').includes('editable')) {
+            listeners.input = this.handleEdit.bind(this);
+            listeners.blur = this.handleEdit.bind(this);
+        }
+
         const actions = getActions(classes.split(' '));
         if (actions.length > 0) {
             let handler = this.handleAction ? this.handleAction : this.context.onAction;
@@ -124,28 +141,25 @@ class Input extends Component {
     constructor(props) {
         super(props);
 
-        this.literal = '';
         this.handleInput = this.handleInput.bind(this);
         this.handleKey = this.handleKey.bind(this);
     }
 
     handleInput(e) {
-        const input = e.target.value;
-        if (input === '"') {
-            this.setState({value: '', domain: '"', literal: 'string'});
-            this.focus();
-        } else {
-            this.value = input;
-            let oldContent = this.content;
-            this.renderContent();
-            oldContent.replaceWith(this.content);
-        }
+        this.value = e.target.value;
+        let oldContent = this.content;
+        this.renderContent();
+        oldContent.replaceWith(this.content);
     }
 
     handleKey(e) {
-        if (e.target.value && ( (e.key === ' ' && this.literal !== 'string') || e.key === 'Enter' || e.key === 'Tab') ) {
+        if (e.target.value && ( e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') ) {
             e.preventDefault();
-            let info = {value: e.target.value, complete: (e.key !== ' '), literal: this.literal};
+            let info = {value: e.target.value, complete: (e.key !== ' '), literal: ''};
+            this.context.onAction('input', this.parentPath, info);
+        } else if (! e.target.value && (e.key === '"')) {
+            e.preventDefault();
+            let info = {value: '', complete: true, literal: 'string'};
             this.context.onAction('input', this.parentPath, info);
         }
     }
@@ -161,7 +175,6 @@ class Input extends Component {
     renderFacade() {
         let domProps= {
             value: this.value,
-            autofocus: true, // Controls focus on initial load - focus will fall on first DOM element with autofocus.
             className: 'facade'
         };
         let listeners = {
@@ -174,25 +187,13 @@ class Input extends Component {
     render() {
         this.renderContent();
         this.renderFacade();
-        if (this.literal) {
-            return (
-                this.inline(this.literal,
-                    this.token('("', 'prefix'),
-                    this.inline('input ',
-                        this.content,
-                        this.facade
-                    ),
-                    this.token(')"', 'suffix')
-                )
-            );
-        } else {
-            return (
-                this.inline('input',
-                    this.content,
-                    this.facade
-                )
-            );
-        }
+
+        return (
+            this.inline('input',
+                this.content,
+                this.facade
+            )
+        );
     }
 }
 

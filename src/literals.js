@@ -11,10 +11,11 @@ const render = {
     },
 
     '"' : function(props) {
+        props.content = props.inline('editable', props.value)
         return (
-            props.inline('string',
+            props.inline('string literal',
                 props.token('("', 'prefix'),
-                props.inline('literal', props.value),
+                props.content,
                 props.token(')"', 'suffix')
             )
         );
@@ -26,8 +27,17 @@ const render = {
 };
 
 class Literal extends Component {
+
     render() {
         return render[this.domain](this);
+    }
+
+    focus() {
+        if (this.domain === '"' && this.content) {
+            this.content.focus();
+        } else {
+            super.focus();
+        }
     }
 }
 

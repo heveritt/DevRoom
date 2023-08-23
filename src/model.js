@@ -442,6 +442,10 @@ class Literal extends Code {
             this.value = props.value;
         }
     }
+
+    input(info) {
+        this.value = info.value;
+    }
 }
 
 const classMap = {Sememe, Nodule, Procedure, Block, Line, Field, Declaration, Expression, Assignment, Return, Reference, Token, Literal, Selection, Branch, Iteration};

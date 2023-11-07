@@ -77,6 +77,8 @@ function translate(nodule) {
             }
             if (props.domain === '"') {
                 return JSON.stringify(props.value);
+            } else if (props.domain === "'") {
+                return '0x' + props.value;
             } else {
                 return map[props.value] ? map[props.value] : props.value;
             }

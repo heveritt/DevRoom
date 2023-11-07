@@ -23,6 +23,17 @@ const render = {
 
     '|': function(props) {
         return props.token(props.value, 'literal');
+    },
+
+    "'": function(props) {
+        props.content = props.inline('editable', props.value)
+        return (
+            props.inline('byte literal',
+                props.token("'", 'prefix'),
+                props.content,
+                props.token("'", 'suffix')
+            )
+        );
     }
 };
 
@@ -33,7 +44,7 @@ class Literal extends Component {
     }
 
     focus() {
-        if (this.domain === '"' && this.content) {
+        if (['"', "'"].includes(this.domain) && this.content) {
             this.content.focus();
         } else {
             super.focus();

@@ -161,6 +161,10 @@ class Input extends Component {
             e.preventDefault();
             let info = {value: '', complete: true, literal: 'string'};
             this.context.onAction('input', this.parentPath, info);
+        } else if (! e.target.value && (e.key === "'")) {
+            e.preventDefault();
+            let info = {value: '', complete: true, literal: 'byte'};
+            this.context.onAction('input', this.parentPath, info);
         }
     }
 

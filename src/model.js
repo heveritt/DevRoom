@@ -307,6 +307,8 @@ class Field extends Code {
         let {value, complete, literal} = info;
         if (literal === 'string') {
             this.setChild('value', create('Literal', {domain: '"', value}));
+        } else if (literal === 'byte') {
+            this.setChild('value', create('Literal', {domain: "'", value}));
         } else {
             let props = lookup.field(value);
             if (props) {

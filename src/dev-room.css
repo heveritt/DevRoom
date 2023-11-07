@@ -166,6 +166,10 @@ span {
     font-family: "Times New roman", serif;
 }
 
+.byte {
+    font-family: "monospace", monospace;
+}
+
 .token {
     padding: 0px 5px;
     text-align: center;

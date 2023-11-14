@@ -204,6 +204,7 @@ class Input extends Component {
 function getActions(categorys) {
     const map = {
         'selectable': ['delete'],
+        'editable': ['edit'],
         'code-line': ['newline'],
         'frame': ['save', 'generate']
     }
@@ -216,15 +217,16 @@ function handleKey(handler, actions, path) {
         'save': e => e.ctrlKey && (e.key === 's' || e.key === 'S'),
         'generate': e => e.ctrlKey && (e.key === 'g' || e.key === 'G'),
         'newline': e => e.key === 'Enter',
-        'delete': e => e.key === 'Delete'
+        'delete': e => e.key === 'Delete',
+        'edit': e => e.key === 'Delete'
     }
 
     return function(e) {
         for (const action of actions) {
             if (keyMap[action](e)) {
                 e.stopPropagation();
-                if (! (action === 'delete') ) e.preventDefault();
-                handler(action, path);
+                if (! (action === 'delete' || action === 'edit') ) e.preventDefault();
+                if (! (action === 'edit') )  handler(action, path);
             }
         }
     }

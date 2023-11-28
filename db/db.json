@@ -106,7 +106,7 @@
                             "className": "Return",
                             "right": {
                               "className": "Field",
-                              "domain": ".",
+                              "domain": "#",
                               "value": {
                                 "className": "Reference",
                                 "refPath": "code.inputs#0",
@@ -130,7 +130,7 @@
                             "className": "Return",
                             "right": {
                               "className": "Field",
-                              "domain": ".",
+                              "domain": "#",
                               "value": {
                                 "className": "Reference",
                                 "refPath": "code.inputs#1",

@@ -52,6 +52,13 @@ class Code {
         child.setParent(this, role);
     }
 
+    createChild(role, className, props) {
+        let child = new classMap[className]({className});
+        child.setParent(this, role);
+        child.init(props);
+        this[role] = child;
+    }
+
     addChild(role, child, ix=this[role].length) {
         this[role].splice(ix, 0, child);
         child.setParent(this, role, ix);
@@ -65,6 +72,10 @@ class Code {
 
     getPath() {
         return this.parent.getPath() ? this.parent.getPath() + '.' + this.role: this.role;
+    }
+
+    getOutput() {
+        return this.parent.getOutput();
     }
 
     getElement(path) {
@@ -184,6 +195,10 @@ class Procedure extends Code {
         this.implementation = create('Field', {domain: props.output.domain}); */
     }
 
+    getOutput() {
+        return this.output;
+    }
+
     lookupSymbol(token) {
         for (const input of this.inputs) {
             if (input.identifier === token) {
@@ -256,7 +271,7 @@ class Line extends Code {
             if ( Array.isArray(this.instruction) ) {
                 props.left = create('Field', {domain: props.left, value: this.instruction[0]});
             }
-            this.setChild('instruction', create(props.className, props));
+            this.createChild('instruction', props.className, props);
         } else {
 
             let referent = this.lookupSymbol(value);
@@ -376,7 +391,7 @@ class Assignment extends Code {
 
 class Return extends Code {
     init(props) {
-        this.setChild('right', create('Field', {domain: '.'})); // TODO - Should be output domain
+        this.createChild('right', 'Field', {domain: this.getOutput().domain});
     }
 }
 

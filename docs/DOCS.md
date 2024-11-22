@@ -1,1 +1,0 @@
-This is some documentation for the project.

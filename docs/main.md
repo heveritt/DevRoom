@@ -55,11 +55,12 @@ Cultivate a vibrant global community of contributors dedicated to the continuous
 
 ### [Open Source Collaboration](collaboration.md)
 
-- A community of contributors dedicated to the continuous improvement and expansion of the platform.
+- A community of contributors dedicated to the continuous improvement and expansion of the platform and a non-profit organisation for the development of the learning tool.
 - Collaborators: Chris
 
 # Strategy
 
+- Set up a non-profit organisation.
 - Build an open source community for the project.
 - Develop a working prototype for the Franca learning tool.
 - Get feedback from students and educators on the prototype.

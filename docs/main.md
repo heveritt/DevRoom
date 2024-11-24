@@ -58,10 +58,28 @@ Cultivate a vibrant global community of contributors dedicated to the continuous
 - A community of contributors dedicated to the continuous improvement and expansion of the platform and a non-profit organisation for the development of the learning tool.
 - Collaborators: Chris
 
+
+
 # Strategy
 
-- Set up a non-profit organisation.
-- Build an open source community for the project.
-- Develop a working prototype for the Franca learning tool.
-- Get feedback from students and educators on the prototype.
-- Apply for grants/look for funding to develop the project further.
+## Phase 1
+
+Goal: Publicly available resources that we can show people who are interested in the project, and a way for them to contribute to it.
+
+- Franca Language (Hugo)
+- Franca Ontology (Hugo)
+- Franca Compiler (Hugo)
+- Open Source Collaboration (Chris)
+
+
+## Phase 2
+
+Goal: A working prototype for the Franca learning tool.
+
+- Web Application Frontend (Hugo + Contributors)
+- Web Application Backend (Chris)
+- Cloud Services (Chris)
+
+## Phase 3
+
+Goal: Find funding for the non-profit organisation, more collaborators for the open source projects, and test users for the Franca learning tool.

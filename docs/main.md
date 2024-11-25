@@ -4,7 +4,7 @@ The Franca project aims to create a universal programming language that is acces
 
 - Easy to learn and use
 - Able to reference real-world ideas and concepts
-- Able to build functioning web applications in Python or JavaScript
+- Able to build functioning web applications in JavaScript
 
 
 ## Goals and Objectives

@@ -11,3 +11,4 @@ Examples:
 - DBpedia
 - WordNet
 - Wikidata
+- Schema.org
